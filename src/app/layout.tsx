@@ -12,7 +12,7 @@ const roboto = Roboto({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
 export const metadata = {
   title: "My Roofs",
-  description: "Sua plataforma de gerenciamento de condomínios",
+  description: "Sua plataforma de gerenciamento de condomínios"
 };
 
 export default function RootLayout({
