@@ -11,8 +11,8 @@ import QueryClientProviderApp from "@providers/QueryClientApp";
 const roboto = Roboto({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
 export const metadata = {
-  title: "Firebase Boilerplate",
-  description: "Firebase boilerplate to get started quickly"
+  title: "My Roofs",
+  description: "Sua plataforma de gerenciamento de condomínios",
 };
 
 export default function RootLayout({
