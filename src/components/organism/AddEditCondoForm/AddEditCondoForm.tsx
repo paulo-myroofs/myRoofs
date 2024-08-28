@@ -318,13 +318,13 @@ const AddEditCondoForm = ({
               setInternalOrgInputs((prev) =>
                 prev
                   ? {
-                    ...prev,
-                    type: value as "Bloco" | "Torre"
-                  }
+                      ...prev,
+                      type: value as "Bloco" | "Torre"
+                    }
                   : {
-                    type: value as "Bloco" | "Torre",
-                    names: [""]
-                  }
+                      type: value as "Bloco" | "Torre",
+                      names: [""]
+                    }
               )
             }
             options={[
@@ -405,9 +405,9 @@ const AddEditCondoForm = ({
                 setInternalOrgInputs((prev) =>
                   prev
                     ? {
-                      ...prev,
-                      names: [...prev.names, ""]
-                    }
+                        ...prev,
+                        names: [...prev.names, ""]
+                      }
                     : undefined
                 );
               }}
