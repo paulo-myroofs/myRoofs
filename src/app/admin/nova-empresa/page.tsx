@@ -193,7 +193,7 @@ const NewCompany = () => {
             <InputField
               formErrors={errors}
               name="cnpj"
-              mask={"999.999.999/9999-99"}
+              mask={"99.999.999/9999-99"}
               className={inputClassName}
               label="CNPJ"
               register={register}

@@ -43,14 +43,6 @@ const AptManagerInputs = <T extends AddAptManagerForm>({
         />
       )}
       <InputField
-        name={"ownerBasicInfo.emitter" as Path<T>}
-        className={inputClassName}
-        label="Emissor"
-        register={register}
-        formErrors={errors}
-        placeholder="Digite o emissor"
-      />
-      <InputField
         name={"ownerBasicInfo.cpf" as Path<T>}
         className={inputClassName}
         label="CPF"
@@ -60,10 +52,17 @@ const AptManagerInputs = <T extends AddAptManagerForm>({
         placeholder="Digite o CPF"
       />
       <InputField
+        name={"ownerBasicInfo.emitter" as Path<T>}
+        className={inputClassName}
+        label="Emissor"
+        register={register}
+        formErrors={errors}
+        placeholder="Digite o emissor"
+      />
+      <InputField
         name={"ownerBasicInfo.rg" as Path<T>}
         className={inputClassName}
         label="RG"
-        mask={"9999.999.999-9"}
         register={register}
         formErrors={errors}
         placeholder="Digite o RG"

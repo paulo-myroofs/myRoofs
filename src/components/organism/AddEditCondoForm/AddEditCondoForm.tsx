@@ -237,7 +237,7 @@ const AddEditCondoForm = ({
             <InputField
               formErrors={errors}
               name="cnpj"
-              mask={"999.999.999/9999-99"}
+              mask={"99.999.999/9999-99"}
               className={inputClassName}
               label="CNPJ"
               register={register}
@@ -318,13 +318,13 @@ const AddEditCondoForm = ({
               setInternalOrgInputs((prev) =>
                 prev
                   ? {
-                      ...prev,
-                      type: value as "Bloco" | "Torre"
-                    }
+                    ...prev,
+                    type: value as "Bloco" | "Torre"
+                  }
                   : {
-                      type: value as "Bloco" | "Torre",
-                      names: [""]
-                    }
+                    type: value as "Bloco" | "Torre",
+                    names: [""]
+                  }
               )
             }
             options={[
@@ -405,9 +405,9 @@ const AddEditCondoForm = ({
                 setInternalOrgInputs((prev) =>
                   prev
                     ? {
-                        ...prev,
-                        names: [...prev.names, ""]
-                      }
+                      ...prev,
+                      names: [...prev.names, ""]
+                    }
                     : undefined
                 );
               }}

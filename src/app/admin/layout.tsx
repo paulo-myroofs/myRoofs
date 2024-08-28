@@ -7,7 +7,7 @@ import { logout } from "@/store/services/auth";
 import AdministratorOnlyFeature from "@templates/Administrator/administrator";
 
 const menuItems = [
-  { label: "Home", href: "/admin" },
+  { label: "Empresas", href: "/admin" },
   { label: "Histórico", href: "/admin/historico" }
 ];
 

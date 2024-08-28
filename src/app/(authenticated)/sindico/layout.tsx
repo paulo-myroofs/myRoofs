@@ -8,7 +8,7 @@ import { logout } from "@/store/services/auth";
 import { storageDelete } from "@/store/services/storage";
 
 const menuItems = [
-  { label: "Home", href: "/sindico" },
+  { label: "Notas & Comunicados", href: "/sindico" },
   { label: "Histórico", href: "/sindico/historico" },
   { label: "Cadastros", href: "/sindico/cadastros" },
   { label: "Finanças", href: "/sindico/financas" },
