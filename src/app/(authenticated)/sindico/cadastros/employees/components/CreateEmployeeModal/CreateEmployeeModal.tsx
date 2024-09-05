@@ -14,6 +14,7 @@ import { EmployeeEntity } from "@/common/entities/employee";
 import Button from "@/components/atoms/Button/button";
 import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
 import InputField from "@/components/molecules/InputField/inputField";
+import { getEmployeesByCondoIdQueryKey } from "@/hooks/queries/employee/useEmployeesByCondoId";
 import { errorToast, successToast } from "@/hooks/useAppToast";
 import { queryClient } from "@/store/providers/queryClient";
 import {
@@ -25,6 +26,7 @@ import { createUserAuth, deleteUserAuth } from "@/store/services/auth";
 import { sendEmail } from "@/store/services/email";
 import { deleteImage, uploadImage } from "@/store/services/firebaseStorage";
 import { storageGet } from "@/store/services/storage";
+import formatToPhoneMask from "@/utils/formatToPhoneMask";
 import unmask from "@/utils/unmask";
 import AddEmployeeSchema from "@/validations/aptManager/AddEmployee";
 
@@ -50,7 +52,14 @@ export default function CreateEmployeeModal({
     reset
   } = useForm<AddEmployeeForm>({
     resolver: zodResolver(AddEmployeeSchema),
-    defaultValues: employeeData || {}
+    values: {
+      name: employeeData?.name ?? "",
+      email: employeeData?.email ?? "",
+      occupation: employeeData?.occupation ?? "",
+      cpf: employeeData?.cpf ?? "",
+      address: employeeData?.address ?? "",
+      phone: employeeData?.phone ? formatToPhoneMask(employeeData?.phone) : ""
+    }
   });
   const inputUpload = useRef<HTMLInputElement | null>(null);
 
@@ -122,7 +131,7 @@ export default function CreateEmployeeModal({
         return errorToast(error ?? "Algo deu errado.");
       }
 
-      const res = await setFirestoreDoc<Omit<EmployeeEntity, "id">>({
+      await setFirestoreDoc<Omit<EmployeeEntity, "id">>({
         docPath: `/users/${employeeId}`,
         data: {
           ...finalData,
@@ -131,7 +140,6 @@ export default function CreateEmployeeModal({
         } as EmployeeEntity
       });
 
-      console.log(res);
       successToast("Funcionário cadastrado com sucesso.");
     } else {
       await updateFirestoreDoc<Omit<EmployeeEntity, "id">>({
@@ -144,7 +152,7 @@ export default function CreateEmployeeModal({
       successToast("Funcionário atualizado com sucesso.");
     }
     setLoading(false);
-    queryClient.invalidateQueries(["employees", condoId]);
+    queryClient.invalidateQueries(getEmployeesByCondoIdQueryKey(condoId));
     setImage(null);
     reset();
     onOpenChange(false);

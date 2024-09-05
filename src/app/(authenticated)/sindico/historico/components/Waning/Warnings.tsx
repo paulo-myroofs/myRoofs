@@ -8,6 +8,7 @@ import { twMerge } from "tailwind-merge";
 import { DataPaginatedTable } from "@/components/atoms/DataTablePaginated/DataTablePaginated";
 import FilterSelect from "@/components/atoms/FilterSelect/filterSelect";
 import Input from "@/components/atoms/Input/input";
+import useCondoAssemblies from "@/hooks/queries/condos/assemblies/useCondoAssemblies";
 import useCondoNotices from "@/hooks/queries/condos/notices/useCondoNotices";
 import useResidentsNotices from "@/hooks/queries/condos/notices/useResidentsNotices";
 import { storageGet } from "@/store/services/storage";
@@ -22,6 +23,7 @@ const WarningTable = () => {
   const [filterValue, setFilterValue] = useState("");
   const { data: condoNotices } = useCondoNotices(condoId as string);
   const { data: notices } = useResidentsNotices(condoId as string);
+  const { data: condoAssemblies } = useCondoAssemblies(condoId as string);
   const [filterSelectValue, setFilterSelectValue] = useState<
     "condo" | "resident" | ""
   >("");
@@ -29,20 +31,32 @@ const WarningTable = () => {
   const shuffledNoticesCondoNotices = shuffleArrays(
     condoNotices?.map((item) => ({
       ...item,
-      type: "condo"
+      type: "condoWarning"
     })) ?? [],
     notices?.map((item) => ({
       ...item,
-      type: "resident"
+      type: "residentWarning"
     })) ?? []
   );
 
-  const filteredData = shuffledNoticesCondoNotices.filter(
+  const lastShuffle = shuffleArrays(
+    shuffledNoticesCondoNotices,
+    condoAssemblies?.map((item) => ({
+      ...item,
+      type: "condoAssembly"
+    })) ?? []
+  );
+
+  const filteredData = lastShuffle.filter(
     (item) =>
       item.about
         .toLocaleLowerCase()
         .includes(filterValue.toLocaleLowerCase()) &&
-      (filterSelectValue ? filterSelectValue === item.type : true)
+      (filterSelectValue
+        ? filterSelectValue === "condo"
+          ? ["condoWarning", "condoAssembly"].includes(item.type)
+          : item.type === "residentWarning"
+        : true)
   );
 
   if (!condoId) return;

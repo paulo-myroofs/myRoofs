@@ -17,7 +17,11 @@ export const getCondosByAptManagerIdQueryFn = (aptManagerId: string) => {
     getFirestoreCollection({
       collectionPath: "condominium",
       filters: [
-        { field: "aptManagerId", operator: "==", value: aptManagerId },
+        {
+          field: "aptManagersIds",
+          operator: "array-contains",
+          value: aptManagerId
+        },
         { field: "endedAt", operator: "==", value: null }
       ]
     }).then((res) => res.data);

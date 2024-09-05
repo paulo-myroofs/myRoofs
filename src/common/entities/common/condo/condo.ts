@@ -5,7 +5,7 @@ import { CondoCommonArea } from "./condoCommonAreas";
 
 export interface CondoEntity {
   id: string;
-  aptManagerId: string;
+  aptManagersIds: string[];
   companyId: string;
   name: string;
   image: string;

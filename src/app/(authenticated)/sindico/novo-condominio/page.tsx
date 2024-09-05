@@ -15,7 +15,7 @@ const NewCondo = () => {
       <TitleAtom className="pb-8 text-center"> Novo Condomínio </TitleAtom>
       <AddEditCondoForm
         companyId={aptManager?.companyId as string}
-        aptManagerId={userUid}
+        aptManagersIds={[userUid]}
       />
     </section>
   );

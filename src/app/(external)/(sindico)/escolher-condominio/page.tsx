@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+import { AptManagerEntity } from "@/common/entities/aptManager";
 import Button from "@/components/atoms/Button/button";
 import LoadingComponent from "@/components/atoms/Loading/loading";
 import useCondosByAptManagerId from "@/hooks/queries/condos/useCondosByAptManagerId";
@@ -14,7 +15,7 @@ import { storageSet } from "@/store/services/storage";
 const ChooseCondo = () => {
   const router = useRouter();
   const { userUid } = useAuth();
-  const { data: user } = useProfile(userUid);
+  const { data: user } = useProfile<AptManagerEntity>(userUid);
   const { data: condos } = useCondosByAptManagerId(userUid as string);
 
   const handleSelectCondo = (id: string) => {
@@ -57,14 +58,16 @@ const ChooseCondo = () => {
               </div>
             )}
 
-            <Button
-              className="mx-auto mt-8 w-[200px] font-normal"
-              variant="basicBlack"
-              onClick={() => router.push("/sindico/novo-condominio")}
-            >
-              {" "}
-              Novo condomínio{" "}
-            </Button>
+            {!user.isSecondary && (
+              <Button
+                className="mx-auto mt-8 w-[200px] font-normal"
+                variant="basicBlack"
+                onClick={() => router.push("/sindico/novo-condominio")}
+              >
+                {" "}
+                Novo condomínio{" "}
+              </Button>
+            )}
           </>
         ) : (
           <div className="m-auto flex items-center justify-center">

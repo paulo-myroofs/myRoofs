@@ -44,7 +44,7 @@ const defaultInternalOrgInput = {
 
 const AddEditCondoForm = ({
   companyId,
-  aptManagerId,
+  aptManagersIds,
   condoData,
   setEditFalse,
   readOnly = false
@@ -82,7 +82,7 @@ const AddEditCondoForm = ({
   >();
 
   const handleForm = async (data: AddCondoForm) => {
-    if (!aptManagerId) return;
+    if (!aptManagersIds) return;
     if (!companyId) return;
     if (!isCNPJ(unmask(data.cnpj))) {
       return errorToast("CNPJ não é válido.");
@@ -124,7 +124,7 @@ const AddEditCondoForm = ({
     const finalData: Omit<CondoEntity, "id" | "createdAt"> = {
       commonAreas: commonAreas ?? null,
       companyId,
-      aptManagerId,
+      aptManagersIds,
       name: data.name,
       image: imageUrl,
       cnpj: unmask(data.cnpj),

@@ -20,7 +20,7 @@ const InfoCondoSection = () => {
     <section className="mx-auto w-full max-w-[1300px] space-y-8 ">
       <AddEditCondoForm
         companyId={aptManager?.companyId as string}
-        aptManagerId={userUid}
+        aptManagersIds={condo?.aptManagersIds as string[]}
         condoData={condo}
         readOnly={!isEdit}
         setEditFalse={() => setIsEdit(false)}

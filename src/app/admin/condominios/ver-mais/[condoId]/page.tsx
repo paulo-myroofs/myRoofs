@@ -65,7 +65,9 @@ const MoreInfoCondo = () => {
           <span>Dados do responsável legal</span>
         </div>
       ),
-      content: <AptManagerData aptManagerId={condo?.aptManagerId as string} />
+      content: (
+        <AptManagerData aptManagerId={condo?.aptManagersIds[0] as string} />
+      )
     }
   ];
 

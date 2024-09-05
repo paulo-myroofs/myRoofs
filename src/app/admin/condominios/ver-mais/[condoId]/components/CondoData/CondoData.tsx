@@ -17,7 +17,7 @@ const CondoData = ({ condoId }: { condoId: string }) => {
   return (
     <div className="mx-auto max-w-[1200px]">
       <AddEditCondoForm
-        aptManagerId={condo?.aptManagerId}
+        aptManagersIds={condo?.aptManagersIds}
         companyId={condo?.companyId}
         readOnly
         condoData={condo}

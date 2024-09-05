@@ -19,7 +19,7 @@ function AdministratorOnlyFeature({ children }: Props): JSX.Element {
 
   useEffect(() => {
     if (user && !user.role?.includes("admin")) {
-      router.push(`/login`);
+      router.push(`/`);
     }
   }, [router, user]);
 

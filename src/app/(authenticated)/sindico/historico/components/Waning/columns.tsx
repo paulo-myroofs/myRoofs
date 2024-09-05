@@ -7,10 +7,12 @@ import { timestampToDate } from "@/utils/timestampToDate";
 
 import { WarningColumnData } from "./types";
 
+import CreateAssemblyModal from "../../../components/Assembly/components/CreateAssemblyWarningModal/CreateAssemblyWarnigModal";
 import CreateCondoWarningModal from "../../../components/Condo/components/CreateCondoWarningModal/CreateCondoWarningModal";
 
 const SeeMore = ({ data }: { data: WarningColumnData }) => {
   const [modalOpen, setModalOpen] = useState(false);
+
   return (
     <>
       <Button
@@ -22,12 +24,21 @@ const SeeMore = ({ data }: { data: WarningColumnData }) => {
         Ver Mais
       </Button>
 
-      <CreateCondoWarningModal
-        readOnly
-        noticeData={data}
-        onOpenChange={setModalOpen}
-        isOpen={modalOpen}
-      />
+      {data.type === "condoAssembly" ? (
+        <CreateAssemblyModal
+          readOnly
+          assemblyData={data}
+          onOpenChange={setModalOpen}
+          isOpen={modalOpen}
+        />
+      ) : (
+        <CreateCondoWarningModal
+          readOnly
+          noticeData={data}
+          onOpenChange={setModalOpen}
+          isOpen={modalOpen}
+        />
+      )}
     </>
   );
 };
@@ -46,7 +57,7 @@ export const columns: ColumnDef<WarningColumnData>[] = [
     cell: ({ row }) => (
       <p className="text-[16px]">
         {row.original.type
-          ? row.original.type === "resident"
+          ? row.original.type === "residentWarning"
             ? "Morador"
             : "Síndico"
           : "Sem dados"}
@@ -60,6 +71,12 @@ export const columns: ColumnDef<WarningColumnData>[] = [
       row.original.updatedAt
         ? timestampToDate(row.original.updatedAt).toLocaleDateString()
         : "Sem dados"
+  },
+  {
+    accessorKey: "type",
+    header: "Tipo",
+    cell: ({ row }) =>
+      row.original.type === "condoAssembly" ? "Assembleia" : "Aviso"
   },
   {
     accessorKey: "month",

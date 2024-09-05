@@ -4,6 +4,7 @@ import { MaritalStatusOptionsType } from "./common/maritalStatusOptionsType";
 export interface AptManagerEntity extends AddressFields {
   id: string;
   role: "aptManager";
+  isSecondary?: boolean;
   companyId: string;
   name: string;
   email: string;

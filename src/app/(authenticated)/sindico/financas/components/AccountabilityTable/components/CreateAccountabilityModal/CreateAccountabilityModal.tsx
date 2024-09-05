@@ -15,7 +15,9 @@ import FormErrorLabel from "@/components/atoms/FormError/formError";
 import Label from "@/components/atoms/Label/label";
 import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
 import SelectField from "@/components/molecules/SelectField/selectField";
-import useCondoInstallments from "@/hooks/queries/condos/installments/useCondoInstallments";
+import useCondoInstallments, {
+  getCondoInstallmentsQueryKey
+} from "@/hooks/queries/condos/installments/useCondoInstallments";
 import useCondo from "@/hooks/queries/condos/useCondo";
 import { errorToast, successToast } from "@/hooks/useAppToast";
 import { queryClient } from "@/store/providers/queryClient";
@@ -164,11 +166,11 @@ const CreateAccountabilityModal = ({
     if (!installmentData) return;
     setLoading(true);
     await deleteFirestoreDoc({
-      documentPath: `/condominium/${condoId}/installments/${installmentData.id}`
+      documentPath: `/installments/${installmentData.id}`
     });
     setLoading(false);
     successToast("Prestação de conta removida com sucesso.");
-    queryClient.invalidateQueries(["installments", condoId]);
+    queryClient.invalidateQueries(getCondoInstallmentsQueryKey(condoId));
     onOpenChange(false);
   };
 

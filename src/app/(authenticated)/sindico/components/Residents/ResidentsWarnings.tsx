@@ -9,7 +9,7 @@ import ResidentsWarningCard from "./components/ResidentsWarningCard/ResidentsWar
 const ResidentsWarnings = () => {
   const condoId = storageGet<string>("condoId") as string;
   const { data: residentsNotices } = useResidentsNotices(condoId);
-  if (!residentsNotices) return;
+  if (!residentsNotices || residentsNotices.length === 0) return;
 
   return (
     <>

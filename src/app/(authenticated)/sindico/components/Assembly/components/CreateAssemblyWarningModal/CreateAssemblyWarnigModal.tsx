@@ -36,6 +36,7 @@ import { CreateAssemblyModalProps } from "./types";
 type AddWarningForm = z.infer<typeof AddWarningSchema>;
 
 const CreateAssemblyModal = ({
+  readOnly,
   isOpen,
   onOpenChange,
   assemblyData
@@ -178,38 +179,43 @@ const CreateAssemblyModal = ({
       title="Nova Assembleia"
       description="Insira as informações da assembleia"
       confirmBtn={
-        <Button
-          variant="icon"
-          size="lg"
-          className=" w-[210px] bg-[#202425]"
-          loading={loading}
-          onClick={handleSubmit(handleForm)}
-        >
-          {assemblyData ? "Editar " : "Registrar"}
-        </Button>
+        !readOnly && (
+          <Button
+            variant="icon"
+            size="lg"
+            className=" w-[210px] bg-[#202425]"
+            loading={loading}
+            onClick={handleSubmit(handleForm)}
+          >
+            {assemblyData ? "Salvar " : "Registrar"}
+          </Button>
+        )
       }
       cancelBtn={
-        <Button
-          onClick={() => {
-            reset();
-            setImage(null);
-            onOpenChange(false);
-          }}
-          type="button"
-          variant="outline-black"
-          size="lg"
-          className="w-[210px] text-sm"
-        >
-          Cancelar
-        </Button>
+        !readOnly && (
+          <Button
+            onClick={() => {
+              reset();
+              setImage(null);
+              onOpenChange(false);
+            }}
+            type="button"
+            variant="outline-black"
+            size="lg"
+            className="w-[210px] text-sm"
+          >
+            Cancelar
+          </Button>
+        )
       }
     >
       <form
         onSubmit={handleSubmit(handleForm)}
-        className={`flex flex-col gap-y-4`}
+        className={`flex flex-col gap-y-4 ${readOnly && " opacity-50"}`}
       >
         <InputField
           formErrors={errors}
+          disabled={readOnly}
           name="title"
           className={inputClassName}
           label="Título"
@@ -217,6 +223,7 @@ const CreateAssemblyModal = ({
           placeholder="Digite aqui"
         />
         <TextareaField
+          disabled={readOnly}
           formErrors={errors}
           name="description"
           className={inputClassName}
@@ -228,6 +235,7 @@ const CreateAssemblyModal = ({
           <Label>Imagem </Label>
           <input
             type="file"
+            disabled={readOnly}
             ref={inputUpload}
             accept="image/*"
             className="hidden"
@@ -248,14 +256,40 @@ const CreateAssemblyModal = ({
             )}
           >
             {image ? (
-              <Image
-                src={
-                  typeof image === "string" ? image : URL.createObjectURL(image)
-                }
-                fill
-                alt="Imagem do aviso"
-                className="object-contain"
-              />
+              <>
+                {readOnly ? (
+                  <Link
+                    target="_blank"
+                    href={
+                      typeof image === "string"
+                        ? image
+                        : URL.createObjectURL(image)
+                    }
+                  >
+                    <Image
+                      src={
+                        typeof image === "string"
+                          ? image
+                          : URL.createObjectURL(image)
+                      }
+                      fill
+                      alt="Imagem do assembleia"
+                      className="object-contain"
+                    />
+                  </Link>
+                ) : (
+                  <Image
+                    src={
+                      typeof image === "string"
+                        ? image
+                        : URL.createObjectURL(image)
+                    }
+                    fill
+                    alt="Imagem do assembleia"
+                    className="object-contain"
+                  />
+                )}
+              </>
             ) : (
               <strong>Clique para fazer upload</strong>
             )}
@@ -265,6 +299,7 @@ const CreateAssemblyModal = ({
           <Label>Arquivo </Label>
           <input
             type="file"
+            disabled={readOnly}
             ref={fileInputUpload}
             accept=".pdf,.doc,.docx,.txt,.rtf,.odt"
             className="hidden"

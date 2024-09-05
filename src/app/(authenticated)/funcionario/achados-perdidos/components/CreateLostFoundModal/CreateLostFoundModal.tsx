@@ -148,8 +148,8 @@ const CreateLostFoundModal = ({
     <TransitionModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title="Registrar encomenda"
-      description="Insira as informações necessárias para registrar a encomenda"
+      title="Registrar Achados e Perdidos"
+      description="Insira as informações necessárias para registrar um novo objeto"
       confirmBtn={
         <Button
           variant="icon"

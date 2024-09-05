@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Timestamp } from "firebase/firestore";
 import Image from "next/image";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 import { z } from "zod";
@@ -224,14 +225,40 @@ const CreateCondoWarningModal = ({
             )}
           >
             {image ? (
-              <Image
-                src={
-                  typeof image === "string" ? image : URL.createObjectURL(image)
-                }
-                fill
-                alt="Imagem do aviso"
-                className="object-contain"
-              />
+              <>
+                {readOnly ? (
+                  <Link
+                    target="_blank"
+                    href={
+                      typeof image === "string"
+                        ? image
+                        : URL.createObjectURL(image)
+                    }
+                  >
+                    <Image
+                      src={
+                        typeof image === "string"
+                          ? image
+                          : URL.createObjectURL(image)
+                      }
+                      fill
+                      alt="Imagem do aviso"
+                      className="object-contain"
+                    />
+                  </Link>
+                ) : (
+                  <Image
+                    src={
+                      typeof image === "string"
+                        ? image
+                        : URL.createObjectURL(image)
+                    }
+                    fill
+                    alt="Imagem do aviso"
+                    className="object-contain"
+                  />
+                )}
+              </>
             ) : (
               <strong>Clique para fazer upload</strong>
             )}

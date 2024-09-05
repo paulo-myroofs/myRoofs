@@ -13,7 +13,7 @@ import { z } from "zod";
 
 import { UserEntity as UserDoc } from "@/common/entities/user";
 import firebaseApp from "@/config/firebase";
-import { errorToast, successToast } from "@/hooks/useAppToast";
+import { errorToast } from "@/hooks/useAppToast";
 import {
   createUserWithEmailAndPasswordLocal,
   deleteOwnAccount,
@@ -80,7 +80,6 @@ const AuthProvider = ({ children }: Props) => {
       return;
     }
     if (user) {
-      successToast("Bem vindo!");
       setUserUid(user.uid);
     } else {
       setUserUid("");
@@ -150,8 +149,9 @@ const AuthProvider = ({ children }: Props) => {
     const { error } = await recoverPassword(email);
     if (!error) {
       toast("Email de redefinição de senha enviado", { type: "success" });
+    } else {
+      errorToast("Algo deu errado!");
     }
-    errorToast(error);
     setLoading((prev) => ({ ...prev, forgotPassword: false }));
   };
 
