@@ -32,10 +32,13 @@ import AddCompanySchema from "@/validations/admin/AddCompany";
 import AddressInputs from "./components/AddressInputs";
 import AptManagerInputs from "./components/AptManagerInputs/AptManagerInputs";
 import { AddCompanyForm } from "./types";
+import { useRouter } from "next/navigation";
 
 const inputClassName = "border-[#DEE2E6] bg-[#F8F9FA]";
 
 const NewCompany = () => {
+  const router = useRouter();
+
   const {
     handleSubmit,
     register,
@@ -122,7 +125,8 @@ const NewCompany = () => {
         (item) => item.value === data.ownerAddressData.state
       )?.label as BrazilStatesOptionsType,
       number: data.ownerAddressData.number,
-      cep: unmask(data.ownerAddressData.cep)
+      cep: unmask(data.ownerAddressData.cep),
+      city: data.ownerAddressData.city
     };
 
     await setFirestoreDoc<AptManagerEntity>({
@@ -142,6 +146,7 @@ const NewCompany = () => {
       )?.label as BrazilStatesOptionsType,
       number: data.addressData.number,
       cep: unmask(data.addressData.cep),
+      city: data.addressData.city,
       setupValue: parseInt(unmaskCurrency(data.setupValue)),
       monthValue: parseInt(unmaskCurrency(data.monthValue)),
       finder: data.finder ?? null,
@@ -160,6 +165,7 @@ const NewCompany = () => {
     queryClient.invalidateQueries(["companies", "activeCompanies"]);
     reset();
     setImage(null);
+    router.push("/admin");
   };
 
   const inputUpload = useRef<HTMLInputElement | null>(null);
