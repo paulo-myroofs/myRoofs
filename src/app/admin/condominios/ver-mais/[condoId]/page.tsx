@@ -3,6 +3,7 @@ import React from "react";
 
 import { Timestamp } from "firebase/firestore";
 import { File, User2, Users2 } from "lucide-react";
+import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 
 import Button from "@/components/atoms/Button/button";
@@ -87,7 +88,17 @@ const MoreInfoCondo = () => {
   return (
     <section className="mx-auto w-11/12 max-w-[1500px] space-y-8">
       <div className="flex flex-col justify-between gap-y-4 sm:flex-row sm:items-center">
-        <TitleAtom> {condo?.name}</TitleAtom>
+        <div className="flex items-center">
+          <Image
+            src="/arrow_back.svg"
+            alt="Voltar"
+            width={24}
+            height={24}
+            onClick={() => router.back()}
+            className="mr-2 cursor-pointer"
+          />
+          <TitleAtom> {condo?.name}</TitleAtom>
+        </div>
         <Button onClick={handleEndCondo}> Encerrar Condomínio</Button>
       </div>
 

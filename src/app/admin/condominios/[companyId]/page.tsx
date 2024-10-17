@@ -1,6 +1,7 @@
 "use client";
 
 import { Timestamp } from "firebase/firestore";
+import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 
 import Button from "@/components/atoms/Button/button";
@@ -62,7 +63,17 @@ export default function CompanyCondos() {
   return (
     <section className="mx-auto w-11/12 max-w-[1500px] space-y-8">
       <div className="flex flex-col justify-between gap-y-4 sm:flex-row sm:items-center">
-        <TitleAtom> Condomínios Cadastrados de {company?.name}</TitleAtom>
+        <div className="flex items-center">
+          <Image
+            src="/arrow_back.svg"
+            alt="Voltar"
+            width={24}
+            height={24}
+            onClick={() => router.back()}
+            className="mr-2 cursor-pointer"
+          />
+          <TitleAtom> Condomínios Cadastrados de {company?.name}</TitleAtom>
+        </div>
         <Button onClick={handleEndCompany}> Encerrar Empresa</Button>
       </div>
 
