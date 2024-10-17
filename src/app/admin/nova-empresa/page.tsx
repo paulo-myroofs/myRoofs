@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { isCNPJ, isCPF } from "brazilian-values";
 import { Timestamp } from "firebase/firestore";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 import { v7 as uuid, v4 as uuidV4 } from "uuid";
@@ -32,7 +33,6 @@ import AddCompanySchema from "@/validations/admin/AddCompany";
 import AddressInputs from "./components/AddressInputs";
 import AptManagerInputs from "./components/AptManagerInputs/AptManagerInputs";
 import { AddCompanyForm } from "./types";
-import { useRouter } from "next/navigation";
 
 const inputClassName = "border-[#DEE2E6] bg-[#F8F9FA]";
 
