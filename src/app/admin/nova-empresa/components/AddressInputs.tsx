@@ -54,6 +54,10 @@ const AddressInputs = <T extends FieldValues>({
           Path<T>
         >
       );
+      setValue(
+        `${zodObj}.city` as Path<T>,
+        data.localidade as PathValue<T, Path<T>>
+      );
     }
   }, [data, setValue, zodObj]);
 
@@ -86,22 +90,36 @@ const AddressInputs = <T extends FieldValues>({
           formErrors={formErrors}
         />
         <InputField
-          name={`${zodObj}.number` as Path<T>}
+          name={`${zodObj}.city` as Path<T>}
           className={inputClassName}
-          label="Número"
+          label="Cidade"
           register={register}
           formErrors={formErrors}
-          placeholder="Digite o número"
+          placeholder="Digite a cidade"
         />
       </div>
-      <InputField
-        name={`${zodObj}.address` as Path<T>}
-        className={inputClassName}
-        label="Endereço"
-        register={register}
-        formErrors={formErrors}
-        placeholder="Digite o endereço"
-      />
+      <div className="grid gap-3 sm:grid-cols-3">
+        <div className="sm:col-span-2">
+          <InputField
+            name={`${zodObj}.address` as Path<T>}
+            className={inputClassName}
+            label="Endereço"
+            register={register}
+            formErrors={formErrors}
+            placeholder="Digite o endereço"
+          />
+        </div>
+        <div className="sm:col-span-1">
+          <InputField
+            name={`${zodObj}.number` as Path<T>}
+            className={inputClassName}
+            label="Número"
+            register={register}
+            formErrors={formErrors}
+            placeholder="Digite o número"
+          />
+        </div>
+      </div>
       <InputField
         name={`${zodObj}.neighborhood` as Path<T>}
         className={inputClassName}
