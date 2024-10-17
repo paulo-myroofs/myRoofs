@@ -1,9 +1,9 @@
 "use client";
 
 import { Timestamp } from "firebase/firestore";
+import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 
-import Image from "next/image";
 import Button from "@/components/atoms/Button/button";
 import CompanyCard from "@/components/atoms/CompanyCard/companyCard";
 import LoadingComponent from "@/components/atoms/Loading/loading";
