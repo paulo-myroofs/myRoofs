@@ -10,7 +10,8 @@ const addressData = z.object({
     .string({ required_error: "Insira um valor" })
     .min(1, "Insira um valor"),
   number,
-  cep: numberWithAux
+  cep: numberWithAux,
+  city: z.string().min(1, "Insira um valor")
 });
 
 export default addressData;

@@ -59,7 +59,8 @@ const AptManagerSection = ({ aptManagerId }: { aptManagerId: string }) => {
           brazilStates.find((item) => item.label === aptManager?.state)
             ?.value ?? "",
         number: aptManager?.number ?? "",
-        cep: aptManager?.cep ?? ""
+        cep: aptManager?.cep ?? "",
+        city: aptManager?.city ?? ""
       },
       ownerEmail: aptManager?.email ?? ""
     }
@@ -85,7 +86,8 @@ const AptManagerSection = ({ aptManagerId }: { aptManagerId: string }) => {
         (item) => item.value === data.ownerAddressData.state
       )?.label as BrazilStatesOptionsType,
       number: data.ownerAddressData.number,
-      cep: unmask(data.ownerAddressData.cep)
+      cep: unmask(data.ownerAddressData.cep),
+      city: data.ownerAddressData.city
     };
     const { error } = await updateFirestoreDoc<AptManagerEntity>({
       documentPath: "/users/" + aptManagerId,

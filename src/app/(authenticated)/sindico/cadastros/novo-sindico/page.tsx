@@ -99,6 +99,7 @@ const NovoSindico = () => {
       )?.label as BrazilStatesOptionsType,
       number: data.ownerAddressData.number,
       cep: unmask(data.ownerAddressData.cep),
+      city: data.ownerAddressData.city,
       isSecondary: true
     };
 
