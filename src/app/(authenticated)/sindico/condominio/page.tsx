@@ -77,7 +77,13 @@ const Condo = () => {
 
   return (
     <section className="mx-auto w-11/12 max-w-[1500px] space-y-8">
-      <TitleAtom> {condo.name} </TitleAtom>
+      <div className="flex justify-between max-sm:max-w-[275px] max-sm:flex-col max-sm:gap-[19px]">
+        <TitleAtom> {condo.name} </TitleAtom>
+        <div className="código font-inter flex gap-2 rounded-2xl border border-[#000] px-6 py-2">
+          <h1 className="flex items-center">Código do Condomíno:</h1>
+          <h2 className="flex items-center">{condoId?.substring(0, 6)}</h2>
+        </div>
+      </div>
 
       <Accordion type="single" collapsible className="w-full">
         {data.map((item, index) => (
