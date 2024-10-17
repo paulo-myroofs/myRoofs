@@ -160,6 +160,7 @@ const CreateAssemblyModal = ({
     queryClient.invalidateQueries(["condoAssemblies", condoId]);
     reset();
     setImage(null);
+    setFile(null);
     onOpenChange(false);
   };
 
