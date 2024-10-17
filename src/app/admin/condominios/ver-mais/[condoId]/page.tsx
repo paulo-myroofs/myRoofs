@@ -3,9 +3,9 @@ import React from "react";
 
 import { Timestamp } from "firebase/firestore";
 import { File, User2, Users2 } from "lucide-react";
+import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 
-import Image from "next/image";
 import Button from "@/components/atoms/Button/button";
 import LoadingComponent from "@/components/atoms/Loading/loading";
 import TitleAtom from "@/components/atoms/TitleAtom/TitleAtom";
@@ -95,7 +95,7 @@ const MoreInfoCondo = () => {
             width={24}
             height={24}
             onClick={() => router.back()}
-            className="cursor-pointer mr-2"
+            className="mr-2 cursor-pointer"
           />
           <TitleAtom> {condo?.name}</TitleAtom>
         </div>

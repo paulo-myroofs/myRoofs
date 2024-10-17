@@ -70,7 +70,7 @@ export default function CompanyCondos() {
             width={24}
             height={24}
             onClick={() => router.back()}
-            className="cursor-pointer mr-2"
+            className="mr-2 cursor-pointer"
           />
           <TitleAtom> Condomínios Cadastrados de {company?.name}</TitleAtom>
         </div>
