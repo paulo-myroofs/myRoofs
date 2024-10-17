@@ -23,6 +23,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       onClick: () => router.push("/sindico/condominio")
     },
     {
+      label: "Meus condomínios",
+      onClick: () => router.push("/escolher-condominio")
+    },
+    {
       label: "Sair",
       onClick: () => {
         logout();
