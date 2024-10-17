@@ -42,7 +42,8 @@ const AptManagerData = ({ aptManagerId }: { aptManagerId: string }) => {
           brazilStates.find((item) => item.label === aptManager?.state)
             ?.value ?? "",
         number: aptManager?.number ?? "",
-        cep: aptManager?.cep ?? ""
+        cep: aptManager?.cep ?? "",
+        city: aptManager?.city ?? ""
       },
       ownerEmail: aptManager?.email ?? ""
     }
