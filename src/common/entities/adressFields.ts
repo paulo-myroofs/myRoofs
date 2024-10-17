@@ -6,4 +6,5 @@ export interface AddressFields {
   state: BrazilStatesOptionsType;
   number: string;
   cep: string;
+  city: string;
 }
