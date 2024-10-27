@@ -1,5 +1,14 @@
 import { Timestamp } from "./timestamp";
 
+export interface EmployeeAddress {
+  cep: string;
+  state: string;
+  city: string;
+  neighborhood: string;
+  address: string;
+  number: string;
+}
+
 export interface EmployeeEntity {
   id: string;
   image: string | null;
@@ -8,7 +17,7 @@ export interface EmployeeEntity {
   phone?: string;
   cpf: string;
   occupation: string;
-  address: string;
+  address: EmployeeAddress;
   createdAt: Timestamp;
   updatedAt: Timestamp;
   condominiumCode: string;
