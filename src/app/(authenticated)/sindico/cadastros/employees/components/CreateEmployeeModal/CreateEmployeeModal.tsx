@@ -10,6 +10,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { v4 } from "uuid";
 import z from "zod";
 
+import AddressInputsModal from "@/app/admin/nova-empresa/components/AddressInputsModal";
 import { EmployeeEntity } from "@/common/entities/employee";
 import Button from "@/components/atoms/Button/button";
 import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
@@ -46,10 +47,13 @@ export default function CreateEmployeeModal({
   );
   const [loading, setLoading] = useState(false);
   const {
-    register,
     handleSubmit,
+    register,
+    control,
+    watch,
     formState: { errors },
-    reset
+    reset,
+    setValue
   } = useForm<AddEmployeeForm>({
     resolver: zodResolver(AddEmployeeSchema),
     values: {
@@ -57,7 +61,14 @@ export default function CreateEmployeeModal({
       email: employeeData?.email ?? "",
       occupation: employeeData?.occupation ?? "",
       cpf: employeeData?.cpf ?? "",
-      address: employeeData?.address ?? "",
+      address: {
+        cep: employeeData?.address.cep ?? "",
+        state: employeeData?.address?.state ?? "",
+        city: employeeData?.address?.city ?? "",
+        neighborhood: employeeData?.address?.neighborhood ?? "",
+        address: employeeData?.address?.address ?? "",
+        number: employeeData?.address?.number ?? ""
+      },
       phone: employeeData?.phone ? formatToPhoneMask(employeeData?.phone) : ""
     }
   });
@@ -92,7 +103,6 @@ export default function CreateEmployeeModal({
       imageUrl = url;
 
       if (employeeData && employeeData.image) {
-        // is editting
         await deleteImage(employeeData.image);
       }
     }
@@ -279,10 +289,10 @@ export default function CreateEmployeeModal({
             placeholder="Digite aqui"
           />
         </div>
-        <div className="flex gap-4 max-sm:flex-wrap">
+        <div className="flex gap-3 max-sm:flex-wrap">
           <InputField
             name="occupation"
-            className={"w-full min-w-[215px] border-[#DEE2E6] bg-[#F8F9FA]"}
+            className={"w-full border-[#DEE2E6] bg-[#F8F9FA]"}
             label="Cargo"
             register={register}
             formErrors={errors}
@@ -290,7 +300,7 @@ export default function CreateEmployeeModal({
           />
           <InputField
             name="cpf"
-            className={"w-full min-w-[215px] border-[#DEE2E6] bg-[#F8F9FA]"}
+            className={"w-full border-[#DEE2E6] bg-[#F8F9FA]"}
             label="CPF"
             mask={"999.999.999-99"}
             register={register}
@@ -298,12 +308,12 @@ export default function CreateEmployeeModal({
             placeholder="000.000.000-00"
           />
         </div>
-        <div className="flex w-full gap-4 max-sm:flex-wrap">
+        <div className="flex w-full gap-3 max-sm:flex-wrap">
           <InputField
             name="email"
             disabled={!!employeeData}
             className={
-              "w-full min-w-[215px] border-[#DEE2E6] bg-[#F8F9FA] disabled:opacity-50"
+              "w-full border-[#DEE2E6] bg-[#F8F9FA] disabled:opacity-50"
             }
             label="Email"
             register={register}
@@ -312,7 +322,7 @@ export default function CreateEmployeeModal({
           />
           <InputField
             mask="(99) 99999-9999"
-            className={"w-full min-w-[215px] border-[#DEE2E6] bg-[#F8F9FA]"}
+            className={"w-full border-[#DEE2E6] bg-[#F8F9FA]"}
             name="phone"
             register={register}
             formErrors={errors}
@@ -321,13 +331,14 @@ export default function CreateEmployeeModal({
           />
         </div>
         <div className="w-full">
-          <InputField
-            name="address"
-            className={inputClassName}
-            label="Endereço"
+          <AddressInputsModal
+            control={control}
+            inputClassName={inputClassName}
             register={register}
             formErrors={errors}
-            placeholder="Digite o endereço"
+            zodObj="address"
+            setValue={setValue}
+            watchCep={unmask(watch("address.cep") ?? "")}
           />
         </div>
       </form>
