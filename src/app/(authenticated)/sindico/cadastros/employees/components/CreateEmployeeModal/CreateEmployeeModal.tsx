@@ -235,8 +235,8 @@ export default function CreateEmployeeModal({
           />
         </button>
       )}
-      <div className="flex gap-5 max-sm:flex-col">
-        <div className="relative flex h-[64px]  w-[64px] items-center justify-center overflow-hidden rounded-full bg-gray-400 bg-cover">
+      <div className="flex justify-between max-sm:flex-col">
+        <div className="relative mb-6 flex h-[64px] w-[64px] items-center justify-center overflow-hidden rounded-full bg-gray-400 bg-cover">
           {image ? (
             <Image
               className="object-cover"
