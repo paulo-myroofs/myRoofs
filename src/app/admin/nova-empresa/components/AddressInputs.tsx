@@ -20,7 +20,7 @@ export interface AddressInputsProps<T extends FieldValues> {
   register: UseFormRegister<T>;
   formErrors: FieldErrors<T>;
   control: Control<T>;
-  zodObj: "addressData" | "ownerAddressData";
+  zodObj: "addressData" | "ownerAddressData" | "address";
   watchCep: string;
   setValue: UseFormSetValue<T>;
 }
