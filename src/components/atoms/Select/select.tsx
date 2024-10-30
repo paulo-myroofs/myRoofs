@@ -44,12 +44,13 @@ const Select = ({
             className
           )}
         >
-          {value ? (
-            options.find((option) => option.value === value)?.label
-          ) : (
-            <span className="text-black/50">{placeholder}</span>
-          )}
-
+          <span className="max-w-[150px] truncate">
+            {value ? (
+              options.find((option) => option.value === value)?.label
+            ) : (
+              <span className="text-black/50">{placeholder}</span>
+            )}
+          </span>
           <ChevronDown className="h-5 w-5" />
         </Button>
       </PopoverTrigger>
