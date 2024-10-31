@@ -33,12 +33,12 @@ import { AddEditCondoFormProps } from "./types";
 const inputClassName = "border-[#DEE2E6] bg-[#F8F9FA]";
 type AddCondoForm = z.infer<typeof AddCondoSchema>;
 interface InternalOrgInputsType {
-  type: "Bloco" | "Torre";
+  type: "Bloco" | "Torre" | "Unidade" | "Quadra" | "Lote" | "Outro";
   names: string[];
 }
 
 const defaultInternalOrgInput = {
-  type: "Bloco" as "Bloco" | "Torre",
+  type: "Bloco" as "Bloco" | "Torre" | "Unidade" | "Quadra" | "Lote" | "Outro",
   names: [""]
 };
 
@@ -93,6 +93,8 @@ const AddEditCondoForm = ({
   const [internalOrgInputs, setInternalOrgInputs] = useState<
     InternalOrgInputsType | undefined
   >();
+  const [otherFormationName, setOtherFormationName] = useState("");
+
   const [housingInputs, setHousingInputs] = useState<
     HousingInputs | undefined
   >();
@@ -117,6 +119,9 @@ const AddEditCondoForm = ({
       return errorToast(
         "Adicione um nome de formação válidos em Organização Interna."
       );
+    if (internalOrgInputs?.type === "Outro") {
+      internalOrgInputs.names = [otherFormationName];
+    }
 
     setLoading(true);
 
@@ -327,30 +332,58 @@ const AddEditCondoForm = ({
           <Select
             className={inputClassName}
             value={internalOrgInputs?.type ?? ""}
-            disabled={
-              !!residents?.some((r) =>
-                internalOrgInputs?.names.includes(r.formationName)
-              )
-            }
-            onChange={(value) =>
+            onChange={(value) => {
               setInternalOrgInputs((prev) =>
                 prev
                   ? {
                       ...prev,
-                      type: value as "Bloco" | "Torre"
+                      type: value as
+                        | "Bloco"
+                        | "Torre"
+                        | "Unidade"
+                        | "Quadra"
+                        | "Lote"
+                        | "Outro",
+                      names: value === "Outro" ? prev.names : [""]
                     }
                   : {
-                      type: value as "Bloco" | "Torre",
-                      names: [""]
+                      type: value as
+                        | "Bloco"
+                        | "Torre"
+                        | "Unidade"
+                        | "Quadra"
+                        | "Lote"
+                        | "Outro",
+                      names: value === "Outro" ? [""] : [""]
                     }
-              )
-            }
+              );
+
+              if (value !== "Outro") {
+                setOtherFormationName("");
+              }
+            }}
             options={[
               { label: "Torre", value: "Torre" },
-              { label: "Bloco", value: "Bloco" }
+              { label: "Bloco", value: "Bloco" },
+              { label: "Unidade", value: "Unidade" },
+              { label: "Quadra", value: "Quadra" },
+              { label: "Lote", value: "Lote" },
+              { label: "Outro", value: "Outro" }
             ]}
           />
         </div>
+
+        {internalOrgInputs?.type === "Outro" && (
+          <div className="relative">
+            <InputField
+              className={inputClassName}
+              label="Especificar Outro"
+              value={otherFormationName}
+              onChange={(e) => setOtherFormationName(e.target.value)}
+              placeholder="Digite a formação"
+            />
+          </div>
+        )}
 
         {Array.from(
           { length: internalOrgInputs?.names.length ?? 1 },
@@ -358,13 +391,13 @@ const AddEditCondoForm = ({
         ).map((index) => (
           <div className="relative" key={index as number}>
             <InputField
-              disabled={
-                !!residents?.find(
-                  (r) =>
-                    r.formationName ===
-                    internalOrgInputs?.names[index as number]
-                )
-              }
+              // disabled={
+              //   !!residents?.find(
+              //     (r) =>
+              //       r.formationName ===
+              //       internalOrgInputs?.names[index as number]
+              //   )
+              // }
               className={inputClassName + " disabled:opacity-50"}
               label={"Nome da formação " + (index + 1)}
               value={internalOrgInputs?.names[index as number]}
