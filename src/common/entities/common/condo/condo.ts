@@ -12,7 +12,7 @@ export interface CondoEntity {
   cnpj: string;
   address: string;
   phone: string;
-  formationType: "Bloco" | "Torre" | "Unidade" | "Quadra" | "Lote" | "Outro";
+  formationType: "Bloco" | "Torre";
   formationNames: string[];
   housingName: string;
   floorsQty: number;
