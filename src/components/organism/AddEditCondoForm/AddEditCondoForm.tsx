@@ -42,6 +42,19 @@ const defaultInternalOrgInput = {
   names: [""]
 };
 
+interface HousingInputs {
+  type:
+    | "Apartamento"
+    | "Bangalô"
+    | "Casa"
+    | "Cabana"
+    | "Chalé"
+    | "Kitnet"
+    | "Studio"
+    | "Outro"; // Usando o tipo que você acabou de definir
+  names: string[];
+}
+
 const AddEditCondoForm = ({
   companyId,
   aptManagersIds,
@@ -81,6 +94,12 @@ const AddEditCondoForm = ({
     InternalOrgInputsType | undefined
   >();
   const [otherFormationName, setOtherFormationName] = useState("");
+
+  const [housingInputs, setHousingInputs] = useState<
+    HousingInputs | undefined
+  >();
+
+  const housingNameValue = housingInputs?.names?.[0] ?? "";
 
   const handleForm = async (data: AddCondoForm) => {
     if (!aptManagersIds) return;
@@ -134,7 +153,7 @@ const AddEditCondoForm = ({
       cnpj: unmask(data.cnpj),
       address: data.address,
       phone: unmask(data.phone),
-      housingName: data.housingName,
+      housingName: housingNameValue,
       floorsQty: parseInt(data.floorsQty),
       garageQty: parseInt(data.garageSpacesQty),
       formationType: internalOrgInputs.type,
@@ -245,7 +264,7 @@ const AddEditCondoForm = ({
               className={inputClassName}
               label="CNPJ"
               register={register}
-              placeholder="Digite o CNPJ"
+              placeholder="Digite o nome"
             />
           </div>
           <div className="flex flex-col gap-1">
@@ -455,14 +474,71 @@ const AddEditCondoForm = ({
           Unidade habitacionais
         </TitleAtom>
 
-        <InputField
-          name="housingName"
-          className={inputClassName}
-          label="Nome da habitação"
-          register={register}
-          formErrors={errors}
-          placeholder="Apartamento, casa ..."
-        />
+        <div className="flex w-full flex-col gap-1">
+          <Label>Unidades Habitacionais</Label>
+          <Select
+            className={inputClassName}
+            value={housingInputs?.type ?? ""}
+            onChange={(value) =>
+              setHousingInputs((prev) =>
+                prev
+                  ? {
+                      ...prev,
+                      type: value as
+                        | "Apartamento"
+                        | "Bangalô"
+                        | "Casa"
+                        | "Cabana"
+                        | "Chalé"
+                        | "Kitnet"
+                        | "Studio"
+                        | "Outro"
+                    }
+                  : {
+                      type: value as
+                        | "Apartamento"
+                        | "Bangalô"
+                        | "Casa"
+                        | "Cabana"
+                        | "Chalé"
+                        | "Kitnet"
+                        | "Studio"
+                        | "Outro",
+                      names: [""]
+                    }
+              )
+            }
+            options={[
+              { label: "Apartamento", value: "Apartamento" },
+              { label: "Bangalô", value: "Bangalô" },
+              { label: "Casa", value: "Casa" },
+              { label: "Cabana", value: "Cabana" },
+              { label: "Chalé", value: "Chalé" },
+              { label: "Kitnet", value: "Kitnet" },
+              { label: "Studio", value: "Studio" },
+              { label: "Outro", value: "Outro" }
+            ]}
+          />
+        </div>
+        {housingInputs?.type === "Outro" && (
+          <div className="relative">
+            <InputField
+              className={inputClassName}
+              label="Especificar Outro"
+              value={housingInputs?.names[0] || ""}
+              onChange={(e) =>
+                setHousingInputs((prev) => {
+                  if (!prev) return;
+                  return {
+                    ...prev,
+                    names: [e.target.value]
+                  };
+                })
+              }
+              placeholder="Digite a unidade habitacional"
+            />
+          </div>
+        )}
         <InputField
           name="floorsQty"
           className={inputClassName}
