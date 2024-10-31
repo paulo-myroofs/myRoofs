@@ -15,17 +15,17 @@ import InputField from "@/components/molecules/InputField/inputField";
 import SelectField from "@/components/molecules/SelectField/selectField";
 import useAddressByCep from "@/hooks/useAddressByCep";
 
-export interface AddressInputsProps<T extends FieldValues> {
+export interface AddressInputsModalProps<T extends FieldValues> {
   inputClassName: string;
   register: UseFormRegister<T>;
   formErrors: FieldErrors<T>;
   control: Control<T>;
-  zodObj: "addressData" | "ownerAddressData" | "address";
+  zodObj: "address" | "ownerAddress";
   watchCep: string;
   setValue: UseFormSetValue<T>;
 }
 
-const AddressInputs = <T extends FieldValues>({
+const AddressInputsModal = <T extends FieldValues>({
   inputClassName,
   register,
   formErrors,
@@ -33,7 +33,7 @@ const AddressInputs = <T extends FieldValues>({
   zodObj,
   watchCep,
   setValue
-}: AddressInputsProps<T>) => {
+}: AddressInputsModalProps<T>) => {
   const [enableSearch, setEnableSearch] = useState(false);
   const { data, isFetching, refetch } = useAddressByCep(watchCep, enableSearch);
 
@@ -62,7 +62,7 @@ const AddressInputs = <T extends FieldValues>({
   }, [data, setValue, zodObj]);
 
   return (
-    <>
+    <div className="flex flex-col gap-y-4">
       <div className="grid gap-3 sm:grid-cols-3">
         <InputField
           mask={"99999-999"}
@@ -128,8 +128,8 @@ const AddressInputs = <T extends FieldValues>({
         formErrors={formErrors}
         placeholder="Digite o nome do bairro"
       />
-    </>
+    </div>
   );
 };
 
-export default AddressInputs;
+export default AddressInputsModal;

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Timestamp } from "firebase/firestore";
@@ -8,12 +8,15 @@ import { useForm } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 import { z } from "zod";
 
+import AddressInputs from "@/app/admin/nova-empresa/components/AddressInputs";
 import { inputClassName } from "@/app/contants";
+import { brazilStates } from "@/common/constants/brazilStates";
+import { BrazilStatesOptionsType } from "@/common/entities/common/brazilStatesOptionsType";
 import { EmployeeEntity } from "@/common/entities/employee";
 import Button from "@/components/atoms/Button/button";
 import InputField from "@/components/molecules/InputField/inputField";
 import useProfile from "@/hooks/queries/useProfile";
-import { errorToast } from "@/hooks/useAppToast";
+import { errorToast, successToast } from "@/hooks/useAppToast";
 import useAuth from "@/hooks/useAuth";
 import { queryClient } from "@/store/providers/queryClient";
 import { updateFirestoreDoc } from "@/store/services";
@@ -36,7 +39,10 @@ const Perfil = () => {
     handleSubmit,
     register,
     formState: { errors },
-    reset
+    reset,
+    control,
+    watch,
+    setValue
   } = useForm<EditEmployeeForm>({
     mode: "all",
     criteriaMode: "all",
@@ -44,7 +50,16 @@ const Perfil = () => {
     values: {
       name: profile?.name ?? "",
       email: profile?.email ?? "",
-      address: profile?.address ?? "",
+      address: {
+        address: profile?.address?.address ?? "",
+        city: profile?.address?.city ?? "",
+        state:
+          brazilStates.find((item) => item.label === profile?.address?.state)
+            ?.value ?? "",
+        number: profile?.address?.number ?? "",
+        cep: profile?.address?.cep ?? "",
+        neighborhood: profile?.address?.neighborhood ?? ""
+      },
       occupation: profile?.occupation ?? "",
       phone: profile?.phone ? formatToPhoneMask(profile.phone) : "",
       cpf: profile?.cpf ?? ""
@@ -55,19 +70,23 @@ const Perfil = () => {
     setLoading(true);
     let imageUrl = profile?.image ?? null;
     if (typeof image !== "string" && !!image) {
-      const { image: url, error: errorUpload } = await uploadImage(image);
+      const { image: url, error: errorUpload } = await uploadImage(
+        image as File
+      );
 
       if (errorUpload || !url) {
+        setLoading(false);
         errorToast(
           "Não foi possível fazer upload de imagem, entrar em contato."
         );
       }
-
       imageUrl = url;
+
       if (isEdit && profile?.image) {
-        await deleteImage(profile.image); // just uploaded the new one in line above
+        await deleteImage(profile.image);
       }
     }
+
     if (profile?.image && !image && isEdit) {
       await deleteImage(profile.image);
     }
@@ -78,7 +97,15 @@ const Perfil = () => {
       phone: unmask(data.phone),
       cpf: data.cpf,
       occupation: data.occupation,
-      address: data.address,
+      address: {
+        cep: unmask(data.address.cep),
+        state: brazilStates.find((item) => item.value === data.address.state)
+          ?.label as BrazilStatesOptionsType,
+        city: data.address.city,
+        neighborhood: data.address.neighborhood,
+        address: data.address.address,
+        number: data.address.number
+      },
       updatedAt: Timestamp.now()
     } as Partial<EmployeeEntity>;
 
@@ -86,6 +113,8 @@ const Perfil = () => {
       documentPath: `users/${userUid}`,
       data: finalData
     });
+    setImage(imageUrl);
+    successToast("Perfil atualizado com sucesso.");
     setLoading(false);
     setIsEdit(false);
     queryClient.invalidateQueries(["profile", userUid]);
@@ -99,12 +128,6 @@ const Perfil = () => {
       setImage(file);
     }
   };
-
-  useEffect(() => {
-    if (profile && profile.image && !image) {
-      setImage(profile.image);
-    }
-  }, [profile, image]);
 
   return (
     <section className="mx-auto flex w-11/12 max-w-[600px] flex-col items-center gap-y-8">
@@ -123,12 +146,18 @@ const Perfil = () => {
           inputClassName
         )}
       >
-        {image ? (
+        {image || profile?.image ? (
           <Image
-            src={typeof image === "string" ? image : URL.createObjectURL(image)}
+            src={
+              typeof image === "string"
+                ? image
+                : image instanceof File
+                  ? URL.createObjectURL(image)
+                  : profile?.image || ""
+            }
             fill
             className="object-cover"
-            alt="Imagem "
+            alt="Imagem de perfil"
           />
         ) : (
           <strong className="text-sm">Clique para fazer upload</strong>
@@ -174,13 +203,14 @@ const Perfil = () => {
             placeholder="Digite aqui"
           />{" "}
         </div>
-        <InputField
-          className={inputClassName}
-          label="Endereço"
-          name="address"
+        <AddressInputs
+          control={control}
+          inputClassName={inputClassName}
           register={register}
           formErrors={errors}
-          placeholder="Digite aqui"
+          zodObj="address"
+          setValue={setValue}
+          watchCep={unmask(watch("address.cep") ?? "")}
         />{" "}
       </form>
 
