@@ -34,26 +34,15 @@ const inputClassName = "border-[#DEE2E6] bg-[#F8F9FA]";
 type AddCondoForm = z.infer<typeof AddCondoSchema>;
 interface InternalOrgInputsType {
   type: "Bloco" | "Torre" | "Unidade" | "Quadra" | "Lote" | "Outro";
+  type: "Bloco" | "Torre" | "Unidade" | "Quadra" | "Lote" | "Outro";
   names: string[];
 }
 
 const defaultInternalOrgInput = {
   type: "Bloco" as "Bloco" | "Torre" | "Unidade" | "Quadra" | "Lote" | "Outro",
+  type: "Bloco" as "Bloco" | "Torre" | "Unidade" | "Quadra" | "Lote" | "Outro",
   names: [""]
 };
-
-interface HousingInputs {
-  type:
-    | "Apartamento"
-    | "Bangalô"
-    | "Casa"
-    | "Cabana"
-    | "Chalé"
-    | "Kitnet"
-    | "Studio"
-    | "Outro"; // Usando o tipo que você acabou de definir
-  names: string[];
-}
 
 const AddEditCondoForm = ({
   companyId,
@@ -122,6 +111,9 @@ const AddEditCondoForm = ({
     if (internalOrgInputs?.type === "Outro") {
       internalOrgInputs.names = [otherFormationName];
     }
+    if (internalOrgInputs?.type === "Outro") {
+      internalOrgInputs.names = [otherFormationName];
+    }
 
     setLoading(true);
 
@@ -153,7 +145,7 @@ const AddEditCondoForm = ({
       cnpj: unmask(data.cnpj),
       address: data.address,
       phone: unmask(data.phone),
-      housingName: housingNameValue,
+      housingName: data.housingName,
       floorsQty: parseInt(data.floorsQty),
       garageQty: parseInt(data.garageSpacesQty),
       formationType: internalOrgInputs.type,
@@ -264,7 +256,7 @@ const AddEditCondoForm = ({
               className={inputClassName}
               label="CNPJ"
               register={register}
-              placeholder="Digite o nome"
+              placeholder="Digite o CNPJ"
             />
           </div>
           <div className="flex flex-col gap-1">
@@ -333,10 +325,19 @@ const AddEditCondoForm = ({
             className={inputClassName}
             value={internalOrgInputs?.type ?? ""}
             onChange={(value) => {
+            onChange={(value) => {
               setInternalOrgInputs((prev) =>
                 prev
                   ? {
                       ...prev,
+                      type: value as
+                        | "Bloco"
+                        | "Torre"
+                        | "Unidade"
+                        | "Quadra"
+                        | "Lote"
+                        | "Outro",
+                      names: value === "Outro" ? prev.names : [""]
                       type: value as
                         | "Bloco"
                         | "Torre"
@@ -355,7 +356,21 @@ const AddEditCondoForm = ({
                         | "Lote"
                         | "Outro",
                       names: value === "Outro" ? [""] : [""]
+                      type: value as
+                        | "Bloco"
+                        | "Torre"
+                        | "Unidade"
+                        | "Quadra"
+                        | "Lote"
+                        | "Outro",
+                      names: value === "Outro" ? [""] : [""]
                     }
+              );
+
+              if (value !== "Outro") {
+                setOtherFormationName("");
+              }
+            }}
               );
 
               if (value !== "Outro") {
@@ -364,6 +379,11 @@ const AddEditCondoForm = ({
             }}
             options={[
               { label: "Torre", value: "Torre" },
+              { label: "Bloco", value: "Bloco" },
+              { label: "Unidade", value: "Unidade" },
+              { label: "Quadra", value: "Quadra" },
+              { label: "Lote", value: "Lote" },
+              { label: "Outro", value: "Outro" }
               { label: "Bloco", value: "Bloco" },
               { label: "Unidade", value: "Unidade" },
               { label: "Quadra", value: "Quadra" },
@@ -385,12 +405,31 @@ const AddEditCondoForm = ({
           </div>
         )}
 
+        {internalOrgInputs?.type === "Outro" && (
+          <div className="relative">
+            <InputField
+              className={inputClassName}
+              label="Especificar Outro"
+              value={otherFormationName}
+              onChange={(e) => setOtherFormationName(e.target.value)}
+              placeholder="Digite a formação"
+            />
+          </div>
+        )}
+
         {Array.from(
           { length: internalOrgInputs?.names.length ?? 1 },
           (_, index) => index
         ).map((index) => (
           <div className="relative" key={index as number}>
             <InputField
+              // disabled={
+              //   !!residents?.find(
+              //     (r) =>
+              //       r.formationName ===
+              //       internalOrgInputs?.names[index as number]
+              //   )
+              // }
               // disabled={
               //   !!residents?.find(
               //     (r) =>
@@ -474,71 +513,14 @@ const AddEditCondoForm = ({
           Unidade habitacionais
         </TitleAtom>
 
-        <div className="flex w-full flex-col gap-1">
-          <Label>Unidades Habitacionais</Label>
-          <Select
-            className={inputClassName}
-            value={housingInputs?.type ?? ""}
-            onChange={(value) =>
-              setHousingInputs((prev) =>
-                prev
-                  ? {
-                      ...prev,
-                      type: value as
-                        | "Apartamento"
-                        | "Bangalô"
-                        | "Casa"
-                        | "Cabana"
-                        | "Chalé"
-                        | "Kitnet"
-                        | "Studio"
-                        | "Outro"
-                    }
-                  : {
-                      type: value as
-                        | "Apartamento"
-                        | "Bangalô"
-                        | "Casa"
-                        | "Cabana"
-                        | "Chalé"
-                        | "Kitnet"
-                        | "Studio"
-                        | "Outro",
-                      names: [""]
-                    }
-              )
-            }
-            options={[
-              { label: "Apartamento", value: "Apartamento" },
-              { label: "Bangalô", value: "Bangalô" },
-              { label: "Casa", value: "Casa" },
-              { label: "Cabana", value: "Cabana" },
-              { label: "Chalé", value: "Chalé" },
-              { label: "Kitnet", value: "Kitnet" },
-              { label: "Studio", value: "Studio" },
-              { label: "Outro", value: "Outro" }
-            ]}
-          />
-        </div>
-        {housingInputs?.type === "Outro" && (
-          <div className="relative">
-            <InputField
-              className={inputClassName}
-              label="Especificar Outro"
-              value={housingInputs?.names[0] || ""}
-              onChange={(e) =>
-                setHousingInputs((prev) => {
-                  if (!prev) return;
-                  return {
-                    ...prev,
-                    names: [e.target.value]
-                  };
-                })
-              }
-              placeholder="Digite a unidade habitacional"
-            />
-          </div>
-        )}
+        <InputField
+          name="housingName"
+          className={inputClassName}
+          label="Nome da habitação"
+          register={register}
+          formErrors={errors}
+          placeholder="Apartamento, casa ..."
+        />
         <InputField
           name="floorsQty"
           className={inputClassName}
