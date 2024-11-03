@@ -1,7 +1,6 @@
 "use client";
-import React from "react";
+import { useState } from "react";
 
-import { Timestamp } from "firebase/firestore";
 import { File, User2, Users2 } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
@@ -16,29 +15,17 @@ import {
   AccordionTrigger
 } from "@/components/ui/accordion";
 import useCondo from "@/hooks/queries/condos/useCondo";
-import { successToast } from "@/hooks/useAppToast";
-import { queryClient } from "@/store/providers/queryClient";
-import { updateFirestoreDoc } from "@/store/services";
 
 import AptManagerData from "./components/AptManagerData/AptManagerData";
 import CondoData from "./components/CondoData/CondoData";
+import CreateDeleteCondoModal from "./components/CreateDeleteCondoModal/CreateDeleteCondoModal";
 import UsersSection from "./components/UsersSection/UsersSection";
 
 const MoreInfoCondo = () => {
-  const router = useRouter();
   const { condoId } = useParams();
+  const [modalOpen, setModalOpen] = useState(false);
   const { data: condo, isLoading, isError } = useCondo(condoId as string);
-
-  const handleEndCondo = async () => {
-    await updateFirestoreDoc({
-      documentPath: `/condominium/${condoId}`,
-      data: { endedAt: Timestamp.now() }
-    });
-    queryClient.invalidateQueries(["condominium"]);
-    queryClient.invalidateQueries(["condominium", "endedCondominium"]);
-    successToast("Condomínio encerrado com sucesso!");
-    router.push("/admin/historico");
-  };
+  const router = useRouter();
 
   const data = [
     {
@@ -86,31 +73,41 @@ const MoreInfoCondo = () => {
   if (!condo) return;
 
   return (
-    <section className="mx-auto w-11/12 max-w-[1500px] space-y-8">
-      <div className="flex flex-col justify-between gap-y-4 sm:flex-row sm:items-center">
-        <div className="flex items-center">
-          <Image
-            src="/arrow_back.svg"
-            alt="Voltar"
-            width={24}
-            height={24}
-            onClick={() => router.back()}
-            className="mr-2 cursor-pointer"
-          />
-          <TitleAtom> {condo?.name}</TitleAtom>
+    <>
+      <section className="mx-auto w-11/12 max-w-[1500px] space-y-8">
+        <div className="flex flex-col justify-between gap-y-4 sm:flex-row sm:items-center">
+          <div className="flex items-center">
+            <Image
+              src="/arrow_back.svg"
+              alt="Voltar"
+              width={24}
+              height={24}
+              onClick={() => router.back()}
+              className="mr-2 cursor-pointer"
+            />
+            <TitleAtom> {condo?.name}</TitleAtom>
+          </div>
+          <Button onClick={() => setModalOpen(true)}>
+            {" "}
+            Encerrar Condomínio
+          </Button>
         </div>
-        <Button onClick={handleEndCondo}> Encerrar Condomínio</Button>
-      </div>
 
-      <Accordion type="single" collapsible className="w-full">
-        {data.map((item, index) => (
-          <AccordionItem value={`item-${index}`} key={`item-${index}`}>
-            <AccordionTrigger>{item.trigger}</AccordionTrigger>
-            <AccordionContent>{item.content}</AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
-    </section>
+        <Accordion type="single" collapsible className="w-full">
+          {data.map((item, index) => (
+            <AccordionItem value={`item-${index}`} key={`item-${index}`}>
+              <AccordionTrigger>{item.trigger}</AccordionTrigger>
+              <AccordionContent>{item.content}</AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </section>
+      <CreateDeleteCondoModal
+        isOpen={modalOpen}
+        onOpenChange={setModalOpen}
+        condoData={condo}
+      ></CreateDeleteCondoModal>
+    </>
   );
 };
 
