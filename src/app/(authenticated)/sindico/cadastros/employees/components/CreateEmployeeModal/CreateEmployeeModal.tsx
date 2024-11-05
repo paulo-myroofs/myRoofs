@@ -10,9 +10,6 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { v4 } from "uuid";
 import z from "zod";
 
-import AddressInputsModal from "@/app/admin/nova-empresa/components/AddressInputsModal";
-import { brazilStates } from "@/common/constants/brazilStates";
-import { BrazilStatesOptionsType } from "@/common/entities/common/brazilStatesOptionsType";
 import { EmployeeEntity } from "@/common/entities/employee";
 import Button from "@/components/atoms/Button/button";
 import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
@@ -34,6 +31,7 @@ import unmask from "@/utils/unmask";
 import AddEmployeeSchema from "@/validations/aptManager/AddEmployee";
 
 import { EmployeeModalProps } from "./types";
+import AddressInputsModal from "@/app/admin/nova-empresa/components/AddressInputsModal";
 
 type AddEmployeeForm = z.infer<typeof AddEmployeeSchema>;
 const inputClassName = "baorder-[#DEE2E6] bg-[#F8F9FA]";
@@ -65,10 +63,7 @@ export default function CreateEmployeeModal({
       cpf: employeeData?.cpf ?? "",
       address: {
         cep: employeeData?.address.cep ?? "",
-        state:
-          brazilStates.find(
-            (item) => item.label === employeeData?.address?.state
-          )?.value ?? "",
+        state: employeeData?.address?.state ?? "",
         city: employeeData?.address?.city ?? "",
         neighborhood: employeeData?.address?.neighborhood ?? "",
         address: employeeData?.address?.address ?? "",
@@ -117,15 +112,7 @@ export default function CreateEmployeeModal({
       cpf: unmask(data.cpf),
       phone: unmask(data.phone),
       email: data.email,
-      address: {
-        cep: unmask(data.address.cep),
-        state: brazilStates.find((item) => item.value === data.address.state)
-          ?.label as BrazilStatesOptionsType,
-        city: data.address.city,
-        neighborhood: data.address.neighborhood,
-        address: data.address.address,
-        number: data.address.number
-      },
+      address: data.address,
       occupation: data.occupation,
       image: imageUrl,
       condominiumCode: condoId,
@@ -172,7 +159,6 @@ export default function CreateEmployeeModal({
           updatedAt: Timestamp.now()
         } as EmployeeEntity
       });
-      setImage(imageUrl);
       successToast("Funcionário atualizado com sucesso.");
     }
     setLoading(false);
@@ -249,20 +235,16 @@ export default function CreateEmployeeModal({
           />
         </button>
       )}
-      <div className="flex justify-between max-sm:flex-col">
-        <div className="relative mb-6 flex h-[64px] w-[64px] items-center justify-center overflow-hidden rounded-full bg-gray-400 bg-cover">
-          {image || employeeData?.image ? (
+      <div className="flex gap-5 max-sm:flex-col">
+        <div className="relative flex h-[64px]  w-[64px] items-center justify-center overflow-hidden rounded-full bg-gray-400 bg-cover">
+          {image ? (
             <Image
               className="object-cover"
               fill
               src={
-                typeof image === "string"
-                  ? image
-                  : image instanceof File
-                    ? URL.createObjectURL(image)
-                    : employeeData?.image || ""
+                typeof image === "string" ? image : URL.createObjectURL(image)
               }
-              alt="Imagem do funcionário"
+              alt="Imagem"
             />
           ) : (
             <Camera />

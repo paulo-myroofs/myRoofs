@@ -121,12 +121,12 @@ const AddressInputsModal = <T extends FieldValues>({
         </div>
       </div>
       <InputField
-        name={`${zodObj}.neighborhood` as Path<T>}
-        className={inputClassName}
-        label="Bairro"
-        register={register}
-        formErrors={formErrors}
-        placeholder="Digite o nome do bairro"
+          name={`${zodObj}.neighborhood` as Path<T>}
+          className={inputClassName}
+          label="Bairro"
+          register={register}
+          formErrors={formErrors}
+          placeholder="Digite o nome do bairro"
       />
     </div>
   );
