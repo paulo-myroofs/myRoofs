@@ -10,7 +10,7 @@ export interface CondoEntity {
   name: string;
   image: string;
   cnpj: string;
-  address: string;
+  address: CondoAddress;
   phone: string;
   formationType: "Bloco" | "Torre" | "Unidade" | "Quadra" | "Lote" | "Outro";
   formationNames: string[];
@@ -23,4 +23,13 @@ export interface CondoEntity {
   regulationsDoc?: string | null;
   createdAt: Timestamp;
   endedAt: Timestamp | null;
+}
+
+export interface CondoAddress {
+  cep: string;
+  state: string;
+  city: string;
+  neighborhood: string;
+  address: string;
+  number: string;
 }
