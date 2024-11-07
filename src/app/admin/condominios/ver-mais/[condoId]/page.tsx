@@ -3,9 +3,8 @@ import React from "react";
 
 import { Timestamp } from "firebase/firestore";
 import { File, User2, Users2 } from "lucide-react";
-import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
-
+import Image from "next/image";
 import Button from "@/components/atoms/Button/button";
 import LoadingComponent from "@/components/atoms/Loading/loading";
 import TitleAtom from "@/components/atoms/TitleAtom/TitleAtom";
@@ -21,6 +20,7 @@ import { queryClient } from "@/store/providers/queryClient";
 import { updateFirestoreDoc } from "@/store/services";
 
 import AptManagerData from "./components/AptManagerData/AptManagerData";
+import AdminHistory from "./components/AdminHistory/AdminHistory";
 import CondoData from "./components/CondoData/CondoData";
 import UsersSection from "./components/UsersSection/UsersSection";
 
@@ -62,12 +62,23 @@ const MoreInfoCondo = () => {
     {
       trigger: (
         <div className="flex items-center gap-4 py-2 text-base font-regular md:text-[21px]">
-          <Users2 strokeWidth={2} />
+          <Users2 strokeWidth={2}/>
           <span>Dados do responsável legal</span>
         </div>
       ),
       content: (
-        <AptManagerData aptManagerId={condo?.aptManagersIds[0] as string} />
+        <AptManagerData aptManagerId={condo?.aptManagersIds[0] as string}/>
+      )
+    },
+    {
+      trigger: (
+        <div className="flex items-center gap-4 py-2 text-base font-regular md:text-[21px]">
+          <Users2 strokeWidth={2}/>
+          <span>Histórico de administradores</span>
+        </div>
+      ),
+      content: (
+        <AdminHistory condoId={condoId as string} />
       )
     }
   ];
@@ -95,11 +106,11 @@ const MoreInfoCondo = () => {
             width={24}
             height={24}
             onClick={() => router.back()}
-            className="mr-2 cursor-pointer"
+            className="cursor-pointer mr-2"
           />
           <TitleAtom> {condo?.name}</TitleAtom>
         </div>
-        <Button onClick={handleEndCondo}> Encerrar Condomínio</Button>
+        <Button onClick={handleEndCondo}>Encerrar Condomínio</Button>
       </div>
 
       <Accordion type="single" collapsible className="w-full">
