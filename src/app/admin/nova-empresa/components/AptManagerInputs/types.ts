@@ -14,4 +14,5 @@ export interface AptManagerInputsProps<T extends FieldValues> {
   control: Control<T>;
   setValue: UseFormSetValue<T>;
   hideEmail?: boolean;
+  emailDisabled?: boolean;
 }
