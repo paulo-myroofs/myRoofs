@@ -73,13 +73,15 @@ const CreateAssemblyModal = ({
     if (!file) {
       return errorToast("Adicione arquivo.");
     }
-  
+
     setLoading(true);
-  
+
     // Função de upload para a imagem
     const uploadImageIfNeeded = async () => {
       if (typeof image !== "string" && !!image) {
-        const { image: url, error: errorUpload } = await uploadImage(image as File);
+        const { image: url, error: errorUpload } = await uploadImage(
+          image as File
+        );
         if (errorUpload || !url) {
           throw new Error("Não foi possível fazer upload da imagem.");
         }
@@ -91,11 +93,13 @@ const CreateAssemblyModal = ({
       }
       return assemblyData?.image ?? null; // Retorna a imagem existente se não houver novo upload
     };
-  
+
     // Função de upload para o arquivo
     const uploadFileIfNeeded = async () => {
       if (typeof file !== "string" && !!file) {
-        const { fileUrl: url, error: errorUpload } = await uploadFile(file as File);
+        const { fileUrl: url, error: errorUpload } = await uploadFile(
+          file as File
+        );
         if (errorUpload || !url) {
           throw new Error("Não foi possível fazer upload do arquivo.");
         }
@@ -107,23 +111,23 @@ const CreateAssemblyModal = ({
       }
       return assemblyData?.meetingFileUrl ?? null; // Retorna o arquivo existente se não houver novo upload
     };
-  
+
     try {
       // Executa os uploads de imagem e arquivo em paralelo
       const [imageUrl, fileUrl] = await Promise.all([
         uploadImageIfNeeded(),
-        uploadFileIfNeeded(),
+        uploadFileIfNeeded()
       ]);
-  
+
       const finalData: Partial<CondoAssembly> = {
         about: data.title,
         text: data.description,
         image: imageUrl as string,
         meetingFileUrl: fileUrl as string,
         condominiumId: condoId as string,
-        creatorId: userUid,
+        creatorId: userUid
       };
-  
+
       // Criação ou atualização do documento no Firestore
       if (!assemblyData) {
         await createFirestoreDoc<Omit<CondoAssembly, "id">>({
@@ -131,8 +135,8 @@ const CreateAssemblyModal = ({
           data: {
             ...finalData,
             createdAt: Timestamp.now(),
-            updatedAt: Timestamp.now(),
-          } as CondoAssembly,
+            updatedAt: Timestamp.now()
+          } as CondoAssembly
         });
         await sendNotification({
           content: `Ata de reunião do dia ${new Date().toLocaleDateString()} já disponível`,
@@ -141,8 +145,8 @@ const CreateAssemblyModal = ({
           type: "survey",
           users: (residents ?? []).map((resident) => ({
             tokens: resident?.tokens ?? [],
-            userId: resident?.id ?? "",
-          })),
+            userId: resident?.id ?? ""
+          }))
         });
         successToast("Nova assembleia adicionada.");
       } else {
@@ -150,25 +154,26 @@ const CreateAssemblyModal = ({
           documentPath: `/condoAssemblies/${assemblyData.id}`,
           data: {
             ...finalData,
-            updatedAt: Timestamp.now(),
-          } as CondoAssembly,
+            updatedAt: Timestamp.now()
+          } as CondoAssembly
         });
         successToast("Assembleia editada com sucesso!");
       }
-  
+
       queryClient.invalidateQueries(["condoAssemblies", condoId]);
       reset();
       setImage(null);
       setFile(null);
       onOpenChange(false);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Erro desconhecido";
+      const errorMessage =
+        error instanceof Error ? error.message : "Erro desconhecido";
       errorToast(errorMessage);
     } finally {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     if (assemblyData && assemblyData.image && !image) {
       setImage(assemblyData.image);

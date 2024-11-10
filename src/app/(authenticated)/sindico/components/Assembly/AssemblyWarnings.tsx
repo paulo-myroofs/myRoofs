@@ -24,15 +24,19 @@ const AssemblyWarnings = () => {
         </h1>
 
         <div className="w-full space-y-4 sm:w-[80%]">
-        {condoAssemblies
+          {condoAssemblies
             .sort((a, b) => {
-              const dateA = new Date(Math.max(a.createdAt.seconds, a.updatedAt.seconds) * 1000);
-              const dateB = new Date(Math.max(b.createdAt.seconds, b.updatedAt.seconds) * 1000);
+              const dateA = new Date(
+                Math.max(a.createdAt.seconds, a.updatedAt.seconds) * 1000
+              );
+              const dateB = new Date(
+                Math.max(b.createdAt.seconds, b.updatedAt.seconds) * 1000
+              );
               return dateB.getTime() - dateA.getTime();
             })
             .map((item) => (
               <AssemblyWarningCard key={item.id} condoAssembly={item} />
-          ))}
+            ))}
         </div>
 
         <Button
