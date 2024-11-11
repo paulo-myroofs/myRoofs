@@ -1,11 +1,12 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { formatToCPF } from "brazilian-values";
+
 import { AdministratorEntity } from "@/common/entities/administrator";
 
 export const columns: ColumnDef<AdministratorEntity>[] = [
   {
     header: "Cargo",
-    accessorKey: "occupation"
+    accessorKey: "positionOptions"
   },
   {
     header: "Nome",
@@ -19,6 +20,6 @@ export const columns: ColumnDef<AdministratorEntity>[] = [
   },
   {
     header: "E-mail",
-    accessorKey: "email",
+    accessorKey: "email"
   }
 ];

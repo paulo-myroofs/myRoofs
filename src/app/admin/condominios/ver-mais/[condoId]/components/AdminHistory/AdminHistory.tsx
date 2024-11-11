@@ -1,13 +1,16 @@
 "use client";
 
 import { useState } from "react";
+
+import { useRouter } from "next/navigation";
 import { twMerge } from "tailwind-merge";
+
+import { AdministratorEntity } from "@/common/entities/administrator";
 import { DataPaginatedTable } from "@/components/atoms/DataTablePaginated/DataTablePaginated";
 import Input from "@/components/atoms/Input/input";
-import { columns } from "./Columns";
-import { AdministratorEntity } from "@/common/entities/administrator";
-import { useRouter } from "next/navigation";
 import useAdministratorByCondoId from "@/hooks/queries/administrator/useAdministratorByCondoId";
+
+import { columns } from "./Columns";
 
 const boxStyle = "border border-black rounded-[8px]";
 
@@ -16,10 +19,9 @@ interface AdminHistoryProps {
 }
 
 const AdminHistory = ({ condoId }: AdminHistoryProps) => {
-  const router = useRouter();
   const [filterValue, setFilterValue] = useState("");
   const { data: administrator } = useAdministratorByCondoId(condoId);
-  
+
   const filteredData = administrator?.filter((item) =>
     item.name.toLocaleLowerCase().includes(filterValue.toLocaleLowerCase())
   );
@@ -28,7 +30,9 @@ const AdminHistory = ({ condoId }: AdminHistoryProps) => {
     <section className="space-y-4">
       <div className={twMerge(boxStyle)}>
         <div className="flex flex-col items-center justify-between gap-y-3 px-8 py-4 md:flex-row">
-          <h1 className="text-[18px] font-bold sm:text-[24px]">Adminstradores</h1>
+          <h1 className="text-[18px] font-bold sm:text-[24px]">
+            Adminstradores
+          </h1>
 
           <Input
             className={
