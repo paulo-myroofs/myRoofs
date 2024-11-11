@@ -23,7 +23,7 @@ export const getAdministratorByCondoIdQueryFn = (condoCode: string) => {
     }).then((res) => res.data);
 };
 
-const useAdministratorByCondoId = <T = AdministratorEntity[]>(
+const useAdministratorByCondoId = <T = AdministratorEntity[],>(
   condoCode: string,
   select?: (data: DocumentData) => T
 ) => {

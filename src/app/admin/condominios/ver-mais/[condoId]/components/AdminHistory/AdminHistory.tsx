@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 
-import { useRouter } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 
 import { AdministratorEntity } from "@/common/entities/administrator";
