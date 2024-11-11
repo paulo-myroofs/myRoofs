@@ -4,11 +4,9 @@ import { Timestamp } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 
 import { inputClassName } from "@/app/contants";
-import { AptManagerEntity } from "@/common/entities/aptManager";
 import Button from "@/components/atoms/Button/button";
 import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
 import InputFieldForDelete from "@/components/molecules/InputField/InputFieldForDelete";
-import useProfile from "@/hooks/queries/useProfile";
 import { successToast, errorToast } from "@/hooks/useAppToast";
 import { queryClient } from "@/store/providers/queryClient";
 import { updateFirestoreDoc } from "@/store/services";
@@ -23,9 +21,6 @@ const CreateDeleteCompanyModal = ({
   condoData
 }: CreateDeleteCompanyModalProps) => {
   const router = useRouter();
-  const { data: aptManager } = useProfile<AptManagerEntity>(
-    companyData?.aptManagerId as string
-  );
   const [inputValue, setInputValue] = useState("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,7 +29,7 @@ const CreateDeleteCompanyModal = ({
   };
 
   const handleEndCompany = async () => {
-    const { error } = await deleteUserAuth(aptManager?.id as string);
+    const { error } = await deleteUserAuth(companyData?.aptManagerId as string);
 
     if (error) {
       errorToast("Erro ao encerrar a empresa. Por favor, tente novamente.");
@@ -46,9 +41,9 @@ const CreateDeleteCompanyModal = ({
       data: { endedAt: Timestamp.now() }
     });
 
-    if (aptManager?.id) {
+    if (companyData?.aptManagerId) {
       await updateFirestoreDoc({
-        documentPath: `/users/${aptManager?.id}`,
+        documentPath: `/users/${companyData?.aptManagerId}`,
         data: { endedAt: Timestamp.now() }
       });
     }
@@ -66,7 +61,7 @@ const CreateDeleteCompanyModal = ({
     queryClient.invalidateQueries(["companies"]);
     queryClient.invalidateQueries(["condominiums", companyData.id]);
     successToast("Empresa e seus condomínios encerrados com sucesso!");
-    router.push("/admin/historico");
+    router.push("/admin");
   };
 
   const handleConfirmClick = () => {
