@@ -20,6 +20,7 @@ import { successToast } from "@/hooks/useAppToast";
 import { queryClient } from "@/store/providers/queryClient";
 import { updateFirestoreDoc } from "@/store/services";
 
+import AdminHistory from "./components/AdminHistory/AdminHistory";
 import AptManagerData from "./components/AptManagerData/AptManagerData";
 import CondoData from "./components/CondoData/CondoData";
 import UsersSection from "./components/UsersSection/UsersSection";
@@ -69,6 +70,15 @@ const MoreInfoCondo = () => {
       content: (
         <AptManagerData aptManagerId={condo?.aptManagersIds[0] as string} />
       )
+    },
+    {
+      trigger: (
+        <div className="flex items-center gap-4 py-2 text-base font-regular md:text-[21px]">
+          <Users2 strokeWidth={2} />
+          <span>Histórico de administradores</span>
+        </div>
+      ),
+      content: <AdminHistory condoId={condoId as string} />
     }
   ];
 
@@ -99,7 +109,7 @@ const MoreInfoCondo = () => {
           />
           <TitleAtom> {condo?.name}</TitleAtom>
         </div>
-        <Button onClick={handleEndCondo}> Encerrar Condomínio</Button>
+        <Button onClick={handleEndCondo}>Encerrar Condomínio</Button>
       </div>
 
       <Accordion type="single" collapsible className="w-full">
