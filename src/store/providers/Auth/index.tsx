@@ -64,7 +64,7 @@ const AuthProvider = ({ children }: Props) => {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [auth]);
 
   const loginWithInternalService = async (email: string, password: string) => {
     setLoading((prev) => ({ ...prev, loginWithInternalService: true }));

@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/accordion";
 import useCondo from "@/hooks/queries/condos/useCondo";
 
+import AdminHistory from "./components/AdminHistory/AdminHistory";
 import AptManagerData from "./components/AptManagerData/AptManagerData";
 import CondoData from "./components/CondoData/CondoData";
 import CreateDeleteCondoModal from "./components/CreateDeleteCondoModal/CreateDeleteCondoModal";
@@ -56,6 +57,15 @@ const MoreInfoCondo = () => {
       content: (
         <AptManagerData aptManagerId={condo?.aptManagersIds[0] as string} />
       )
+    },
+    {
+      trigger: (
+        <div className="flex items-center gap-4 py-2 text-base font-regular md:text-[21px]">
+          <Users2 strokeWidth={2} />
+          <span>Histórico de administradores</span>
+        </div>
+      ),
+      content: <AdminHistory condoId={condoId as string} />
     }
   ];
 

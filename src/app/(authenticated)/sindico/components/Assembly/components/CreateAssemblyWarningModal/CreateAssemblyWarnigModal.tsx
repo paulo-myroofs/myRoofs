@@ -76,92 +76,102 @@ const CreateAssemblyModal = ({
 
     setLoading(true);
 
-    let imageUrl = assemblyData?.image ?? null;
-    if (typeof image !== "string" && !!image) {
-      const { image: url, error: errorUpload } = await uploadImage(
-        image as File
-      );
-
-      if (errorUpload || !url) {
-        setLoading(false);
-        return errorToast(
-          "Não foi possível fazer upload de imagem, entrar em contato."
+    // Função de upload para a imagem
+    const uploadImageIfNeeded = async () => {
+      if (typeof image !== "string" && !!image) {
+        const { image: url, error: errorUpload } = await uploadImage(
+          image as File
         );
+        if (errorUpload || !url) {
+          throw new Error("Não foi possível fazer upload da imagem.");
+        }
+        // Deleta a imagem antiga, se estiver editando
+        if (assemblyData?.image) {
+          await deleteImage(assemblyData.image);
+        }
+        return url;
       }
-      imageUrl = url;
-
-      if (assemblyData && assemblyData.image) {
-        // is editting
-        await deleteImage(assemblyData.image);
-      }
-    }
-
-    let fileUrl = assemblyData?.meetingFileUrl ?? null;
-    if (typeof file !== "string" && !!file) {
-      const { fileUrl: url, error: errorUpload } = await uploadFile(
-        file as File
-      );
-
-      if (errorUpload || !url) {
-        setLoading(false);
-        return errorToast(
-          "Não foi possível fazer upload de imagem, entrar em contato."
-        );
-      }
-      fileUrl = url;
-
-      if (assemblyData && assemblyData.meetingFileUrl) {
-        // is editting
-        await deleteFile(assemblyData.meetingFileUrl);
-      }
-    }
-
-    const finalData: Partial<CondoAssembly> = {
-      about: data.title,
-      text: data.description,
-      image: imageUrl as string,
-      meetingFileUrl: fileUrl as string,
-      condominiumId: condoId as string,
-      creatorId: userUid
+      return assemblyData?.image ?? null; // Retorna a imagem existente se não houver novo upload
     };
 
-    if (!assemblyData) {
-      await createFirestoreDoc<Omit<CondoAssembly, "id">>({
-        collectionPath: `condoAssemblies`,
-        data: {
-          ...finalData,
-          createdAt: Timestamp.now(),
-          updatedAt: Timestamp.now()
-        } as CondoAssembly
-      });
-      await sendNotification({
-        content: `Ata de reunião do dia ${new Date().toLocaleDateString()} já disponível`,
-        title: "Ata disponível!",
-        date: null,
-        type: "survey",
-        users: (residents ?? []).map((resident) => ({
-          tokens: resident?.tokens ?? [],
-          userId: resident?.id ?? ""
-        }))
-      });
-      successToast("Nova assembleia adicionada.");
-    } else {
-      await updateFirestoreDoc({
-        documentPath: `/condoAssemblies/${assemblyData.id}`,
-        data: {
-          ...finalData,
-          updatedAt: Timestamp.now()
-        } as CondoAssembly
-      });
-      successToast("Assembleia editada com sucesso!");
-    }
+    // Função de upload para o arquivo
+    const uploadFileIfNeeded = async () => {
+      if (typeof file !== "string" && !!file) {
+        const { fileUrl: url, error: errorUpload } = await uploadFile(
+          file as File
+        );
+        if (errorUpload || !url) {
+          throw new Error("Não foi possível fazer upload do arquivo.");
+        }
+        // Deleta o arquivo antigo, se estiver editando
+        if (assemblyData?.meetingFileUrl) {
+          await deleteFile(assemblyData.meetingFileUrl);
+        }
+        return url;
+      }
+      return assemblyData?.meetingFileUrl ?? null; // Retorna o arquivo existente se não houver novo upload
+    };
 
-    setLoading(false);
-    queryClient.invalidateQueries(["condoAssemblies", condoId]);
-    reset();
-    setImage(null);
-    setFile(null);
-    onOpenChange(false);
+    try {
+      // Executa os uploads de imagem e arquivo em paralelo
+      const [imageUrl, fileUrl] = await Promise.all([
+        uploadImageIfNeeded(),
+        uploadFileIfNeeded()
+      ]);
+
+      const finalData: Partial<CondoAssembly> = {
+        about: data.title,
+        text: data.description,
+        image: imageUrl as string,
+        meetingFileUrl: fileUrl as string,
+        condominiumId: condoId as string,
+        creatorId: userUid
+      };
+
+      // Criação ou atualização do documento no Firestore
+      if (!assemblyData) {
+        await createFirestoreDoc<Omit<CondoAssembly, "id">>({
+          collectionPath: `condoAssemblies`,
+          data: {
+            ...finalData,
+            createdAt: Timestamp.now(),
+            updatedAt: Timestamp.now()
+          } as CondoAssembly
+        });
+        await sendNotification({
+          content: `Ata de reunião do dia ${new Date().toLocaleDateString()} já disponível`,
+          title: "Ata disponível!",
+          date: null,
+          type: "survey",
+          users: (residents ?? []).map((resident) => ({
+            tokens: resident?.tokens ?? [],
+            userId: resident?.id ?? ""
+          }))
+        });
+        successToast("Nova assembleia adicionada.");
+      } else {
+        await updateFirestoreDoc({
+          documentPath: `/condoAssemblies/${assemblyData.id}`,
+          data: {
+            ...finalData,
+            updatedAt: Timestamp.now()
+          } as CondoAssembly
+        });
+        successToast("Assembleia editada com sucesso!");
+      }
+
+      queryClient.invalidateQueries(["condoAssemblies", condoId]);
+      reset();
+      setImage(null);
+      setFile(null);
+      onOpenChange(false);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Erro desconhecido";
+      errorToast(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
