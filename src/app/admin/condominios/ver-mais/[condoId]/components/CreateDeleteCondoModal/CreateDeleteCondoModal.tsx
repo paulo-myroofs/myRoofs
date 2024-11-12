@@ -33,7 +33,7 @@ const CreateDeleteCondoModal = ({
     queryClient.invalidateQueries(["condominium"]);
     queryClient.invalidateQueries(["condominium", "endedCondominium"]);
     successToast("Condomínio encerrado com sucesso!");
-    router.push("/admin/historico");
+    router.back();
   };
 
   const handleConfirmClick = () => {
