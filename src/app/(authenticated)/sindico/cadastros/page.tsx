@@ -8,14 +8,16 @@ import Button from "@atoms/Button/button";
 
 import EmployeesTable from "./employees/employees";
 import ResidentsTable from "./residents/residents";
+import AdministratorTable from "./adminstrator/adminstrator";
 
-export default function MoradoresFuncionariosCadastrados() {
-  const [activeTab, setActiveTab] = useState<"Moradores" | "Funcionários">(
+export default function MoradoresFuncionariosAdministradoresCadastrados() {
+  const [activeTab, setActiveTab] = useState<"Moradores" | "Funcionários" | "Administradores">(
     "Moradores"
   );
-  const tabs: Array<"Moradores" | "Funcionários"> = [
+  const tabs: Array<"Moradores" | "Funcionários" | "Administradores"> = [
     "Moradores",
-    "Funcionários"
+    "Funcionários",
+    "Administradores"
   ];
 
   return (
@@ -37,18 +39,19 @@ export default function MoradoresFuncionariosCadastrados() {
             </Button>
           ))}
         </div>
-
+{/* 
         <Link
           href={"/sindico/cadastros/novo-sindico"}
           className="font-medium tracking-wide hover:underline"
         >
           {" "}
           Adicionar síndico{" "}
-        </Link>
+        </Link> */}
       </div>
 
       {activeTab === "Moradores" && <ResidentsTable />}
       {activeTab === "Funcionários" && <EmployeesTable />}
+      {activeTab === "Adminstradores" && <AdministratorTable />}
     </main>
   );
 }

@@ -8,6 +8,7 @@ const userData = z.object({
   rg: numberWithAux,
   emitter: z.string().min(1, "Insira um valor"),
   profession: z.string().min(1, "Insira um valor"),
+  positionOptions: z.string(),
   maritalStatus: z.string().min(1, "Insira um valor")
 });
 

@@ -1,4 +1,5 @@
 import { Timestamp } from "./timestamp";
+
 export interface AdministratorEntity {
   id: string;
   image: string | null;
@@ -11,5 +12,6 @@ export interface AdministratorEntity {
   createdAt: Timestamp;
   updatedAt: Timestamp;
   condominiumCode: string;
-  role: "administrator";
+  role: "aptManager";
+  isActive: boolean;
 }
