@@ -272,14 +272,13 @@ const NewCompany = () => {
         cep: unmask(data.ownerAddressData.cep),
         city: data.ownerAddressData.city
       };
-
       await updateFirestoreDoc<AptManagerEntity>({
         documentPath: `users/${company?.aptManagerId}`,
         data: aptManagerData
       });
 
       const companyData = {
-        aptManagerId: aptManager?.id,
+        aptManagerId: company.aptManagerId,
         name: data.name,
         image: imageUrl,
         cnpj: unmask(data.cnpj),
@@ -446,15 +445,26 @@ const NewCompany = () => {
         />
       </div>
 
-      <Button
-        variant="icon"
-        size="md"
-        className="mx-auto mt-16 w-[180px] bg-[#202425]"
-        type="submit"
-        loading={loading}
-      >
-        {company ? "Editar" : "Registrar"}
-      </Button>
+      <div className="flex">
+        <Button
+          size="md"
+          className="mx-auto mt-16 w-[180px] rounded-full"
+          type="button"
+          loading={loading}
+          onClick={() => router.back()}
+        >
+          Cancelar
+        </Button>
+        <Button
+          variant="icon"
+          size="md"
+          className="mx-auto mt-16 w-[180px] bg-[#202425]"
+          type="submit"
+          loading={loading}
+        >
+          {company ? "Confirmar" : "Registrar"}
+        </Button>
+      </div>
     </form>
   );
 };
