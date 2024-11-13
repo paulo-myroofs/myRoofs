@@ -60,6 +60,7 @@ const NewCompany = () => {
       state:
         (brazilStates.find((item) => item.label === company?.state)
           ?.value as string) || "",
+      city: company?.city || "",
       number: company?.number || "",
       cep: company?.cep || ""
     },
@@ -80,6 +81,7 @@ const NewCompany = () => {
       state:
         (brazilStates.find((item) => item.label === company?.state)
           ?.value as string) || "",
+      city: aptManager?.city || "",
       number: aptManager?.number || "",
       cep: aptManager?.cep || ""
     }
@@ -147,6 +149,7 @@ const NewCompany = () => {
   }, [aptManager, company, reset]);
 
   const handleForm = async (data: AddCompanyForm) => {
+    console.log(image);
     if (!isCNPJ(unmask(data.cnpj))) {
       return errorToast("CNPJ não é válido.");
     }
@@ -450,7 +453,6 @@ const NewCompany = () => {
           size="md"
           className="mx-auto mt-16 w-[180px] rounded-full"
           type="button"
-          loading={loading}
           onClick={() => router.back()}
         >
           Cancelar
