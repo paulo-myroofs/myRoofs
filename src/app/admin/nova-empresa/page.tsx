@@ -122,7 +122,8 @@ const NewCompany = () => {
             (brazilStates.find((item) => item.label === company.state)
               ?.value as string) || "",
           number: company.number || "",
-          cep: company.cep || ""
+          cep: company.cep || "",
+          city: company.city || ""
         },
         ownerBasicInfo: {
           name: aptManager.name || "",
@@ -142,14 +143,14 @@ const NewCompany = () => {
             (brazilStates.find((item) => item.label === aptManager.state)
               ?.value as string) || "",
           number: aptManager.number || "",
-          cep: aptManager.cep || ""
+          cep: aptManager.cep || "",
+          city: aptManager.city || ""
         }
       });
     }
   }, [aptManager, company, reset]);
 
   const handleForm = async (data: AddCompanyForm) => {
-    console.log(image);
     if (!isCNPJ(unmask(data.cnpj))) {
       return errorToast("CNPJ não é válido.");
     }
@@ -165,17 +166,21 @@ const NewCompany = () => {
     setLoading(true);
 
     let imageUrl = "";
-    const { image: imageUploaded, error: errorUpload } = await uploadImage(
-      image as File
-    );
-
-    if (errorUpload || !imageUploaded) {
-      setLoading(false);
-      return errorToast(
-        "Não foi possível fazer upload de imagem, entrar em contato."
+    if (image instanceof File) {
+      const { image: imageUploaded, error: errorUpload } = await uploadImage(
+        image as File
       );
+
+      if (errorUpload || !imageUploaded) {
+        setLoading(false);
+        return errorToast(
+          "Não foi possível fazer upload de imagem, entrar em contato."
+        );
+      }
+      imageUrl = imageUploaded;
+    } else {
+      imageUrl = image as string;
     }
-    imageUrl = imageUploaded;
 
     if (!company) {
       const password = uuidV4().slice(0, 8);
@@ -307,6 +312,7 @@ const NewCompany = () => {
     }
     setLoading(false);
     queryClient.invalidateQueries(["companies", "activeCompanies"]);
+    queryClient.invalidateQueries(["companies", companyId]);
     reset();
     setImage(null);
     if (!company) {
