@@ -12,12 +12,14 @@ import TitleAtom from "@/components/atoms/TitleAtom/TitleAtom";
 import useCompany from "@/hooks/queries/companies/useCompany";
 import useCondosByCompanyId from "@/hooks/queries/condos/useCondosByCompanyId";
 
+import CreateBlockCompanyModal from "./components/CreateBlockCompanyModal/CreateBlockCompanyModal";
 import CreateDeleteCompanyModal from "./components/CreateDeleteCompanyModal/CreateDeleteCompanyModal";
 
 export default function CompanyCondos() {
   const router = useRouter();
   const { companyId } = useParams();
-  const [modalOpen, setModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [blockModalOpen, setBlockModalOpen] = useState(false);
   const {
     data: condos,
     isLoading,
@@ -54,7 +56,18 @@ export default function CompanyCondos() {
             />
             <TitleAtom> Condomínios Cadastrados de {company?.name}</TitleAtom>
           </div>
-          <Button onClick={() => setModalOpen(true)}> Encerrar Empresa</Button>
+          <Image
+            src="/lock.png"
+            alt="Cadeado"
+            width={35}
+            height={30}
+            className="rounded-full border-2"
+            onClick={() => setBlockModalOpen(true)}
+          />
+          <Button onClick={() => setDeleteModalOpen(true)}>
+            {" "}
+            Encerrar Empresa
+          </Button>
         </div>
 
         {condos && condos.length > 0 ? (
@@ -73,11 +86,17 @@ export default function CompanyCondos() {
         )}
       </section>
       <CreateDeleteCompanyModal
-        isOpen={modalOpen}
-        onOpenChange={setModalOpen}
+        isOpen={deleteModalOpen}
+        onOpenChange={setDeleteModalOpen}
         companyData={company}
         condoData={condos}
       ></CreateDeleteCompanyModal>
+      <CreateBlockCompanyModal
+        isOpen={blockModalOpen}
+        onOpenChange={setBlockModalOpen}
+        companyData={company}
+        condoData={condos}
+      ></CreateBlockCompanyModal>
     </>
   );
 }
