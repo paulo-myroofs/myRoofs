@@ -27,6 +27,7 @@ import { deleteImage, uploadImage } from "@/store/services/firebaseStorage";
 import formatToPhoneMask from "@/utils/formatToPhoneMask";
 import unmask from "@/utils/unmask";
 import AddCondoSchema from "@/validations/aptManager/AddCondo";
+import AddressInputs from "@/app/admin/nova-empresa/components/AddressInputs";
 
 import { AddEditCondoFormProps } from "./types";
 
@@ -73,8 +74,11 @@ const AddEditCondoForm = ({
   const {
     handleSubmit,
     register,
+    control,
+    watch,
     formState: { errors },
-    reset
+    reset,
+    setValue
   } = useForm<AddCondoForm>({
     mode: "all",
     criteriaMode: "all",
@@ -82,7 +86,14 @@ const AddEditCondoForm = ({
     values: {
       name: condoData?.name ?? "",
       cnpj: condoData?.cnpj ?? "",
-      address: condoData?.address ?? "",
+      address: {
+        cep: condoData?.address.cep ?? "",
+        state: condoData?.address?.state ?? "",
+        city: condoData?.address?.city ?? "",
+        neighborhood: condoData?.address?.neighborhood ?? "",
+        address: condoData?.address?.address ?? "",
+        number: condoData?.address?.number ?? ""
+      },
       phone: condoData?.phone ? formatToPhoneMask(condoData?.phone) : "",
       housingName: condoData?.housingName ?? "",
       floorsQty: (condoData?.floorsQty ?? "0").toString(),
@@ -264,7 +275,7 @@ const AddEditCondoForm = ({
               className={inputClassName}
               label="CNPJ"
               register={register}
-              placeholder="Digite o nome"
+              placeholder="Digite o CNPJ"
             />
           </div>
           <div className="flex flex-col gap-1">
@@ -303,13 +314,14 @@ const AddEditCondoForm = ({
             </button>
           </div>
         </div>
-        <InputField
-          name="address"
-          className={inputClassName}
-          label="Endereço"
+        <AddressInputs
+          control={control}
+          inputClassName={inputClassName}
           register={register}
           formErrors={errors}
-          placeholder="Digite seu endereço"
+          zodObj="address"
+          setValue={setValue}
+          watchCep={unmask(watch("address.cep") ?? "")}
         />
         <InputField
           name="phone"

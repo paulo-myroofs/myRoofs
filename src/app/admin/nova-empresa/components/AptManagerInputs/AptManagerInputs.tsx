@@ -88,7 +88,7 @@ const AptManagerInputs = <T extends AddAptManagerForm>({
         inputClassName={inputClassName}
         register={register}
         formErrors={errors}
-        zodObj="ownerAddressData"
+        zodObj="ownerAddress"
         setValue={setValue}
         watchCep={unmask(watch()?.ownerAddressData?.cep ?? "")}
       />
