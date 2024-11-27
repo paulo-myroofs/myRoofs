@@ -10,7 +10,7 @@ import InputFieldForDelete from "@/components/molecules/InputField/InputFieldFor
 import { successToast, errorToast } from "@/hooks/useAppToast";
 import { queryClient } from "@/store/providers/queryClient";
 import { updateFirestoreDoc } from "@/store/services";
-import { deleteUserAuth } from "@/store/services/auth";
+import { deactivateUserAuth } from "@/store/services/auth";
 
 import { CreateBlockCompanyModalProps } from "./types";
 
@@ -23,56 +23,52 @@ const CreateBlockCompanyModal = ({
   const router = useRouter();
   const [inputValue, setInputValue] = useState("");
 
-  //   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //     const value = e.target.value;
-  //     setInputValue(value);
-  //   };
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setInputValue(value);
+  };
 
-  //   const handleEndCompany = async () => {
-  //     const { error } = await deleteUserAuth(companyData?.aptManagerId as string);
+  const handleBlockCompany = async () => {
+    const { error } = await deactivateUserAuth(
+      companyData?.aptManagerId as string
+    );
+    if (error) {
+      errorToast("Erro ao bloquear a empresa. Por favor, tente novamente.");
+      return;
+    }
+    await updateFirestoreDoc({
+      documentPath: `/companies/${companyData.id}`,
+      data: { blockedAt: Timestamp.now() }
+    });
+    if (companyData?.aptManagerId) {
+      await updateFirestoreDoc({
+        documentPath: `/users/${companyData?.aptManagerId}`,
+        data: { blockedAt: Timestamp.now() }
+      });
+    }
+    const updatePromises =
+      condoData?.map(async (condo) => {
+        return updateFirestoreDoc({
+          documentPath: `/condominium/${condo.id}`,
+          data: { blcokedAt: Timestamp.now() }
+        });
+      }) ?? [];
+    await Promise.all(updatePromises);
+    queryClient.invalidateQueries(["companies", "activeCompanies"]);
+    queryClient.invalidateQueries(["condominiums", companyData.id]);
+    successToast("Empresa e seus condomínios bloqueados com sucesso!");
+    router.push("/admin");
+  };
 
-  //     if (error) {
-  //       errorToast("Erro ao encerrar a empresa. Por favor, tente novamente.");
-  //       return;
-  //     }
-
-  //     await updateFirestoreDoc({
-  //       documentPath: `/companies/${companyData.id}`,
-  //       data: { endedAt: Timestamp.now() }
-  //     });
-
-  //     if (companyData?.aptManagerId) {
-  //       await updateFirestoreDoc({
-  //         documentPath: `/users/${companyData?.aptManagerId}`,
-  //         data: { endedAt: Timestamp.now() }
-  //       });
-  //     }
-
-  //     const updatePromises =
-  //       condoData?.map(async (condo) => {
-  //         return updateFirestoreDoc({
-  //           documentPath: `/condominium/${condo.id}`,
-  //           data: { endedAt: Timestamp.now() }
-  //         });
-  //       }) ?? [];
-
-  //     await Promise.all(updatePromises);
-
-  //     queryClient.invalidateQueries(["companies"]);
-  //     queryClient.invalidateQueries(["condominiums", companyData.id]);
-  //     successToast("Empresa e seus condomínios encerrados com sucesso!");
-  //     router.push("/admin");
-  // };
-
-  //   const handleConfirmClick = () => {
-  //     if (inputValue === companyData.name) {
-  //       handleEndCompany();
-  //     } else {
-  //       errorToast(
-  //         "O nome da empresa não corresponde. Por favor, tente novamente."
-  //       );
-  //     }
-  //   };
+  const handleConfirmClick = () => {
+    if (inputValue === companyData.name) {
+      handleBlockCompany();
+    } else {
+      errorToast(
+        "O nome da empresa não corresponde. Por favor, tente novamente."
+      );
+    }
+  };
 
   return (
     <TransitionModal
@@ -85,7 +81,7 @@ const CreateBlockCompanyModal = ({
           variant="icon"
           size="lg"
           className=" w-[210px] bg-[#202425]"
-          // onClick={handleConfirmClick}
+          onClick={handleConfirmClick}
         >
           Confirmar
         </Button>
@@ -111,7 +107,7 @@ const CreateBlockCompanyModal = ({
         className={inputClassName}
         placeholder="Digite Aqui"
         value={inputValue}
-        // onChange={handleInputChange}
+        onChange={handleInputChange}
       />
     </TransitionModal>
   );

@@ -1,6 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import admin from "firebase-admin";
 
+export const deactivateUserAuthAdmin = async (
+  uid: string
+): Promise<{ error: null | string }> => {
+  return admin
+    .auth()
+    .updateUser(uid, {
+      disabled: true
+    })
+    .then(() => ({
+      error: null
+    }))
+    .catch((error) => {
+      console.log(error);
+      return { error: "Erro ao desativar usuário" };
+    });
+};
+
 export const deleteUserAuthAdmin = async (
   uid: string
 ): Promise<{ error: null | string }> => {

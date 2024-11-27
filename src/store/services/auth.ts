@@ -99,6 +99,13 @@ export const createUserAuth = async (
   }).then((data) => data.json());
 };
 
+export const deactivateUserAuth = async (userUid: string) => {
+  return await fetch("/api/deactivateAuth", {
+    method: "POST",
+    body: JSON.stringify(userUid)
+  }).then((data) => data.json());
+};
+
 export const deleteUserAuth = async (userUid: string) => {
   return await fetch("/api/deleteAuth", {
     method: "POST",

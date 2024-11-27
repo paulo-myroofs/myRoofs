@@ -151,7 +151,8 @@ const NewCompany = () => {
       monthValue: parseInt(unmaskCurrency(data.monthValue)),
       finder: data.finder ?? null,
       createdAt: Timestamp.now(),
-      endedAt: null
+      endedAt: null,
+      blockedAt: null
     };
     await setFirestoreDoc<CompanyEntity>({
       docPath: `companies/${companyId}`,
