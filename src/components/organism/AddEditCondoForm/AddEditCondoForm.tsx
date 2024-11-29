@@ -84,7 +84,6 @@ const AddEditCondoForm = ({
       cnpj: condoData?.cnpj ?? "",
       address: condoData?.address ?? "",
       phone: condoData?.phone ? formatToPhoneMask(condoData?.phone) : "",
-      housingName: condoData?.housingName ?? "",
       floorsQty: (condoData?.floorsQty ?? "0").toString(),
       garageSpacesQty: (condoData?.garageQty ?? "0").toString()
     }
