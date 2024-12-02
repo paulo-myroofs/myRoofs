@@ -10,8 +10,6 @@ const SignInFormSchema = z.object({
   cnpj: numberWithAux,
   address: z.string().min(1, "Insira um valor"),
   phone,
-
-  housingName: z.string().min(1, "Insira um valor"),
   floorsQty: number,
   garageSpacesQty: number
 });
