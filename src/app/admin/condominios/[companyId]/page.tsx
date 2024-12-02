@@ -41,21 +41,33 @@ export default function CompanyCondos() {
 
   return (
     <>
-    <section className="mx-auto w-11/12 max-w-[1500px] space-y-8">
-      <div className="flex flex-col justify-between gap-y-4 sm:flex-row sm:items-center">
-        <div className="flex items-center">
-          <Image
-            src="/arrow_back.svg"
-            alt="Voltar"
-            width={24}
-            height={24}
-            onClick={() => router.back()}
-            className="mr-2 cursor-pointer"
-          />
-          <TitleAtom> Condomínios Cadastrados de {company?.name}</TitleAtom>
+      <section className="mx-auto w-11/12 max-w-[1500px] space-y-8">
+        <div className="flex flex-col justify-between gap-y-4 sm:flex-row sm:items-center">
+          <div className="flex items-center">
+            <Image
+              src="/arrow_back.svg"
+              alt="Voltar"
+              width={24}
+              height={24}
+              onClick={() => router.back()}
+              className="mr-2 cursor-pointer"
+            />
+            <TitleAtom> Condomínios Cadastrados de {company?.name}</TitleAtom>
+          </div>
+          <div className="flex justify-around gap-3 sm:justify-start">
+            <Button
+              onClick={() => {
+                router.push(`/admin/nova-empresa?companyId=${company.id}`);
+              }}
+            >
+              Editar Empresa
+            </Button>
+            <Button onClick={() => setModalOpen(true)}>
+              {" "}
+              Encerrar Empresa
+            </Button>
+          </div>
         </div>
-        <Button onClick={() => setModalOpen(true)}> Encerrar Empresa</Button>
-      </div>
 
         {condos && condos.length > 0 ? (
           <div className="flex flex-wrap gap-x-12 gap-y-6">
