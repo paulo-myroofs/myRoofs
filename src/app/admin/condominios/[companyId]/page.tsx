@@ -54,7 +54,19 @@ export default function CompanyCondos() {
             />
             <TitleAtom> Condomínios Cadastrados de {company?.name}</TitleAtom>
           </div>
-          <Button onClick={() => setModalOpen(true)}> Encerrar Empresa</Button>
+          <div className="flex justify-around gap-3 sm:justify-start">
+            <Button
+              onClick={() => {
+                router.push(`/admin/nova-empresa?companyId=${company.id}`);
+              }}
+            >
+              Editar Empresa
+            </Button>
+            <Button onClick={() => setModalOpen(true)}>
+              {" "}
+              Encerrar Empresa
+            </Button>
+          </div>
         </div>
 
         {condos && condos.length > 0 ? (
