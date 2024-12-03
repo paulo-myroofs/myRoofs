@@ -56,14 +56,15 @@ export default function CompanyCondos() {
             />
             <TitleAtom> Condomínios Cadastrados de {company?.name}</TitleAtom>
           </div>
-          <Image
-            src="/lock.png"
-            alt="Cadeado"
-            width={35}
-            height={30}
-            className="rounded-full border-2"
-            onClick={() => setBlockModalOpen(true)}
-          />
+          <div className="flex h-[40px] w-[40px] items-center justify-center rounded-full border-2">
+            <Image
+              src="/lock.png"
+              alt="Cadeado"
+              width={30}
+              height={30}
+              onClick={() => setBlockModalOpen(true)}
+            />
+          </div>
           <Button onClick={() => setDeleteModalOpen(true)}>
             {" "}
             Encerrar Empresa

@@ -8,10 +8,27 @@ import CompanyCard from "@/components/atoms/CompanyCard/companyCard";
 import LoadingComponent from "@/components/atoms/Loading/loading";
 import TitleAtom from "@/components/atoms/TitleAtom/TitleAtom";
 import useActiveCompanies from "@/hooks/queries/companies/useActiveCompanies";
+import useBlockedCompanies from "@/hooks/queries/companies/useBlockedCompany";
 
 export default function AdminPage() {
   const router = useRouter();
-  const { data: companies, isLoading, isError } = useActiveCompanies();
+
+  const {
+    data: activeCompanies,
+    isLoading: isActiveLoading,
+    isError: isActiveError
+  } = useActiveCompanies();
+
+  const {
+    data: blockedCompanies,
+    isLoading: isBlockedLoading,
+    isError: isBlockedError
+  } = useBlockedCompanies();
+
+  const isLoading = isActiveLoading || isBlockedLoading;
+  const isError = isActiveError || isBlockedError;
+
+  console.log(blockedCompanies);
 
   if (isLoading) {
     return (
@@ -43,20 +60,42 @@ export default function AdminPage() {
         </Button>
       </div>
 
-      {companies && companies.length > 0 ? (
-        <div className="flex flex-wrap gap-x-12 gap-y-6">
-          {companies?.map((item) => (
-            <CompanyCard
-              key={item.id}
-              title={item.name}
-              image={item.image}
-              href={"/admin/condominios/" + item.id}
-            />
-          ))}
-        </div>
-      ) : (
-        <p> Sem resultados empresas cadastradas ainda.</p>
-      )}
+      <div>
+        <h2 className="text-lg font-semibold">Empresas Ativas</h2>
+        {activeCompanies && activeCompanies.length > 0 ? (
+          <div className="flex flex-wrap gap-x-12 gap-y-6">
+            {activeCompanies.map((item) => (
+              <CompanyCard
+                key={item.id}
+                title={item.name}
+                image={item.image}
+                href={"/admin/condominios/" + item.id}
+              />
+            ))}
+          </div>
+        ) : (
+          <p>Sem empresas ativas cadastradas ainda.</p>
+        )}
+      </div>
+
+      {/* Empresas bloqueadas */}
+      <div>
+        <h2 className="text-lg font-semibold">Empresas Bloqueadas</h2>
+        {blockedCompanies && blockedCompanies.length > 0 ? (
+          <div className="flex flex-wrap gap-x-12 gap-y-6">
+            {blockedCompanies.map((item) => (
+              <CompanyCard
+                key={item.id}
+                title={item.name}
+                image={item.image}
+                href={"/admin/empresas-bloqueadas/" + item.id}
+              />
+            ))}
+          </div>
+        ) : (
+          <p>Sem empresas bloqueadas cadastradas ainda.</p>
+        )}
+      </div>
     </section>
   );
 }
