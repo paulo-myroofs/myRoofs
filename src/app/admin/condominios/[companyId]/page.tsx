@@ -56,19 +56,28 @@ export default function CompanyCondos() {
             />
             <TitleAtom> Condomínios Cadastrados de {company?.name}</TitleAtom>
           </div>
-          <div className="flex h-[40px] w-[40px] items-center justify-center rounded-full border-2">
-            <Image
-              src="/lock.png"
-              alt="Cadeado"
-              width={30}
-              height={30}
-              onClick={() => setBlockModalOpen(true)}
-            />
+          <div className="flex justify-around gap-3 sm:justify-start">
+            <div className="flex h-[40px] w-[40px] items-center justify-center rounded-full border-2">
+              <Image
+                src="/lock.png"
+                alt="Cadeado"
+                width={30}
+                height={30}
+                onClick={() => setBlockModalOpen(true)}
+              />
+              <Button
+                onClick={() => {
+                  router.push(`/admin/nova-empresa?companyId=${company.id}`);
+                }}
+              >
+                Editar Empresa
+              </Button>
+            </div>
+            <Button onClick={() => setDeleteModalOpen(true)}>
+              {" "}
+              Encerrar Empresa
+            </Button>
           </div>
-          <Button onClick={() => setDeleteModalOpen(true)}>
-            {" "}
-            Encerrar Empresa
-          </Button>
         </div>
 
         {condos && condos.length > 0 ? (
