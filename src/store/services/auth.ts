@@ -99,6 +99,13 @@ export const createUserAuth = async (
   }).then((data) => data.json());
 };
 
+export const activateUserAuth = async (userUid: string) => {
+  return await fetch("/api/activateAuth", {
+    method: "POST",
+    body: JSON.stringify(userUid)
+  }).then((data) => data.json());
+};
+
 export const deactivateUserAuth = async (userUid: string) => {
   return await fetch("/api/deactivateAuth", {
     method: "POST",
