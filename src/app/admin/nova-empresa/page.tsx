@@ -248,7 +248,8 @@ const NewCompany = () => {
         finder: data.finder ?? null,
         createdAt: Timestamp.now(),
         endedAt: null,
-        city: data.addressData.city
+        city: data.addressData.city,
+        blockedAt: null
       };
       await setFirestoreDoc<CompanyEntity>({
         docPath: `companies/${companyId}`,

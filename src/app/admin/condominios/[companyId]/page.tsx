@@ -12,12 +12,14 @@ import TitleAtom from "@/components/atoms/TitleAtom/TitleAtom";
 import useCompany from "@/hooks/queries/companies/useCompany";
 import useCondosByCompanyId from "@/hooks/queries/condos/useCondosByCompanyId";
 
+import CreateBlockCompanyModal from "./components/CreateBlockCompanyModal/CreateBlockCompanyModal";
 import CreateDeleteCompanyModal from "./components/CreateDeleteCompanyModal/CreateDeleteCompanyModal";
 
 export default function CompanyCondos() {
   const router = useRouter();
   const { companyId } = useParams();
-  const [modalOpen, setModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [blockModalOpen, setBlockModalOpen] = useState(false);
   const {
     data: condos,
     isLoading,
@@ -55,6 +57,15 @@ export default function CompanyCondos() {
             <TitleAtom> Condomínios Cadastrados de {company?.name}</TitleAtom>
           </div>
           <div className="flex justify-around gap-3 sm:justify-start">
+            <Button>
+              <Image
+                src="/lock.png"
+                alt="Cadeado"
+                width={30}
+                height={30}
+                onClick={() => setBlockModalOpen(true)}
+              />
+            </Button>
             <Button
               onClick={() => {
                 router.push(`/admin/nova-empresa?companyId=${company.id}`);
@@ -62,7 +73,7 @@ export default function CompanyCondos() {
             >
               Editar Empresa
             </Button>
-            <Button onClick={() => setModalOpen(true)}>
+            <Button onClick={() => setDeleteModalOpen(true)}>
               {" "}
               Encerrar Empresa
             </Button>
@@ -85,11 +96,17 @@ export default function CompanyCondos() {
         )}
       </section>
       <CreateDeleteCompanyModal
-        isOpen={modalOpen}
-        onOpenChange={setModalOpen}
+        isOpen={deleteModalOpen}
+        onOpenChange={setDeleteModalOpen}
         companyData={company}
         condoData={condos}
       ></CreateDeleteCompanyModal>
+      <CreateBlockCompanyModal
+        isOpen={blockModalOpen}
+        onOpenChange={setBlockModalOpen}
+        companyData={company}
+        condoData={condos}
+      ></CreateBlockCompanyModal>
     </>
   );
 }
