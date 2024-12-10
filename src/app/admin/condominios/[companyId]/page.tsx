@@ -12,18 +12,23 @@ import TitleAtom from "@/components/atoms/TitleAtom/TitleAtom";
 import useCompany from "@/hooks/queries/companies/useCompany";
 import useCondosByCompanyId from "@/hooks/queries/condos/useCondosByCompanyId";
 
+import CreateBlockCompanyModal from "./components/CreateBlockCompanyModal/CreateBlockCompanyModal";
 import CreateDeleteCompanyModal from "./components/CreateDeleteCompanyModal/CreateDeleteCompanyModal";
+import CreateUnlockCompanyModal from "./components/CreateUnlockCompnayModal/CreateUnlockCompanyModal";
 
 export default function CompanyCondos() {
   const router = useRouter();
   const { companyId } = useParams();
-  const [modalOpen, setModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [blockModalOpen, setBlockModalOpen] = useState(false);
+  const [unlockModalOpen, setUnlockModalOpen] = useState(false);
   const {
     data: condos,
     isLoading,
     isError
   } = useCondosByCompanyId(companyId as string);
   const { data: company } = useCompany(companyId as string);
+  console.log(company);
 
   if (isLoading) {
     return (
@@ -55,6 +60,26 @@ export default function CompanyCondos() {
             <TitleAtom> Condomínios Cadastrados de {company?.name}</TitleAtom>
           </div>
           <div className="flex justify-around gap-3 sm:justify-start">
+            {company.blockedAt === null && (
+              <Button onClick={() => setBlockModalOpen(true)}>
+                <Image
+                  src="/lock-svgrepo-com.svg"
+                  alt="Cadeado"
+                  width={25}
+                  height={25}
+                />
+              </Button>
+            )}
+            {company.blockedAt !== null && (
+              <Button onClick={() => setUnlockModalOpen(true)}>
+                <Image
+                  src="/unlock-svgrepo-com.svg"
+                  alt="Cadeado"
+                  width={25}
+                  height={25}
+                />
+              </Button>
+            )}
             <Button
               onClick={() => {
                 router.push(`/admin/nova-empresa?companyId=${company.id}`);
@@ -62,7 +87,7 @@ export default function CompanyCondos() {
             >
               Editar Empresa
             </Button>
-            <Button onClick={() => setModalOpen(true)}>
+            <Button onClick={() => setDeleteModalOpen(true)}>
               {" "}
               Encerrar Empresa
             </Button>
@@ -85,11 +110,22 @@ export default function CompanyCondos() {
         )}
       </section>
       <CreateDeleteCompanyModal
-        isOpen={modalOpen}
-        onOpenChange={setModalOpen}
+        isOpen={deleteModalOpen}
+        onOpenChange={setDeleteModalOpen}
         companyData={company}
         condoData={condos}
       ></CreateDeleteCompanyModal>
+      <CreateBlockCompanyModal
+        isOpen={blockModalOpen}
+        onOpenChange={setBlockModalOpen}
+        companyData={company}
+        condoData={condos}
+      ></CreateBlockCompanyModal>
+      <CreateUnlockCompanyModal
+        isOpen={unlockModalOpen}
+        onOpenChange={setUnlockModalOpen}
+        companyData={company}
+      ></CreateUnlockCompanyModal>
     </>
   );
 }
