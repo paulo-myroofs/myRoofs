@@ -56,6 +56,7 @@ const CreateBlockCompanyModal = ({
     await Promise.all(updatePromises);
     queryClient.invalidateQueries(["companies", "activeCompanies"]);
     queryClient.invalidateQueries(["companies", "blockedCompanies"]);
+    queryClient.invalidateQueries(["companies", companyData.id]);
     queryClient.invalidateQueries(["condominiums", companyData.id]);
     successToast("Empresa e seus condomínios bloqueados com sucesso!");
     router.push("/admin");

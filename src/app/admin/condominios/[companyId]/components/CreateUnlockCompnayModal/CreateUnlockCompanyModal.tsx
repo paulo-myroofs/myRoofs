@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { useRouter } from "next/navigation";
+
 import { inputClassName } from "@/app/contants";
 import Button from "@/components/atoms/Button/button";
 import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
@@ -19,6 +21,7 @@ const CreateUnlockCompanyModal = ({
 }: CreateUnlockCompanyModalProps) => {
   const [inputValue, setInputValue] = useState("");
   const { data: condoData } = useCondosByCompanyId(companyData?.id as string);
+  const router = useRouter();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -53,8 +56,10 @@ const CreateUnlockCompanyModal = ({
     await Promise.all(updatePromises);
     queryClient.invalidateQueries(["companies", "activeCompanies"]);
     queryClient.invalidateQueries(["companies", "blockedCompanies"]);
+    queryClient.invalidateQueries(["companies", companyData?.id]);
     queryClient.invalidateQueries(["condominiums", companyData?.id]);
     successToast("Empresa e seus condomínios desbloqueados com sucesso!");
+    router.push("/admin");
   };
 
   const handleConfirmClick = () => {

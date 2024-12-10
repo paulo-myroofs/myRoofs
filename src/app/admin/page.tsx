@@ -3,7 +3,6 @@
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-import BlockedCompanyCard from "@/components/atoms/BlockedCompanyCard/blockedCompanyCard";
 import Button from "@/components/atoms/Button/button";
 import CompanyCard from "@/components/atoms/CompanyCard/companyCard";
 import LoadingComponent from "@/components/atoms/Loading/loading";
@@ -83,7 +82,12 @@ export default function AdminPage() {
           {blockedCompanies && blockedCompanies.length > 0 ? (
             <div className="flex flex-wrap gap-x-12 gap-y-6">
               {blockedCompanies.map((item) => (
-                <BlockedCompanyCard key={item.id} company={item} />
+                <CompanyCard
+                  key={item.id}
+                  title={item.name}
+                  image={item.image}
+                  href={"/admin/condominios/" + item.id}
+                />
               ))}
             </div>
           ) : (

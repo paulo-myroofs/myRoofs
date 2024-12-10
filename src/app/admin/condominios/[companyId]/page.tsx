@@ -14,18 +14,21 @@ import useCondosByCompanyId from "@/hooks/queries/condos/useCondosByCompanyId";
 
 import CreateBlockCompanyModal from "./components/CreateBlockCompanyModal/CreateBlockCompanyModal";
 import CreateDeleteCompanyModal from "./components/CreateDeleteCompanyModal/CreateDeleteCompanyModal";
+import CreateUnlockCompanyModal from "./components/CreateUnlockCompnayModal/CreateUnlockCompanyModal";
 
 export default function CompanyCondos() {
   const router = useRouter();
   const { companyId } = useParams();
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [blockModalOpen, setBlockModalOpen] = useState(false);
+  const [unlockModalOpen, setUnlockModalOpen] = useState(false);
   const {
     data: condos,
     isLoading,
     isError
   } = useCondosByCompanyId(companyId as string);
   const { data: company } = useCompany(companyId as string);
+  console.log(company);
 
   if (isLoading) {
     return (
@@ -57,15 +60,26 @@ export default function CompanyCondos() {
             <TitleAtom> Condomínios Cadastrados de {company?.name}</TitleAtom>
           </div>
           <div className="flex justify-around gap-3 sm:justify-start">
-            <Button>
-              <Image
-                src="/lock.png"
-                alt="Cadeado"
-                width={30}
-                height={30}
-                onClick={() => setBlockModalOpen(true)}
-              />
-            </Button>
+            {company.blockedAt === null && (
+              <Button onClick={() => setBlockModalOpen(true)}>
+                <Image
+                  src="/lock-svgrepo-com.svg"
+                  alt="Cadeado"
+                  width={25}
+                  height={25}
+                />
+              </Button>
+            )}
+            {company.blockedAt !== null && (
+              <Button onClick={() => setUnlockModalOpen(true)}>
+                <Image
+                  src="/unlock-svgrepo-com.svg"
+                  alt="Cadeado"
+                  width={25}
+                  height={25}
+                />
+              </Button>
+            )}
             <Button
               onClick={() => {
                 router.push(`/admin/nova-empresa?companyId=${company.id}`);
@@ -107,6 +121,11 @@ export default function CompanyCondos() {
         companyData={company}
         condoData={condos}
       ></CreateBlockCompanyModal>
+      <CreateUnlockCompanyModal
+        isOpen={unlockModalOpen}
+        onOpenChange={setUnlockModalOpen}
+        companyData={company}
+      ></CreateUnlockCompanyModal>
     </>
   );
 }
