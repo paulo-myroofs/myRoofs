@@ -19,21 +19,61 @@ import { CondoCommonArea } from "../entities/common/condo/condoCommonAreas";
 const condoCommonAreaIcons: {
   type: CondoCommonArea["type"];
   icon: (color?: string) => ReactNode;
+  name: string; // Add name property
 }[] = [
-  { type: "gym", icon: (color) => <Gym color={color} /> },
-  { type: "pool", icon: (color) => <Poll color={color} /> },
-  { type: "grill", icon: (color) => <Grill color={color} /> },
-  { type: "partyRoom", icon: (color) => <Cake color={color} /> },
-  { type: "block", icon: (color) => <Block color={color} /> },
-  { type: "cake", icon: (color) => <Cake color={color} /> },
-  { type: "cinema", icon: (color) => <Cinema color={color} /> },
-  { type: "gameRoom", icon: (color) => <GameRoom color={color} /> },
-  { type: "gourmetSpace", icon: (color) => <Gourmet color={color} /> },
-  { type: "meetingRoom", icon: (color) => <MeetingRoom color={color} /> },
-  { type: "petSpace", icon: (color) => <PetSpace color={color} /> },
-  { type: "playground", icon: (color) => <Playground color={color} /> },
-  { type: "studyRoom", icon: (color) => <StudyRoom color={color} /> },
-  { type: "toyLibrary", icon: (color) => <ToyLibrary color={color} /> },
+  {
+    type: "cake",
+    icon: (color) => <Cake color={color} />,
+    name: "Salão de festas",
+  },
+  { type: "pool", icon: (color) => <Poll color={color} />, name: "Piscina" },
+  { type: "gym", icon: (color) => <Gym color={color} />, name: "Academia" },
+  {
+    type: "grill",
+    icon: (color) => <Grill color={color} />,
+    name: "Churrasqueira",
+  },
+  {
+    type: "playground",
+    icon: (color) => <Playground color={color} />,
+    name: "Playground",
+  },
+  { type: "block", icon: (color) => <Block color={color} />, name: "Quadra" },
+  {
+    type: "meetingRoom",
+    icon: (color) => <MeetingRoom color={color} />,
+    name: "Sala de reunião",
+  },
+  {
+    type: "gameRoom",
+    icon: (color) => <GameRoom color={color} />,
+    name: "Sala de jogos",
+  },
+  {
+    type: "toyLibrary",
+    icon: (color) => <ToyLibrary color={color} />,
+    name: "Brinquedoteca",
+  },
+  {
+    type: "cinema",
+    icon: (color) => <Cinema color={color} />,
+    name: "Sala de cinema",
+  },
+  {
+    type: "petSpace",
+    icon: (color) => <PetSpace color={color} />,
+    name: "Espaço pet",
+  },
+  {
+    type: "gourmetSpace",
+    icon: (color) => <Gourmet color={color} />,
+    name: "Espaço gourmet",
+  },
+  {
+    type: "studyRoom",
+    icon: (color) => <StudyRoom color={color} />,
+    name: "Sala de estudos",
+  },
 ];
 
 export default condoCommonAreaIcons;
