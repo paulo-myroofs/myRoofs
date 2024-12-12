@@ -36,14 +36,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     },
   ];
   return (
-    // <AptManagerOnlyFeatureWrapper>
-    <main>
-      <Navbar
-        menuItems={menuItems}
-        profileSelectOptions={profileSelectOptions}
-      />
-      <div className="my-32">{children}</div>
-    </main>
-    // </AptManagerOnlyFeatureWrapper>
+    <AptManagerOnlyFeatureWrapper>
+      <main>
+        <Navbar
+          menuItems={menuItems}
+          profileSelectOptions={profileSelectOptions}
+        />
+        <div className="my-32">{children}</div>
+      </main>
+    </AptManagerOnlyFeatureWrapper>
   );
 }
