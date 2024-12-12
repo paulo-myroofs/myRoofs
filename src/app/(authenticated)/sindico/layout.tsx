@@ -12,7 +12,7 @@ const menuItems = [
   { label: "Histórico", href: "/sindico/historico" },
   { label: "Cadastros", href: "/sindico/cadastros" },
   { label: "Finanças", href: "/sindico/financas" },
-  { label: "Produtos e Serviços", href: "/sindico/produtos-servicos" }
+  { label: "Produtos e Serviços", href: "/sindico/produtos-servicos" },
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -20,11 +20,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const profileSelectOptions = [
     {
       label: "Perfil do condomínio",
-      onClick: () => router.push("/sindico/condominio")
+      onClick: () => router.push("/sindico/condominio"),
     },
     {
       label: "Meus condomínios",
-      onClick: () => router.push("/escolher-condominio")
+      onClick: () => router.push("/escolher-condominio"),
     },
     {
       label: "Sair",
@@ -32,18 +32,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         logout();
         storageDelete("condoId");
         router.push("/");
-      }
-    }
+      },
+    },
   ];
   return (
-    <AptManagerOnlyFeatureWrapper>
-      <main>
-        <Navbar
-          menuItems={menuItems}
-          profileSelectOptions={profileSelectOptions}
-        />
-        <div className="my-32">{children}</div>
-      </main>
-    </AptManagerOnlyFeatureWrapper>
+    // <AptManagerOnlyFeatureWrapper>
+    <main>
+      <Navbar
+        menuItems={menuItems}
+        profileSelectOptions={profileSelectOptions}
+      />
+      <div className="my-32">{children}</div>
+    </main>
+    // </AptManagerOnlyFeatureWrapper>
   );
 }
