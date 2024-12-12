@@ -9,22 +9,6 @@ const ToyLibrary = ({ color = "#00DC52" }: { color?: string }) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <rect
-        x="0.5"
-        y="1.18213"
-        width="99"
-        height="92.2056"
-        rx="46.1028"
-        fill="white"
-      />
-      <rect
-        x="0.5"
-        y="1.18213"
-        width="99"
-        height="92.2056"
-        rx="46.1028"
-        stroke="black"
-      />
       <path
         d="M30.1351 59.3262C43 69.2009 55.8649 69.2009 68.7297 59.3262"
         stroke="#00DC52"
