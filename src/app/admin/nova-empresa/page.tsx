@@ -315,6 +315,7 @@ const NewCompany = () => {
     queryClient.invalidateQueries(["companies", "activeCompanies"]);
     queryClient.invalidateQueries(["companies", companyId]);
     queryClient.invalidateQueries(["profile", company?.aptManagerId]);
+    queryClient.invalidateQueries(["users", companyId]);
     reset();
     setImage(null);
     if (!company) {

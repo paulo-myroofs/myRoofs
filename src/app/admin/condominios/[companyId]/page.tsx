@@ -28,7 +28,6 @@ export default function CompanyCondos() {
     isError
   } = useCondosByCompanyId(companyId as string);
   const { data: company } = useCompany(companyId as string);
-  console.log(company);
 
   if (isLoading) {
     return (
