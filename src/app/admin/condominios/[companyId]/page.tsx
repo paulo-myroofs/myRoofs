@@ -124,6 +124,7 @@ export default function CompanyCondos() {
         isOpen={unlockModalOpen}
         onOpenChange={setUnlockModalOpen}
         companyData={company}
+        condoData={condos}
       ></CreateUnlockCompanyModal>
     </>
   );
