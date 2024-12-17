@@ -6,7 +6,6 @@ import ReactInputMask from "react-input-mask";
 import { cn } from "@/lib/utils";
 
 import { InputMaskProps } from "./types";
-import { JSX, ClassAttributes, InputHTMLAttributes } from "react";
 
 const InputMask = <T extends FieldValues>({
   mask,
@@ -25,7 +24,6 @@ const InputMask = <T extends FieldValues>({
       {...(register && register(name))}
       mask={mask}
       maskPlaceholder={null}
-      children={undefined}
     />
   );
 };
