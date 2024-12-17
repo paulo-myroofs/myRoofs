@@ -59,7 +59,7 @@
   "devDependencies": {
     "@rocketseat/eslint-config": "^2.1.0",
     "@types/nodemailer": "^6.4.15",
-    "@types/react-input-mask": "^3.0.5",
+    "@types/react-input-mask": "^3.0.6",
     "@types/react-scroll": "^1.8.7",
     "@types/uuid": "^10.0.0",
     "autoprefixer": "10.4.15",
