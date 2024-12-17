@@ -573,6 +573,7 @@ const AddEditCondoForm = ({
           <Button
             variant="outline-black"
             size="md"
+            className="w-[180px]"
             type="button"
             disabled={loading}
             onClick={handleCancel}
@@ -582,7 +583,7 @@ const AddEditCondoForm = ({
           <Button
             variant="icon"
             size="md"
-            className=" w-[180px] bg-[#202425]"
+            className="w-[180px] bg-[#202425]"
             type="submit"
             loading={loading}
           >
