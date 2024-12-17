@@ -12,11 +12,10 @@ const IconsSelector = ({ activeIcon, setActiveIcon }: IconsSelectorProps) => {
       <Label>Ícone</Label>
       <div className="align-center flex flex-wrap gap-2">
         {commonAreaIcons.map((data) => (
-          <div className="align-center flex flex-col">
+          <div className="align-center flex flex-col" key={data.type}>
             <button
               type="button"
               className={`flex h-[90px] w-[90px] items-center justify-center overflow-hidden rounded-full border border-verde-escuro  transition-all ${activeIcon === data.type && "scale-110"} ${activeIcon && activeIcon !== data.type && "opacity-50"} `}
-              key={data.type}
               onClick={() => setActiveIcon(data.type)}
             >
               {data.icon()}
