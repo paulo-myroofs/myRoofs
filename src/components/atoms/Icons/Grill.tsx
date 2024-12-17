@@ -3,8 +3,8 @@ import React from "react";
 const Grill = ({ color = "#00DC52" }: { color?: string }) => {
   return (
     <svg
-      width="24"
-      height="32"
+      width="36"
+      height="36"
       viewBox="0 0 24 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

@@ -3,8 +3,8 @@ import React from "react";
 const Cake = ({ color = "#00DC52" }: { color?: string }) => {
   return (
     <svg
-      width="24"
-      height="26"
+      width="30"
+      height="30"
       viewBox="0 0 24 26"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

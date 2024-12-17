@@ -3,8 +3,8 @@ import React from "react";
 const Block = ({ color = "#00DC52" }: { color?: string }) => {
   return (
     <svg
-      width="100"
-      height="94"
+      width="80"
+      height="80"
       viewBox="0 0 100 94"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

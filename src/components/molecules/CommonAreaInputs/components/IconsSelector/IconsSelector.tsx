@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 import React from "react";
 
 import Label from "@/components/atoms/Label/label";
@@ -9,7 +10,7 @@ const IconsSelector = ({ activeIcon, setActiveIcon }: IconsSelectorProps) => {
   return (
     <div className="flex flex-col gap-1">
       <Label>Ícone</Label>
-      <div className="flex gap-2 align-center flex-wrap">
+      <div className="align-center flex flex-wrap gap-2">
         {commonAreaIcons.map((data) => (
           <div className="align-center flex flex-col">
             <button
@@ -21,7 +22,7 @@ const IconsSelector = ({ activeIcon, setActiveIcon }: IconsSelectorProps) => {
               {data.icon()}
             </button>
             <p
-              className={`text-center mb-2 text-xs ${activeIcon === data.type && "scale-110 mt-2 mb-0"} ${activeIcon && activeIcon !== data.type && "opacity-50"} transition-all`}
+              className={`mb-2 text-center text-xs ${activeIcon === data.type && "mb-0 mt-2 scale-110"} ${activeIcon && activeIcon !== data.type && "opacity-50"} transition-all`}
             >
               {data.name}
             </p>
