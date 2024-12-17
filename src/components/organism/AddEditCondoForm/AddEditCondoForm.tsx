@@ -7,6 +7,7 @@ import { isCNPJ } from "brazilian-values";
 import { Timestamp } from "firebase/firestore";
 import { X } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 import { z } from "zod";
@@ -62,6 +63,7 @@ const AddEditCondoForm = ({
   setEditFalse,
   readOnly = false
 }: AddEditCondoFormProps) => {
+  const router = useRouter();
   const isEditing = !!condoData;
   const inputUpload = useRef<HTMLInputElement | null>(null);
   const [image, setImage] = useState<File | string | null>(null);
@@ -187,6 +189,7 @@ const AddEditCondoForm = ({
     setLoading(false);
     queryClient.invalidateQueries(["condominium"]);
     reset();
+    router.push("/escolher-condominio");
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
