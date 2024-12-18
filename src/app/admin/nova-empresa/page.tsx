@@ -248,7 +248,8 @@ const NewCompany = () => {
         finder: data.finder ?? null,
         createdAt: Timestamp.now(),
         endedAt: null,
-        city: data.addressData.city
+        city: data.addressData.city,
+        blockedAt: null
       };
       await setFirestoreDoc<CompanyEntity>({
         docPath: `companies/${companyId}`,
@@ -314,6 +315,7 @@ const NewCompany = () => {
     queryClient.invalidateQueries(["companies", "activeCompanies"]);
     queryClient.invalidateQueries(["companies", companyId]);
     queryClient.invalidateQueries(["profile", company?.aptManagerId]);
+    queryClient.invalidateQueries(["users", companyId]);
     reset();
     setImage(null);
     if (!company) {
