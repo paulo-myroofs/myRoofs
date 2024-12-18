@@ -85,6 +85,9 @@ const CreateBlockCompanyModal = ({
     queryClient.invalidateQueries(["companies", "activeCompanies"]);
     queryClient.invalidateQueries(["companies", "blockedCompanies"]);
     queryClient.invalidateQueries(["companies", companyData.id]);
+    queryClient.invalidateQueries(["users", companyData.id]);
+    queryClient.invalidateQueries(["employees", condoData]);
+    queryClient.invalidateQueries(["residents", condoData]);
     successToast("Empresa e seus condomínios bloqueados com sucesso!");
     router.push("/admin");
   };

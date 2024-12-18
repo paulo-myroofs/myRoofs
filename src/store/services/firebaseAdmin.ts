@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import admin from "firebase-admin";
 
+import { deleteFirestoreDoc } from ".";
+
 export const activateUserAuthAdmin = async (
   uid: string
 ): Promise<{ error: null | string }> => {
@@ -30,8 +32,12 @@ export const deactivateUserAuthAdmin = async (
       error: null
     }))
     .catch((error) => {
-      console.log(error);
-      return { error: "Erro ao desativar usuário" };
+      console.error(error);
+      if (error.code === "auth/user-not-found") {
+        deleteFirestoreDoc({ documentPath: `users/${uid}` });
+        return { error: null };
+      }
+      return { error: "Erro ao desativar usuário." };
     });
 };
 
