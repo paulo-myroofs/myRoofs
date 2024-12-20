@@ -12,15 +12,33 @@ import useOccurrencesByCondoId from "@/hooks/queries/condos/occurrences/useOccur
 import { storageGet } from "@/store/services/storage";
 
 import { columns } from "./columns";
+import { OccurrenceColumnData } from "./types";
 
 const boxStyle = "border border-black rounded-[8px]";
 
 const IncidentsTable = () => {
   const condoId = storageGet<string>("condoId");
   const [filterValue, setFilterValue] = useState("");
-  const { data: occurrences } = useOccurrencesByCondoId(condoId as string);
-  const filteredData = occurrences?.filter((item) =>
-    item.title.toLocaleLowerCase().includes(filterValue.toLocaleLowerCase())
+  const { data: occurrences } = useOccurrencesByCondoId(
+    condoId as string,
+    (data) =>
+      data.map(
+        (item: OccurrenceEntity) =>
+          ({
+            id: item.id,
+            userId: item.userId,
+            upload: item.upload,
+            date: item.date,
+            status: item.status,
+            details: item.details,
+            condoId: condoId as string,
+            title: item.title
+          }) as OccurrenceColumnData
+      )
+  );
+  const filteredData: OccurrenceColumnData[] | undefined = occurrences?.filter(
+    (item: OccurrenceColumnData) =>
+      item.title.toLocaleLowerCase().includes(filterValue.toLocaleLowerCase())
   );
 
   if (!condoId) return;
@@ -45,7 +63,7 @@ const IncidentsTable = () => {
         </div>
         <span className="block h-[0.5px] w-full bg-black" />
         <div className="mx-auto flex w-11/12 max-w-[1200px] items-center justify-center pb-8 sm:py-8">
-          <DataPaginatedTable<OccurrenceEntity>
+          <DataPaginatedTable<OccurrenceColumnData>
             data={filteredData ?? []}
             columns={columns}
           />
