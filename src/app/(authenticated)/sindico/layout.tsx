@@ -12,7 +12,10 @@ const menuItems = [
   { label: "Histórico", href: "/sindico/historico" },
   { label: "Cadastros", href: "/sindico/cadastros" },
   { label: "Finanças", href: "/sindico/financas" },
-  { label: "Produtos e Serviços", href: "/sindico/produtos-servicos" }
+  { label: "Produtos Serviços", href: "/sindico/produtos-servicos" },
+  { label: "Visitas Encomendas", href: "/funcionario/visitas-encomendas" },
+  { label: "Reservas", href: "/funcionario/reservas" },
+  { label: "Achados Perdidos", href: "/funcionario/achados-perdidos" }
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -36,14 +39,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
   ];
   return (
-    <AptManagerOnlyFeatureWrapper>
+    //<AptManagerOnlyFeatureWrapper>
       <main>
         <Navbar
           menuItems={menuItems}
           profileSelectOptions={profileSelectOptions}
+          gap={'sm'}
         />
         <div className="my-32">{children}</div>
       </main>
-    </AptManagerOnlyFeatureWrapper>
+   // </AptManagerOnlyFeatureWrapper>
   );
 }
