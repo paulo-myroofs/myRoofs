@@ -17,7 +17,7 @@ interface Props {
   children: JSX.Element;
 }
 
-function EmployeeOnlyFeature({ children }: Props): JSX.Element {
+function EmployeeFeature({ children }: Props): JSX.Element {
   const { userUid } = useAuth();
 
   const { data: user } = useProfile<EmployeeEntity>(userUid);
@@ -27,7 +27,11 @@ function EmployeeOnlyFeature({ children }: Props): JSX.Element {
   const router = useRouter();
 
   useEffect(() => {
-    if (userUid && user && user.role === "employee") {
+    if (
+      userUid &&
+      user &&
+      (user.role === "employee" || user.role === "aptManager") // Tanto funcionario quanto sindico tem acesso a esse fluxo
+    ) {
       if (endedCondosIds?.includes(user.condominiumCode)) {
         logout();
         errorToast(
@@ -42,12 +46,12 @@ function EmployeeOnlyFeature({ children }: Props): JSX.Element {
   return children;
 }
 
-export default function EmployeeOnlyFeatureWrapper({
+export default function EmployeeFeatureWrapper({
   children
 }: Props): JSX.Element {
   return (
     <FetchAuthState>
-      <EmployeeOnlyFeature>{children}</EmployeeOnlyFeature>
+      <EmployeeFeature>{children}</EmployeeFeature>
     </FetchAuthState>
   );
 }

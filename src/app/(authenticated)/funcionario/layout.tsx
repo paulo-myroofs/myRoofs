@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
-import EmployeeOnlyFeatureWrapper from "@/components/templates/Employee/employee";
+import EmployeeFeatureWrapper from "@/components/templates/Employee/employee";
 import Navbar from "@/containers/Navbar/navbar";
 import { logout } from "@/store/services/auth";
 import { storageDelete } from "@/store/services/storage";
@@ -30,7 +30,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
   ];
   return (
-    <EmployeeOnlyFeatureWrapper>
+    <EmployeeFeatureWrapper>
       <main>
         <Navbar
           menuItems={menuItems}
@@ -38,6 +38,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         />
         <div className="my-32">{children}</div>
       </main>
-    </EmployeeOnlyFeatureWrapper>
+    </EmployeeFeatureWrapper>
   );
 }
