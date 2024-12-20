@@ -23,14 +23,15 @@ import useAuth from "@/hooks/useAuth";
 import { setFirestoreDoc, updateFirestoreDoc } from "@/store/services";
 import { createUserAuth } from "@/store/services/auth";
 import { sendEmail } from "@/store/services/email";
-import { storageGet } from "@/store/services/storage";
+// import { storageGet } from "@/store/services/storage";
 import unmask from "@/utils/unmask";
 import AddAptManagerSchema from "@/validations/admin/AddAptManager";
 
 type AddAptManagerForm = z.infer<typeof AddAptManagerSchema>;
 
 const NovoSindico = () => {
-  const condoId = storageGet<string>("condoId") as string;
+  // const condoId = storageGet<string>("condoId") as string;
+  const condoId = "12345";
   const { userUid } = useAuth();
   const { data: condo } = useCondo(condoId);
   const { data: user } = useProfile<AptManagerEntity>(userUid);
@@ -100,7 +101,8 @@ const NovoSindico = () => {
       number: data.ownerAddressData.number,
       cep: unmask(data.ownerAddressData.cep),
       city: data.ownerAddressData.city,
-      isSecondary: true
+      isSecondary: true,
+      image: ""
     };
 
     await setFirestoreDoc<AptManagerEntity>({

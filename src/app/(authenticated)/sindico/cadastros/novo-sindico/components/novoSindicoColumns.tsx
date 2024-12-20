@@ -2,6 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { formatToCPF } from "brazilian-values";
+import { Edit } from "lucide-react";
 
 import { AptManagerEntity } from "@/common/entities/aptManager";
 
@@ -23,5 +24,10 @@ export const columns: ColumnDef<AptManagerEntity>[] = [
   {
     header: "Empresa",
     accessorKey: "companyId"
+  },
+  {
+    header: "Editar",
+    accessorKey: "Editar",
+    cell: ({ row }) => <Edit data={row.original} />
   }
 ];
