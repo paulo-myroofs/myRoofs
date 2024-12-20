@@ -7,15 +7,17 @@ import Link from "next/link";
 import Button from "@atoms/Button/button";
 
 import EmployeesTable from "./employees/employees";
+import AptManagersTable from "./novo-sindico/components/novoSindico";
 import ResidentsTable from "./residents/residents";
 
 export default function MoradoresFuncionariosCadastrados() {
-  const [activeTab, setActiveTab] = useState<"Moradores" | "Funcionários">(
-    "Moradores"
-  );
-  const tabs: Array<"Moradores" | "Funcionários"> = [
+  const [activeTab, setActiveTab] = useState<
+    "Moradores" | "Funcionários" | "Administradores"
+  >("Moradores");
+  const tabs: Array<"Moradores" | "Funcionários" | "Administradores"> = [
     "Moradores",
-    "Funcionários"
+    "Funcionários",
+    "Administradores"
   ];
 
   return (
@@ -49,6 +51,7 @@ export default function MoradoresFuncionariosCadastrados() {
 
       {activeTab === "Moradores" && <ResidentsTable />}
       {activeTab === "Funcionários" && <EmployeesTable />}
+      {activeTab === "Administradores" && <AptManagersTable />}
     </main>
   );
 }

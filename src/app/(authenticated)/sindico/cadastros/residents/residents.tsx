@@ -15,7 +15,9 @@ import { columns } from "./residentsColumns";
 const boxStyle = "border border-black rounded-[8px]";
 
 const ResidentsTable = () => {
-  const condoId = storageGet<string>("condoId");
+  // const condoId = storageGet<string>("condoId");
+  const condoId = "12345";
+
   const [filterValue, setFilterValue] = useState("");
   const { data: residents } = useResidentsByCondoId(condoId as string);
   const filteredData = residents?.filter((item) =>

@@ -18,7 +18,9 @@ import { columns } from "./employeesColumns";
 const boxStyle = "border border-black rounded-[8px]";
 
 const EmployeesTable = () => {
-  const condoId = storageGet<string>("condoId");
+  // const condoId = storageGet<string>("condoId");
+  const condoId = "12345";
+
   const [modalOpen, setModalOpen] = useState(false);
   const [filterValue, setFilterValue] = useState("");
   const { data: employees } = useEmployeesByCondoId(condoId as string);
