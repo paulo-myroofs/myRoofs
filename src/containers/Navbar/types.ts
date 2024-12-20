@@ -14,5 +14,4 @@ export interface ResponsiveMenuProps {
 export interface NavbarProps {
   menuItems: MenuItems[];
   profileSelectOptions?: ProfileSelectProps["options"];
-  gap?: string;
 }

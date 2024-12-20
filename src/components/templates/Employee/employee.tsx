@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 "use client";
 
 import { useEffect } from "react";
@@ -17,25 +18,21 @@ interface Props {
   children: JSX.Element;
 }
 
-function EmployeeFeature({ children }: Props): JSX.Element {
+function EmployeeOnlyFeature({ children }: Props): JSX.Element {
   const { userUid } = useAuth();
 
   const { data: user } = useProfile<EmployeeEntity>(userUid);
   const { data: endedCondosIds } = useEndedCondos((data) =>
-    data.map((item: CondoEntity) => item.id)
+    data.map((item: CondoEntity) => item.id),
   );
   const router = useRouter();
 
   useEffect(() => {
-    if (
-      userUid &&
-      user &&
-      (user.role === "employee" || user.role === "aptManager") // Tanto funcionario quanto sindico tem acesso a esse fluxo
-    ) {
+    if (userUid && user && user.role === "employee") {
       if (endedCondosIds?.includes(user.condominiumCode)) {
         logout();
         errorToast(
-          "O condomínio associado a você foi encerrado. Entre em contato com o seu administrador."
+          "O condomínio associado a você foi encerrado. Entre em contato com o seu administrador.",
         );
       }
     } else {
@@ -46,12 +43,12 @@ function EmployeeFeature({ children }: Props): JSX.Element {
   return children;
 }
 
-export default function EmployeeFeatureWrapper({
-  children
+export default function EmployeeOnlyFeatureWrapper({
+  children,
 }: Props): JSX.Element {
   return (
     <FetchAuthState>
-      <EmployeeFeature>{children}</EmployeeFeature>
+      <EmployeeOnlyFeature>{children}</EmployeeOnlyFeature>
     </FetchAuthState>
   );
 }

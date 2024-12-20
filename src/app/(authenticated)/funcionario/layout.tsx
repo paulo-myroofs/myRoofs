@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
-import EmployeeFeatureWrapper from "@/components/templates/Employee/employee";
+import EmployeeOnlyFeatureWrapper from "@/components/templates/Employee/employee";
 import Navbar from "@/containers/Navbar/navbar";
 import { logout } from "@/store/services/auth";
 import { storageDelete } from "@/store/services/storage";
@@ -10,7 +10,7 @@ import { storageDelete } from "@/store/services/storage";
 const menuItems = [
   { label: "Visitas e Encomendas", href: "/funcionario/visitas-encomendas" },
   { label: "Reservas", href: "/funcionario/reservas" },
-  { label: "Achados e Perdidos", href: "/funcionario/achados-perdidos" }
+  { label: "Achados e Perdidos", href: "/funcionario/achados-perdidos" },
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -18,7 +18,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const profileSelectOptions = [
     {
       label: "Perfil do funcionário",
-      onClick: () => router.push("/funcionario/perfil")
+      onClick: () => router.push("/funcionario/perfil"),
     },
     {
       label: "Sair",
@@ -26,11 +26,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         logout();
         storageDelete("condoId");
         router.push("/");
-      }
-    }
+      },
+    },
   ];
   return (
-    <EmployeeFeatureWrapper>
+    <EmployeeOnlyFeatureWrapper>
       <main>
         <Navbar
           menuItems={menuItems}
@@ -38,6 +38,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         />
         <div className="my-32">{children}</div>
       </main>
-    </EmployeeFeatureWrapper>
+    </EmployeeOnlyFeatureWrapper>
   );
 }
