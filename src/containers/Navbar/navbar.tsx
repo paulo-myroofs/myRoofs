@@ -61,8 +61,7 @@ function ResponsiveMenu({
 }
 export default function Navbar({
   menuItems,
-  profileSelectOptions,
-  gap
+  profileSelectOptions
 }: NavbarProps) {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -84,9 +83,7 @@ export default function Navbar({
           <ProfileSelect options={profileSelectOptions} />
         )}
       </div>
-      <ul
-        className={`align-center order-2 hidden h-full items-center lg:flex ${gap === "sm" ? "lg:gap-[2rem] xl:gap-[2rem]" : "lg:gap-[4rem] xl:gap-[6rem]"} `}
-      >
+      <ul className="align-center order-2 hidden h-full items-center lg:flex lg:gap-[4rem] xl:gap-[6rem] ">
         {menuItems.map((button) => (
           <li
             key={button.label}

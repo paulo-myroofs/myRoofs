@@ -30,7 +30,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
   ];
   return (
-    <EmployeeFeatureWrapper>
+   //<EmployeeFeatureWrapper>
       <main>
         <Navbar
           menuItems={menuItems}
@@ -38,6 +38,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         />
         <div className="my-32">{children}</div>
       </main>
-    </EmployeeFeatureWrapper>
+    //</EmployeeFeatureWrapper>
   );
 }

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 "use client";
 
 import { useEffect } from "react";
@@ -30,7 +31,7 @@ function EmployeeFeature({ children }: Props): JSX.Element {
     if (
       userUid &&
       user &&
-      (user.role === "employee" || user.role === "aptManager") // Tanto funcionario quanto sindico tem acesso a esse fluxo
+      user.role === "employee" 
     ) {
       if (endedCondosIds?.includes(user.condominiumCode)) {
         logout();

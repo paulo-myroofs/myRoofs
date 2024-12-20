@@ -12,10 +12,7 @@ const menuItems = [
   { label: "Histórico", href: "/sindico/historico" },
   { label: "Cadastros", href: "/sindico/cadastros" },
   { label: "Finanças", href: "/sindico/financas" },
-  { label: "Produtos Serviços", href: "/sindico/produtos-servicos" },
-  { label: "Visitas Encomendas", href: "/funcionario/visitas-encomendas" },
-  { label: "Reservas", href: "/funcionario/reservas" },
-  { label: "Achados Perdidos", href: "/funcionario/achados-perdidos" }
+  { label: "Produtos e Serviços", href: "/sindico/produtos-servicos" }
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {
