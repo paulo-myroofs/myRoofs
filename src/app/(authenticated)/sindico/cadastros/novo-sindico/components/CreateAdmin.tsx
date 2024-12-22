@@ -139,9 +139,9 @@ export default function AptManagerModal({
         successToast("Administrador atualizado com sucesso.");
       }
 
-      onOpenChange(false); // Fecha o modal
-      reset(); // Limpa o formulário
-      setImage(null); // Limpa a imagem
+      onOpenChange(false);
+      reset();
+      setImage(null);
     } catch (error) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       errorToast((error as any).message || "Erro ao salvar o administrador.");

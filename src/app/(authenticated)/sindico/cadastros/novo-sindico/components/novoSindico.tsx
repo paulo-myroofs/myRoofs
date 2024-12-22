@@ -7,7 +7,7 @@ import { AptManagerEntity } from "@/common/entities/aptManager";
 import Button from "@/components/atoms/Button/button";
 import { DataPaginatedTable } from "@/components/atoms/DataTablePaginated/DataTablePaginated";
 import Input from "@/components/atoms/Input/input";
-import useCondosByAptManagerId from "@/hooks/queries/condos/useCondosByAptManagerId";
+import useAdministratorByCondoId from "@/hooks/queries/administrator/useAdministratorByCondoId";
 import { storageGet } from "@/store/services/storage";
 
 import AptManagerModal from "./CreateAdmin";
@@ -16,7 +16,6 @@ import { columns } from "./novoSindicoColumns";
 const boxStyle = "border border-black rounded-[8px]";
 
 const AptManagersTable = () => {
-  // const condoId = "12345";
   const condoId = storageGet<string>("condoId") as string;
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -24,7 +23,18 @@ const AptManagersTable = () => {
     []
   );
   const [filterValue, setFilterValue] = useState("");
-  const { data: aptManagers } = useCondosByAptManagerId(condoId as string);
+
+  const {
+    data: aptManagers,
+    isError,
+    isLoading
+  } = useAdministratorByCondoId(condoId);
+
+  // Adicione logs para debug
+  console.log("Condominium ID:", condoId);
+  console.log("Administradores recebidos:", aptManagers);
+  console.log("Erro no hook:", isError);
+  console.log("Carregando:", isLoading);
 
   const combinedData = [...(aptManagers ?? []), ...localAptManagers];
 
@@ -42,6 +52,11 @@ const AptManagersTable = () => {
 
   return (
     <section className="space-y-4">
+      {isLoading && <div>Carregando administradores...</div>}
+      {isError && <div>Erro ao carregar administradores.</div>}
+      {!isLoading && !aptManagers?.length && (
+        <div>Nenhum administrador encontrado.</div>
+      )}
       <div className={twMerge(boxStyle)}>
         <div className="flex flex-col items-center justify-between gap-y-3 px-8 py-4 md:flex-row">
           <h1 className="text-[18px] font-bold sm:text-[24px]">

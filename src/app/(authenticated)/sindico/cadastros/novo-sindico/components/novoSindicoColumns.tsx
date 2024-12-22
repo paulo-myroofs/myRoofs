@@ -28,6 +28,7 @@ export const columns: ColumnDef<AptManagerEntity>[] = [
   {
     header: "Editar",
     accessorKey: "Editar",
-    cell: ({ row }) => <Edit data={row.original} />
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    cell: ({ row }) => <Edit />
   }
 ];
