@@ -8,6 +8,7 @@ import Button from "@/components/atoms/Button/button";
 import { DataPaginatedTable } from "@/components/atoms/DataTablePaginated/DataTablePaginated";
 import Input from "@/components/atoms/Input/input";
 import useCondosByAptManagerId from "@/hooks/queries/condos/useCondosByAptManagerId";
+import { storageGet } from "@/store/services/storage";
 
 import AptManagerModal from "./CreateAdmin";
 import { columns } from "./novoSindicoColumns";
@@ -15,7 +16,9 @@ import { columns } from "./novoSindicoColumns";
 const boxStyle = "border border-black rounded-[8px]";
 
 const AptManagersTable = () => {
-  const condoId = "12345";
+  // const condoId = "12345";
+  const condoId = storageGet<string>("condoId") as string;
+
   const [modalOpen, setModalOpen] = useState(false);
   const [localAptManagers, setLocalAptManagers] = useState<AptManagerEntity[]>(
     []
@@ -68,7 +71,7 @@ const AptManagersTable = () => {
         isOpen={modalOpen}
         onOpenChange={setModalOpen}
         adminData={undefined}
-        handleNewAdmin={handleNewAdmin} // Adicione esta linha
+        handleNewAdmin={handleNewAdmin}
       />
     </section>
   );

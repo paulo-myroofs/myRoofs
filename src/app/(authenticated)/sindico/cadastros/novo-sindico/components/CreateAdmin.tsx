@@ -20,6 +20,7 @@ import { errorToast, successToast } from "@/hooks/useAppToast";
 import { setFirestoreDoc, updateFirestoreDoc } from "@/store/services";
 import { deleteImage, uploadImage } from "@/store/services/firebaseStorage";
 // import Button from "@/components/atoms/Button/button";
+import { storageGet } from "@/store/services/storage";
 import AddAptManager from "@/validations/admin/AddAptManager";
 
 import { AdminModalProps } from "./types";
@@ -30,10 +31,10 @@ const inputClassName = "border-[#DEE2E6] bg-[#F8F9FA]";
 export default function AptManagerModal({
   isOpen,
   onOpenChange,
-  adminData,
-  handleNewAdmin
+  adminData
 }: AdminModalProps) {
-  const condoId = "12345";
+  // const condoId = "12345";
+  const condoId = storageGet<string>("condoId") as string;
   const [image, setImage] = useState<File | string | null>(
     adminData?.image ?? null
   );
