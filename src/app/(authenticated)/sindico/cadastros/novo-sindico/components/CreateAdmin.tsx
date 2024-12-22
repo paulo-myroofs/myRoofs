@@ -310,7 +310,7 @@ export default function AptManagerModal({
             inputClassName={inputClassName}
             register={register}
             formErrors={errors}
-            zodObj="ownerAddress"
+            zodObj="ownerAddressData"
             setValue={setValue}
             watchCep={watch("ownerAddressData.cep") ?? ""}
           />
