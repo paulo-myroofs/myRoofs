@@ -7,6 +7,7 @@ import { isCNPJ } from "brazilian-values";
 import { Timestamp } from "firebase/firestore";
 import { X } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 import { z } from "zod";
@@ -63,6 +64,7 @@ const AddEditCondoForm = ({
   setEditFalse,
   readOnly = false
 }: AddEditCondoFormProps) => {
+  const router = useRouter();
   const isEditing = !!condoData;
   const inputUpload = useRef<HTMLInputElement | null>(null);
   const [image, setImage] = useState<File | string | null>(null);
@@ -95,7 +97,6 @@ const AddEditCondoForm = ({
         number: condoData?.address?.number ?? ""
       },
       phone: condoData?.phone ? formatToPhoneMask(condoData?.phone) : "",
-      housingName: condoData?.housingName ?? "",
       floorsQty: (condoData?.floorsQty ?? "0").toString(),
       garageSpacesQty: (condoData?.garageQty ?? "0").toString()
     }
@@ -199,6 +200,7 @@ const AddEditCondoForm = ({
     setLoading(false);
     queryClient.invalidateQueries(["condominium"]);
     reset();
+    router.push("/escolher-condominio");
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -586,6 +588,7 @@ const AddEditCondoForm = ({
           <Button
             variant="outline-black"
             size="md"
+            className="w-[180px]"
             type="button"
             disabled={loading}
             onClick={handleCancel}
@@ -595,7 +598,7 @@ const AddEditCondoForm = ({
           <Button
             variant="icon"
             size="md"
-            className=" w-[180px] bg-[#202425]"
+            className="w-[180px] bg-[#202425]"
             type="submit"
             loading={loading}
           >

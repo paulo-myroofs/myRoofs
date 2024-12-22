@@ -20,6 +20,7 @@ const AptManagerInputs = <T extends AddAptManagerForm>({
   errors,
   control,
   setValue,
+  emailDisabled,
   hideEmail = false
 }: AptManagerInputsProps<T>) => {
   return (
@@ -39,6 +40,7 @@ const AptManagerInputs = <T extends AddAptManagerForm>({
           label="Email"
           register={register}
           formErrors={errors}
+          disabled={emailDisabled}
           placeholder="Digite o email"
         />
       )}

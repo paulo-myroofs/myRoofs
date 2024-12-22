@@ -5,6 +5,7 @@ import { Timestamp } from "firebase/firestore";
 import { CondoCommonArea } from "@/common/entities/common/condo/condoCommonAreas";
 import Button from "@/components/atoms/Button/button";
 import { DatePickerMultiple } from "@/components/atoms/DatePickerMultiple/DatePickerMultiple";
+import Label from "@/components/atoms/Label/label";
 import InputField from "@/components/molecules/InputField/inputField";
 import { errorToast } from "@/hooks/useAppToast";
 import { timestampToDate } from "@/utils/timestampToDate";
@@ -164,26 +165,35 @@ const CommonAreaInputs = ({
             }
             placeholder="Digite aqui a quantidade de pessoas que o local comporta"
           />{" "}
-          <IconsSelector
-            activeIcon={mainInputs.type}
-            setActiveIcon={(type) =>
-              setMainInputs((prev) => ({ ...prev, type }))
-            }
-          />
-          <DatePickerMultiple
-            dates={mainInputs.dates}
-            setDates={(dates) =>
-              setMainInputs((prev) => ({
-                ...prev,
-                dates
-              }))
-            }
-          />
-          <div className="mt-8 flex items-center justify-center gap-8">
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
+              <Label className="text-sm">Ícone</Label>
+              <IconsSelector
+                activeIcon={mainInputs.type}
+                setActiveIcon={(type) =>
+                  setMainInputs((prev) => ({ ...prev, type }))
+                }
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label className="text-sm">Datas Indisponíveis</Label>
+              <DatePickerMultiple
+                dates={mainInputs.dates}
+                setDates={(dates) =>
+                  setMainInputs((prev) => ({
+                    ...prev,
+                    dates
+                  }))
+                }
+              />
+            </div>
+          </div>
+          <div className="flex flex-row items-center justify-center gap-8">
             <Button
               variant="outline-black"
               size="md"
               type="button"
+              className="mb-4 mt-2"
               onClick={
                 toEditCommonArea
                   ? () => {
@@ -204,14 +214,14 @@ const CommonAreaInputs = ({
             <Button
               variant="icon"
               size="md"
-              className=" w-[180px] bg-[#202425]"
+              className="mb-4 mt-2 bg-[#202425]"
               type="button"
               onClick={() => handleAddEdit(toEditCommonArea ? "edit" : "add")}
             >
-              {toEditCommonArea ? "Editar" : "Criar"}
+              {toEditCommonArea ? "Editar" : "Adicionar"}
             </Button>
           </div>
-          <span className="block h-[2px] w-full bg-[#868E96]"></span>
+          <span className="block h-[1px] w-full bg-[#868E96]"></span>
         </div>
       )}
     </>
