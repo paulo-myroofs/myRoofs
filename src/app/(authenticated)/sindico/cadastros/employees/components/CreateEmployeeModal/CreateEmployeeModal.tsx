@@ -23,7 +23,7 @@ import { queryClient } from "@/store/providers/queryClient";
 import {
   deleteFirestoreDoc,
   setFirestoreDoc,
-  updateFirestoreDoc
+  updateFirestoreDoc,
 } from "@/store/services";
 import { createUserAuth, deleteUserAuth } from "@/store/services/auth";
 import { sendEmail } from "@/store/services/email";
@@ -41,11 +41,11 @@ const inputClassName = "baorder-[#DEE2E6] bg-[#F8F9FA]";
 export default function CreateEmployeeModal({
   isOpen,
   onOpenChange,
-  employeeData
+  employeeData,
 }: EmployeeModalProps) {
   const condoId = storageGet<string>("condoId");
   const [image, setImage] = useState<File | string | null>(
-    employeeData?.image ?? null
+    employeeData?.image ?? null,
   );
   const [loading, setLoading] = useState(false);
   const {
@@ -55,7 +55,7 @@ export default function CreateEmployeeModal({
     watch,
     formState: { errors },
     reset,
-    setValue
+    setValue,
   } = useForm<AddEmployeeForm>({
     resolver: zodResolver(AddEmployeeSchema),
     values: {
@@ -67,15 +67,15 @@ export default function CreateEmployeeModal({
         cep: employeeData?.address.cep ?? "",
         state:
           brazilStates.find(
-            (item) => item.label === employeeData?.address?.state
+            (item) => item.label === employeeData?.address?.state,
           )?.value ?? "",
         city: employeeData?.address?.city ?? "",
         neighborhood: employeeData?.address?.neighborhood ?? "",
         address: employeeData?.address?.address ?? "",
-        number: employeeData?.address?.number ?? ""
+        number: employeeData?.address?.number ?? "",
       },
-      phone: employeeData?.phone ? formatToPhoneMask(employeeData?.phone) : ""
-    }
+      phone: employeeData?.phone ? formatToPhoneMask(employeeData?.phone) : "",
+    },
   });
   const inputUpload = useRef<HTMLInputElement | null>(null);
 
@@ -96,13 +96,13 @@ export default function CreateEmployeeModal({
     let imageUrl = employeeData?.image ?? null;
     if (typeof image !== "string" && !!image) {
       const { image: url, error: errorUpload } = await uploadImage(
-        image as File
+        image as File,
       );
 
       if (errorUpload || !url) {
         setLoading(false);
         return errorToast(
-          "Não foi possível fazer upload de imagem, entrar em contato."
+          "Não foi possível fazer upload de imagem, entrar em contato.",
         );
       }
       imageUrl = url;
@@ -124,12 +124,12 @@ export default function CreateEmployeeModal({
         city: data.address.city,
         neighborhood: data.address.neighborhood,
         address: data.address.address,
-        number: data.address.number
+        number: data.address.number,
       },
       occupation: data.occupation,
       image: imageUrl,
       condominiumCode: condoId,
-      role: "employee"
+      role: "employee",
     };
 
     if (!employeeData) {
@@ -140,13 +140,13 @@ export default function CreateEmployeeModal({
       if (errorEmail) {
         setLoading(false);
         return errorToast(
-          "Não foi possível enviar email com credenciais, entre em contato."
+          "Não foi possível enviar email com credenciais, entre em contato.",
         );
       }
 
       const { error, uid: employeeId } = await createUserAuth(
         data.email,
-        password
+        password,
       );
 
       if (error || !employeeId) {
@@ -159,8 +159,8 @@ export default function CreateEmployeeModal({
         data: {
           ...finalData,
           createdAt: Timestamp.now(),
-          updatedAt: Timestamp.now()
-        } as EmployeeEntity
+          updatedAt: Timestamp.now(),
+        } as EmployeeEntity,
       });
 
       successToast("Funcionário cadastrado com sucesso.");
@@ -169,8 +169,8 @@ export default function CreateEmployeeModal({
         documentPath: `users/${employeeData.id}`,
         data: {
           ...finalData,
-          updatedAt: Timestamp.now()
-        } as EmployeeEntity
+          updatedAt: Timestamp.now(),
+        } as EmployeeEntity,
       });
       setImage(imageUrl);
       successToast("Funcionário atualizado com sucesso.");
@@ -186,7 +186,7 @@ export default function CreateEmployeeModal({
     if (!employeeData) return;
     setLoading(true);
     await deleteFirestoreDoc({
-      documentPath: `/users/${employeeData.id}`
+      documentPath: `/users/${employeeData.id}`,
     });
     await deleteUserAuth(employeeData.id);
     setLoading(false);

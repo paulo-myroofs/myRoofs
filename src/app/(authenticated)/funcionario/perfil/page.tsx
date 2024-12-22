@@ -42,7 +42,7 @@ const Perfil = () => {
     reset,
     control,
     watch,
-    setValue
+    setValue,
   } = useForm<EditEmployeeForm>({
     mode: "all",
     criteriaMode: "all",
@@ -58,12 +58,12 @@ const Perfil = () => {
             ?.value ?? "",
         number: profile?.address?.number ?? "",
         cep: profile?.address?.cep ?? "",
-        neighborhood: profile?.address?.neighborhood ?? ""
+        neighborhood: profile?.address?.neighborhood ?? "",
       },
       occupation: profile?.occupation ?? "",
       phone: profile?.phone ? formatToPhoneMask(profile.phone) : "",
-      cpf: profile?.cpf ?? ""
-    }
+      cpf: profile?.cpf ?? "",
+    },
   });
 
   const handleForm = async (data: EditEmployeeForm) => {
@@ -71,13 +71,13 @@ const Perfil = () => {
     let imageUrl = profile?.image ?? null;
     if (typeof image !== "string" && !!image) {
       const { image: url, error: errorUpload } = await uploadImage(
-        image as File
+        image as File,
       );
 
       if (errorUpload || !url) {
         setLoading(false);
         errorToast(
-          "Não foi possível fazer upload de imagem, entrar em contato."
+          "Não foi possível fazer upload de imagem, entrar em contato.",
         );
       }
       imageUrl = url;
@@ -104,14 +104,14 @@ const Perfil = () => {
         city: data.address.city,
         neighborhood: data.address.neighborhood,
         address: data.address.address,
-        number: data.address.number
+        number: data.address.number,
       },
-      updatedAt: Timestamp.now()
+      updatedAt: Timestamp.now(),
     } as Partial<EmployeeEntity>;
 
     await updateFirestoreDoc({
       documentPath: `users/${userUid}`,
-      data: finalData
+      data: finalData,
     });
     setImage(imageUrl);
     successToast("Perfil atualizado com sucesso.");
@@ -143,7 +143,7 @@ const Perfil = () => {
         onClick={() => inputUpload?.current?.click()}
         className={twMerge(
           `relative flex h-[150px] w-[150px] items-center justify-center gap-1 overflow-hidden rounded-full border border-gray-300 px-3 text-sm text-black/50 outline-none transition-all hover:opacity-60 ${!isEdit && "pointer-events-none opacity-70"}`,
-          inputClassName
+          inputClassName,
         )}
       >
         {image || profile?.image ? (
