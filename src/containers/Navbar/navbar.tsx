@@ -18,21 +18,24 @@ function ResponsiveMenu({
 
   return (
     <div className="absolute inset-0 z-30 flex h-screen w-[14.5rem] flex-col items-center justify-start rounded-sm bg-white text-green-500 shadow-[0_100px_200px_50px_rgba(0,0,0,0.9)] lg:hidden">
-      <div className="absolute bottom-0">
+      {/* Certifique-se de que esses elementos estão atrás */}
+      <div className="absolute bottom-0 z-10">
         <BlackShape />
       </div>
-      <div className="absolute bottom-0">
+      <div className="absolute bottom-0 z-10">
         <Stroke />
       </div>
-      <button onClick={onCloseMenu} className="absolute left-4 top-6">
+
+      {/* Conteúdo interativo com z-index maior */}
+      <button onClick={onCloseMenu} className="absolute left-4 top-6 z-20">
         <FiX size={32} color="black" />
       </button>
 
-      <ul className="mt-[6rem] flex flex-col  justify-center gap-[1.5rem]">
+      <ul className="z-20 mt-[6rem] flex flex-col justify-center gap-[1.5rem]">
         {menuItems.map((button) => (
           <li
             key={button.label}
-            className="flex w-full cursor-pointer items-center justify-start text-[1.25rem] transition-colors hover:text-green-300 "
+            className="flex w-full cursor-pointer items-center justify-start text-[1.25rem] transition-colors hover:text-green-300"
           >
             <Link
               href={button.href}
@@ -49,7 +52,7 @@ function ResponsiveMenu({
       </ul>
 
       {profileSelectOptions && (
-        <div className="mt-8 flex w-full cursor-pointer justify-center lg:hidden ">
+        <div className="z-20 mt-8 flex w-full cursor-pointer justify-center lg:hidden">
           <ProfileSelect options={profileSelectOptions} />
         </div>
       )}
@@ -80,7 +83,7 @@ export default function Navbar({
           <ProfileSelect options={profileSelectOptions} />
         )}
       </div>
-      <ul className="align-center order-2 hidden h-full items-center lg:flex lg:gap-[4rem] xl:gap-[6rem]">
+      <ul className="align-center order-2 hidden h-full items-center lg:flex lg:gap-[4rem] xl:gap-[6rem] ">
         {menuItems.map((button) => (
           <li
             key={button.label}
