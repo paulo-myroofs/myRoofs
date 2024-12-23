@@ -7,7 +7,7 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { inputClassName } from "@/app/contants";
-import { EmployeeEntity } from "@/common/entities/employee";
+// import { EmployeeEntity } from "@/common/entities/employee";
 import { VisitEntity } from "@/common/entities/visits";
 import Button from "@/components/atoms/Button/button";
 import { DatePicker } from "@/components/atoms/DatePicker/DatePicker";
@@ -18,7 +18,7 @@ import InputField from "@/components/molecules/InputField/inputField";
 import SelectField from "@/components/molecules/SelectField/selectField";
 import useCondo from "@/hooks/queries/condos/useCondo";
 import useResidentsByCondoId from "@/hooks/queries/residents/useResidentsByCondoId";
-import useProfile from "@/hooks/queries/useProfile";
+// import useProfile from "@/hooks/queries/useProfile";
 import { errorToast, successToast } from "@/hooks/useAppToast";
 import useAuth from "@/hooks/useAuth";
 import { queryClient } from "@/store/providers/queryClient";
@@ -29,6 +29,7 @@ import {
 } from "@/store/services";
 import { sendNotification } from "@/store/services/notification";
 import { sendBrSms } from "@/store/services/sms";
+import { storageGet } from "@/store/services/storage";
 import formatToPhoneMask from "@/utils/formatToPhoneMask";
 import removeDuplicates from "@/utils/removeDuplicates";
 import { timestampToDate } from "@/utils/timestampToDate";
@@ -55,11 +56,17 @@ const CreateVisitsModal = ({
   visitData
 }: CreateVisitsModalProps) => {
   const { userUid } = useAuth();
-  const { data: user } = useProfile<EmployeeEntity>(userUid);
-  const condoId = user?.condominiumCode as string;
+  // const { data: user } = useProfile<EmployeeEntity>(userUid);
+  // const condoId = user?.condominiumCode as string;
+  const condoId = storageGet("condoId") as string;
   const { data: condo } = useCondo(condoId);
   const { data: residents } = useResidentsByCondoId(condoId as string);
   const [loading, setLoading] = useState(false);
+  const formationOptions =
+    condo?.formationNames.map((item) => ({
+      label: item,
+      value: item.toLocaleLowerCase()
+    })) ?? [];
 
   const categoryOptions = [
     { label: "Visita", value: "visita" },
@@ -83,7 +90,9 @@ const CreateVisitsModal = ({
       category:
         (visitData?.visitType?.toLowerCase() as "visita" | "serviço") ?? "",
       date: visitData?.date ? timestampToDate(visitData?.date) : new Date(),
-      formation: visitData?.formation?.toLocaleLowerCase() ?? "",
+      formation:
+        formationOptions.find((i) => i.label === visitData?.formation)?.value ??
+        "",
       apartment: visitData?.apartment ?? "",
       resident:
         residents
@@ -91,12 +100,6 @@ const CreateVisitsModal = ({
           ?.name?.toLowerCase() ?? ""
     }
   });
-
-  const formationOptions =
-    condo?.formationNames.map((item) => ({
-      label: item,
-      value: item?.toLocaleLowerCase()
-    })) ?? [];
 
   const apartmentOptions =
     removeDuplicates(
@@ -117,9 +120,10 @@ const CreateVisitsModal = ({
       ?.filter((item) =>
         watch("formation")
           ? item.formationName.toLocaleLowerCase() === watch("formation")
-          : true && watch("apartment")
-            ? item.housingName === watch("apartment")
-            : true
+          : true
+      )
+      ?.filter((item) =>
+        watch("apartment") ? item.housingName === watch("apartment") : true
       )
       ?.map((item) => ({
         label: item.name,
@@ -212,10 +216,15 @@ const CreateVisitsModal = ({
     onOpenChange(false);
   };
 
+  const handleClose = () => {
+    reset();
+    onOpenChange(false);
+  };
+
   return (
     <TransitionModal
       isOpen={isOpen}
-      onOpenChange={onOpenChange}
+      onOpenChange={handleClose}
       title="Registro de visitante"
       description="Insira as informações necessárias para registrar o visitante"
       confirmBtn={
@@ -231,10 +240,7 @@ const CreateVisitsModal = ({
       }
       cancelBtn={
         <Button
-          onClick={() => {
-            reset();
-            onOpenChange(false);
-          }}
+          onClick={handleClose}
           type="button"
           variant="outline-black"
           size="lg"
@@ -262,6 +268,23 @@ const CreateVisitsModal = ({
         onSubmit={handleSubmit(handleForm)}
         className={`flex flex-col gap-y-4 `}
       >
+        <div className={"flex flex-col gap-1"}>
+          <Label>Data</Label>
+          <Controller
+            name={"date"}
+            control={control}
+            render={({ field }) => (
+              <DatePicker
+                date={field.value}
+                setDate={(value) => field.onChange(value)}
+              />
+            )}
+          />
+          {errors.date && errors.date.message && (
+            <FormErrorLabel>{errors.date.message.toString()}</FormErrorLabel>
+          )}
+        </div>
+
         <InputField
           formErrors={errors}
           name="name"
@@ -292,23 +315,6 @@ const CreateVisitsModal = ({
           />
         </div>
 
-        <div className={"flex flex-col gap-1"}>
-          <Label>Data</Label>
-          <Controller
-            name={"date"}
-            control={control}
-            render={({ field }) => (
-              <DatePicker
-                date={field.value}
-                setDate={(value) => field.onChange(value)}
-              />
-            )}
-          />
-          {errors.date && errors.date.message && (
-            <FormErrorLabel>{errors.date.message.toString()}</FormErrorLabel>
-          )}
-        </div>
-
         <div className="grid grid-cols-2 gap-x-2">
           <SelectField
             options={formationOptions}
@@ -320,7 +326,7 @@ const CreateVisitsModal = ({
             placeholder="Digite formação"
           />
           <SelectField
-            options={apartmentOptions}
+            options={watch("formation") ? apartmentOptions : []}
             formErrors={errors}
             name="apartment"
             className={inputClassName}
@@ -331,7 +337,7 @@ const CreateVisitsModal = ({
         </div>
 
         <SelectField
-          options={residentsOptions}
+          options={watch("apartment") ? residentsOptions : []}
           formErrors={errors}
           name="resident"
           className={inputClassName}

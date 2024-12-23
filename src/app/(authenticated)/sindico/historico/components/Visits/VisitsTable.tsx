@@ -19,7 +19,7 @@ const boxStyle = "border border-black rounded-[8px]";
 
 const VisitsTable = () => {
   const [modalOpen, setModalOpen] = useState(false);
-  const condoId = storageGet<string>("condoId");
+  const condoId = storageGet("condoId") as string;
   const [filterValue, setFilterValue] = useState("");
   const { data: visits } = useVisitsByCondoId(condoId as string);
 
