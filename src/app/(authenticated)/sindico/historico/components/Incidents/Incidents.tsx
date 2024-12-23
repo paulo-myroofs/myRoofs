@@ -32,7 +32,8 @@ const IncidentsTable = () => {
             status: item.status,
             details: item.details,
             condoId: condoId as string,
-            title: item.title
+            title: item.title,
+            response: item.response
           }) as OccurrenceColumnData
       )
   );

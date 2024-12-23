@@ -62,7 +62,6 @@ const GetStatus = ({ data }: { data: OccurrenceColumnData }) => {
 
 const SeeMore = ({ data }: { data: OccurrenceColumnData }) => {
   const [modalOpen, setModalOpen] = useState(false);
-  console.log(data);
   return (
     <>
       <Button
@@ -76,7 +75,7 @@ const SeeMore = ({ data }: { data: OccurrenceColumnData }) => {
 
       <SeeDetailsOccurrence
         isOpen={modalOpen}
-        onOpenChange={() => setModalOpen((prev) => !prev)}
+        onOpenChange={setModalOpen}
         occurenceData={data}
       />
     </>

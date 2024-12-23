@@ -17,4 +17,5 @@ export interface OccurrenceEntity {
   status: Status;
   return: string;
   reaction: "link" | "deslike" | "none";
+  response: string;
 }
