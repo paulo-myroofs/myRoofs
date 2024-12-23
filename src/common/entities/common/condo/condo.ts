@@ -10,11 +10,28 @@ export interface CondoEntity {
   name: string;
   image: string;
   cnpj: string;
-  address: string;
+  addressData: {
+    address: string;
+    neighborhood: string;
+    state: string;
+    number: string;
+    cep: string;
+    city: string;
+  };
   phone: string;
   formationType: "Bloco" | "Torre" | "Unidade" | "Quadra" | "Lote" | "Outro";
+  formationOther: string | null;
   formationNames: string[];
-  housingName: string;
+  housingType:
+    | "Apartamento"
+    | "Bangalô"
+    | "Casa"
+    | "Cabana"
+    | "Chalé"
+    | "Kitnet"
+    | "Studio"
+    | "Outro";
+  housingOther: string | null;
   floorsQty: number;
   garageQty: number;
   commonAreas: CondoCommonArea[] | null;
