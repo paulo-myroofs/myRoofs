@@ -5,14 +5,15 @@ import { useState } from "react";
 import { PlusIcon } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 
-import { EmployeeEntity } from "@/common/entities/employee";
+// import { EmployeeEntity } from "@/common/entities/employee";
 import { OrderEntity } from "@/common/entities/order";
 import Button from "@/components/atoms/Button/button";
 import { DataPaginatedTable } from "@/components/atoms/DataTablePaginated/DataTablePaginated";
 import Input from "@/components/atoms/Input/input";
 import useOrdersByCondoId from "@/hooks/queries/orders/useOrdersByCondoId";
-import useProfile from "@/hooks/queries/useProfile";
-import useAuth from "@/hooks/useAuth";
+// import useProfile from "@/hooks/queries/useProfile";
+// import useAuth from "@/hooks/useAuth";
+import { storageGet } from "@/store/services/storage";
 
 import { columns } from "./columns";
 import CreateOrderModal from "./components/CreateOrder/CreateOrderModal";
@@ -20,12 +21,13 @@ import CreateOrderModal from "./components/CreateOrder/CreateOrderModal";
 const boxStyle = "border border-black rounded-[8px]";
 
 const OrdersTable = () => {
-  const { userUid } = useAuth();
-  const { data: user } = useProfile<EmployeeEntity>(userUid);
+  // const { userUid } = useAuth();
+  const condoId = storageGet("condoId") as string;
+  // const { data: user } = useProfile<EmployeeEntity>(userUid);
   const [modalOpen, setModalOpen] = useState(false);
   const [filterValue, setFilterValue] = useState("");
 
-  const { data: orders } = useOrdersByCondoId(user?.condominiumCode);
+  const { data: orders } = useOrdersByCondoId(condoId);
   const filteredData = orders?.filter((item) =>
     item.apartment.toLocaleLowerCase().includes(filterValue.toLocaleLowerCase())
   );
