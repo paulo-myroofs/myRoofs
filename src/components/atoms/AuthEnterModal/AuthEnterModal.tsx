@@ -21,19 +21,24 @@ const AuthEnterModal = ({
   inputValue,
   setInputValue
 }: AuthEnterModalProps) => {
+  const handleClose = () => {
+    setInputValue(""); // Reseta o valor do input
+    onOpenChange(false); // Fecha o modal
+  };
+
   return (
     <TransitionModal
       title="Autenticação de Entrada"
       description={"Insira o código individual do morador"}
       isOpen={isOpen}
-      onOpenChange={onOpenChange}
+      onOpenChange={handleClose}
       confirmBtn={
         <Button
           onClick={() => {
             if (onConfirm) {
               onConfirm();
             }
-            onOpenChange(false);
+            handleClose();
           }}
           variant="icon"
           size="lg"
@@ -48,7 +53,7 @@ const AuthEnterModal = ({
             if (onCancel) {
               onCancel();
             }
-            onOpenChange(false);
+            handleClose();
           }}
           variant="outline-black"
           size="lg"
