@@ -6,14 +6,12 @@ import { useState } from "react";
 import { PlusIcon } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 
-import { EmployeeEntity } from "@/common/entities/employee";
 import { LostFound } from "@/common/entities/lostAndFound";
 import Button from "@/components/atoms/Button/button";
 import { DataPaginatedTable } from "@/components/atoms/DataTablePaginated/DataTablePaginated";
 import Input from "@/components/atoms/Input/input";
 import useLostFoundByCondoId from "@/hooks/queries/lostFound/useLostFoundByCondoId";
-import useProfile from "@/hooks/queries/useProfile";
-import useAuth from "@/hooks/useAuth";
+import { storageGet } from "@/store/services/storage";
 
 import finalColumns from "./components/columns";
 import CreateLostFoundModal from "./components/CreateLostFoundModal/CreateLostFoundModal";
@@ -23,12 +21,9 @@ const boxStyle = "border border-black rounded-[8px]";
 const AchadosPerdidos = () => {
   const [modalOpen, setModalOpen] = useState(false);
 
-  const { userUid } = useAuth();
-  const { data: user } = useProfile<EmployeeEntity>(userUid);
+  const condoId = storageGet("condoId") as string;
   const [filterValue, setFilterValue] = useState("");
-  const { data: lostFoundData } = useLostFoundByCondoId(
-    user?.condominiumCode as string
-  );
+  const { data: lostFoundData } = useLostFoundByCondoId(condoId);
   const filteredData = lostFoundData?.filter((item) =>
     item.description
       .toLocaleLowerCase()
