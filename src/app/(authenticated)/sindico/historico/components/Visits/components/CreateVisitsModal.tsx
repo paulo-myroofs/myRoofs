@@ -7,7 +7,7 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { inputClassName } from "@/app/contants";
-import { EmployeeEntity } from "@/common/entities/employee";
+// import { EmployeeEntity } from "@/common/entities/employee";
 import { VisitEntity } from "@/common/entities/visits";
 import Button from "@/components/atoms/Button/button";
 import { DatePicker } from "@/components/atoms/DatePicker/DatePicker";
@@ -18,7 +18,7 @@ import InputField from "@/components/molecules/InputField/inputField";
 import SelectField from "@/components/molecules/SelectField/selectField";
 import useCondo from "@/hooks/queries/condos/useCondo";
 import useResidentsByCondoId from "@/hooks/queries/residents/useResidentsByCondoId";
-import useProfile from "@/hooks/queries/useProfile";
+// import useProfile from "@/hooks/queries/useProfile";
 import { errorToast, successToast } from "@/hooks/useAppToast";
 import useAuth from "@/hooks/useAuth";
 import { queryClient } from "@/store/providers/queryClient";
@@ -29,6 +29,7 @@ import {
 } from "@/store/services";
 import { sendNotification } from "@/store/services/notification";
 import { sendBrSms } from "@/store/services/sms";
+import { storageGet } from "@/store/services/storage";
 import formatToPhoneMask from "@/utils/formatToPhoneMask";
 import removeDuplicates from "@/utils/removeDuplicates";
 import { timestampToDate } from "@/utils/timestampToDate";
@@ -55,8 +56,9 @@ const CreateVisitsModal = ({
   visitData
 }: CreateVisitsModalProps) => {
   const { userUid } = useAuth();
-  const { data: user } = useProfile<EmployeeEntity>(userUid);
-  const condoId = user?.condominiumCode as string;
+  // const { data: user } = useProfile<EmployeeEntity>(userUid);
+  // const condoId = user?.condominiumCode as string;
+  const condoId = storageGet("condoId") as string;
   const { data: condo } = useCondo(condoId);
   const { data: residents } = useResidentsByCondoId(condoId as string);
   const [loading, setLoading] = useState(false);
