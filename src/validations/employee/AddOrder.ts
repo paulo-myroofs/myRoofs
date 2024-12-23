@@ -10,5 +10,11 @@ export default z.object({
     .min(1, "Insira um valor "),
   deliverTo: z
     .string({ required_error: "Insira um valor" })
-    .min(1, "Insira um valor ")
+    .min(1, "Insira um valor "),
+  orderType: z
+    .string({ required_error: "Insira um valor" })
+    .min(1, "Insira um valor"),
+  deliverBy: z
+    .string({ required_error: "Insira um valor" })
+    .min(1, "Insira um valor")
 });

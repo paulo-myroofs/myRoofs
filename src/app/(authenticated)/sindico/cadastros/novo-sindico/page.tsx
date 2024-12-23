@@ -20,6 +20,7 @@ import useCondo from "@/hooks/queries/condos/useCondo";
 import useProfile from "@/hooks/queries/useProfile";
 import { errorToast, successToast } from "@/hooks/useAppToast";
 import useAuth from "@/hooks/useAuth";
+import { queryClient } from "@/store/providers/queryClient";
 import { setFirestoreDoc, updateFirestoreDoc } from "@/store/services";
 import { createUserAuth } from "@/store/services/auth";
 import { sendEmail } from "@/store/services/email";
@@ -115,6 +116,7 @@ const NovoSindico = () => {
       }
     });
 
+    queryClient.invalidateQueries(["users", user?.companyId]);
     successToast("Novo síndico adicionado");
     setLoading(false);
     reset();
