@@ -7,8 +7,8 @@ import { LostFound } from "@/common/entities/lostAndFound";
 import Button from "@/components/atoms/Button/button";
 import Tag from "@/components/atoms/Tag/Tag";
 
-import CreateLostFoundModal from "./components/CreateLostFoundModal/CreateLostFoundModal";
-import ValidateDeliverLostFound from "./components/ValidateDeliverLostFound/ValidateDeliverLostFound";
+import CreateLostFoundModal from "../components/CreateLostFoundModal/CreateLostFoundModal";
+import ValidateDeliverLostFound from "../components/ValidateDeliverLostFound/ValidateDeliverLostFound";
 
 const Validate = ({ lostFoundData }: { lostFoundData: LostFound }) => {
   const [modalOpen, setModalOpen] = useState(false);
