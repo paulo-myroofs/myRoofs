@@ -10,10 +10,13 @@ import Button from "@/components/atoms/Button/button";
 import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
 import SelectField from "@/components/molecules/SelectField/selectField";
 import useCondo from "@/hooks/queries/condos/useCondo";
+import useResidentsByUserData from "@/hooks/queries/residents/useResidentByUserData";
 import useResidentsByCondoId from "@/hooks/queries/residents/useResidentsByCondoId";
 import { successToast, errorToast } from "@/hooks/useAppToast";
+import useAuth from "@/hooks/useAuth";
 import { queryClient } from "@/store/providers/queryClient";
 import { updateFirestoreDoc } from "@/store/services";
+import { storageGet } from "@/store/services/storage";
 import removeDuplicates from "@/utils/removeDuplicates";
 import SelectResidentSchema from "@/validations/employee/SelectResident";
 
@@ -25,13 +28,22 @@ const ValidateDeliverLostFound = ({
   onOpenChange,
   lostFoundData
 }: ValidateDeliverLostFoundProps) => {
-  const { data: condo } = useCondo(lostFoundData?.condominiumId as string);
-  const { data: residents } = useResidentsByCondoId(
-    lostFoundData?.condominiumId as string
-  );
+  const { userUid } = useAuth();
+  const condoId = storageGet("condoId") as string;
+  const { data: condo } = useCondo(condoId);
+  const { data: residents } = useResidentsByCondoId(condoId);
   const [modalOpen, setModalOpen] = useState(false);
 
   const [inputValue, setInputValue] = useState("");
+  const [deliveryCode, setDeliveryCode] = useState("");
+  const [deliveredUserId, setDeliveredUserId] = useState("");
+  const [deliveredUserName, setDeliveredUserName] = useState("");
+
+  const formationOptions =
+    condo?.formationNames.map((item) => ({
+      label: item,
+      value: item?.toLocaleLowerCase()
+    })) ?? [];
 
   const {
     handleSubmit,
@@ -42,14 +54,13 @@ const ValidateDeliverLostFound = ({
   } = useForm<SelectResidentForm>({
     mode: "all",
     criteriaMode: "all",
-    resolver: zodResolver(SelectResidentSchema)
+    resolver: zodResolver(SelectResidentSchema),
+    defaultValues: {
+      formation: "",
+      apartment: "",
+      resident: ""
+    }
   });
-
-  const formationOptions =
-    condo?.formationNames.map((item) => ({
-      label: item,
-      value: item?.toLocaleLowerCase()
-    })) ?? [];
 
   const apartmentOptions =
     removeDuplicates(
@@ -70,31 +81,44 @@ const ValidateDeliverLostFound = ({
       ?.filter((item) =>
         watch("formation")
           ? item.formationName.toLocaleLowerCase() === watch("formation")
-          : true && watch("apartment")
-            ? item.housingName === watch("apartment")
-            : true
+          : true
+      )
+      ?.filter((item) =>
+        watch("apartment") ? item.housingName === watch("apartment") : true
       )
       ?.map((item) => ({
         label: item.name,
-        value: item.name + "|" + item.id
+        value: item.name
       })) ?? [];
 
-  const handleForm = () => {
+  const { data: chosenResidentData } = useResidentsByUserData(
+    watch("formation"),
+    watch("apartment"),
+    watch("resident")
+  );
+
+  const handleForm = async () => {
+    if (chosenResidentData && chosenResidentData.length > 0) {
+      if (chosenResidentData[0].deliveryCode) {
+        setDeliveryCode(chosenResidentData[0].deliveryCode);
+      }
+      setDeliveredUserId(chosenResidentData[0].id);
+      setDeliveredUserName(chosenResidentData[0].name);
+    }
     setModalOpen(true);
   };
 
   const onConfirm = async () => {
-    const chosenResidentId = watch("resident").split("|")[1];
-    const chosenResident = residents?.find(
-      (resident) => resident.id === chosenResidentId
-    );
-    if (chosenResident?.deliveryCode === inputValue) {
+    if (deliveryCode === inputValue) {
       await updateFirestoreDoc({
         documentPath: `/lost-and-found/${lostFoundData.id}`,
-        data: { deliveredTo: chosenResident.id }
+        data: {
+          deliveredTo: deliveredUserId,
+          deliveredBy: userUid
+        }
       });
       queryClient.invalidateQueries(["lostFound", lostFoundData.condominiumId]);
-      successToast(`Achado entregue ao morador ${chosenResident.name}!`);
+      successToast(`Achado entregue ao morador ${deliveredUserName}!`);
       onOpenChange(false);
       reset();
     } else {
@@ -102,10 +126,15 @@ const ValidateDeliverLostFound = ({
     }
   };
 
+  const handleClose = () => {
+    reset();
+    onOpenChange(false);
+  };
+
   return (
     <TransitionModal
       isOpen={isOpen}
-      onOpenChange={onOpenChange}
+      onOpenChange={handleClose}
       title="Escolha morador pra entregar encomenda"
       description="Preecha as informações do morador"
       confirmBtn={
@@ -120,10 +149,7 @@ const ValidateDeliverLostFound = ({
       }
       cancelBtn={
         <Button
-          onClick={() => {
-            reset();
-            onOpenChange(false);
-          }}
+          onClick={handleClose}
           type="button"
           variant="outline-black"
           size="lg"
@@ -149,7 +175,7 @@ const ValidateDeliverLostFound = ({
             placeholder="Digite formação"
           />
           <SelectField
-            options={apartmentOptions}
+            options={watch("formation") ? apartmentOptions : []}
             formErrors={errors}
             name="apartment"
             className={inputClassName}
@@ -159,7 +185,7 @@ const ValidateDeliverLostFound = ({
           />
         </div>
         <SelectField
-          options={residentsOptions}
+          options={watch("apartment") ? residentsOptions : []}
           formErrors={errors}
           name="resident"
           className={inputClassName}

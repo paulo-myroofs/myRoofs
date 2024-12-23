@@ -43,7 +43,7 @@ const Edit = ({ lostFoundData }: { lostFoundData: LostFound }) => {
       <Button
         variant={"outline-black"}
         size="sm"
-        className="w-[100px]"
+        className="w-[100px] disabled:pointer-events-none disabled:opacity-50"
         disabled={!!lostFoundData.deliveredTo}
         onClick={() => setModalOpen(true)}
       >
