@@ -6,13 +6,13 @@ import Link from "next/link";
 import { OccurrenceEntity, Status } from "@/common/entities/occurrences";
 import Button from "@/components/atoms/Button/button";
 import Tag from "@/components/atoms/Tag/Tag";
-import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
 import useProfile from "@/hooks/queries/useProfile";
 import { errorToast, successToast } from "@/hooks/useAppToast";
 import { queryClient } from "@/store/providers/queryClient";
 import { updateFirestoreDoc } from "@/store/services";
 import { extractFilename } from "@/utils/extractFilename";
 
+import SeeDetailsOccurrence from "./components/SeeDetailsOccurrence";
 import { OccurrenceColumnData } from "./types";
 
 const GetUserName = ({ userId }: { userId: string }) => {
@@ -60,8 +60,9 @@ const GetStatus = ({ data }: { data: OccurrenceColumnData }) => {
   );
 };
 
-const SeeMore = ({ details }: { details: OccurrenceEntity["details"] }) => {
+const SeeMore = ({ data }: { data: OccurrenceColumnData }) => {
   const [modalOpen, setModalOpen] = useState(false);
+  console.log(data);
   return (
     <>
       <Button
@@ -73,20 +74,11 @@ const SeeMore = ({ details }: { details: OccurrenceEntity["details"] }) => {
         Ver Mais
       </Button>
 
-      <TransitionModal
-        hasButtons={false}
+      <SeeDetailsOccurrence
         isOpen={modalOpen}
         onOpenChange={() => setModalOpen((prev) => !prev)}
-        title="Detalhes da ocorrência"
-      >
-        <textarea
-          disabled={true}
-          rows={4}
-          className="w-full items-center gap-1 rounded-sm border border-gray-300 px-2 py-2 text-sm opacity-60 outline-none focus:border-black sm:px-4 sm:text-base"
-        >
-          {details}
-        </textarea>
-      </TransitionModal>
+        occurenceData={data}
+      />
     </>
   );
 };
@@ -136,6 +128,6 @@ export const columns: ColumnDef<OccurrenceColumnData>[] = [
   {
     accessorKey: "detalhes",
     header: "Detalhes",
-    cell: ({ row }) => <SeeMore details={row.original.details} />
+    cell: ({ row }) => <SeeMore data={row.original} />
   }
 ];
