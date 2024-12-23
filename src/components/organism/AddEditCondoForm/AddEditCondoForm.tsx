@@ -153,7 +153,7 @@ const AddEditCondoForm = ({
       imageUrl = imageUploaded;
       if (condoData && condoData?.image) {
         await deleteImage(condoData.image);
-      }
+      }      
     }
 
     const finalData: Omit<CondoEntity, "id" | "createdAt"> = {
@@ -260,7 +260,7 @@ const AddEditCondoForm = ({
       className={`space-y-10 ${readOnly && "pointer-events-none opacity-60"}`}
     >
       <div className="space-y-4">
-        <div className="mt-4 grid gap-x-2 gap-y-4 sm:grid-cols-2">
+        <div className="mt-4 grid gap-x-3 gap-y-4 sm:grid-cols-2">
           <div className="flex flex-col justify-between gap-y-4 sm:gap-y-0">
             <InputField
               formErrors={errors}
@@ -294,7 +294,7 @@ const AddEditCondoForm = ({
               type="button"
               onClick={() => inputUpload?.current?.click()}
               className={twMerge(
-                "relative flex h-[130px] w-full items-center justify-center gap-1 overflow-hidden rounded-sm border border-gray-300 px-3 text-sm text-black/50 outline-none transition-all hover:opacity-60",
+                "relative flex h-[136px] w-full items-center justify-center gap-1 overflow-hidden rounded-sm border border-gray-300 px-3 text-sm text-black/50 outline-none transition-all hover:opacity-60",
                 inputClassName
               )}
             >
@@ -370,6 +370,7 @@ const AddEditCondoForm = ({
                         | "Outro",
                       names: value === "Outro" ? [""] : [""]
                     }
+
               );
 
               if (value !== "Outro") {
