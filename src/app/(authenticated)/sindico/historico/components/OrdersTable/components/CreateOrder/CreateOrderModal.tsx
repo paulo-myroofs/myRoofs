@@ -7,7 +7,7 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { inputClassName } from "@/app/contants";
-import { EmployeeEntity } from "@/common/entities/employee";
+// import { EmployeeEntity } from "@/common/entities/employee";
 import { OrderEntity, OrderType } from "@/common/entities/order";
 import Button from "@/components/atoms/Button/button";
 import { DatePicker } from "@/components/atoms/DatePicker/DatePicker";
@@ -17,7 +17,7 @@ import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
 import SelectField from "@/components/molecules/SelectField/selectField";
 import useCondo from "@/hooks/queries/condos/useCondo";
 import useResidentsByCondoId from "@/hooks/queries/residents/useResidentsByCondoId";
-import useProfile from "@/hooks/queries/useProfile";
+// import useProfile from "@/hooks/queries/useProfile";
 import { errorToast, successToast } from "@/hooks/useAppToast";
 import useAuth from "@/hooks/useAuth";
 import { queryClient } from "@/store/providers/queryClient";
@@ -27,6 +27,7 @@ import {
   updateFirestoreDoc
 } from "@/store/services";
 import { sendNotification } from "@/store/services/notification";
+import { storageGet } from "@/store/services/storage";
 import removeDuplicates from "@/utils/removeDuplicates";
 import { timestampToDate } from "@/utils/timestampToDate";
 import AddOrderSchema from "@/validations/employee/AddOrder";
@@ -42,10 +43,11 @@ const CreateOrderModal = ({
   orderData
 }: CreateOrderModalProps) => {
   const { userUid } = useAuth();
-  const { data: user } = useProfile<EmployeeEntity>(userUid);
-  const condoId = user?.condominiumCode;
-  const { data: condo } = useCondo(condoId as string);
-  const { data: residents } = useResidentsByCondoId(condoId as string);
+  // const { data: user } = useProfile<EmployeeEntity>(userUid);
+  // const condoId = user?.condominiumCode;
+  const condoId = storageGet("condoId") as string;
+  const { data: condo } = useCondo(condoId);
+  const { data: residents } = useResidentsByCondoId(condoId);
   const [loading, setLoading] = useState(false);
   const formationOptions =
     condo?.formationNames.map((item) => ({

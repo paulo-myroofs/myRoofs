@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { inputClassName } from "@/app/contants";
-import { EmployeeEntity } from "@/common/entities/employee";
 import AuthEnterModal from "@/components/atoms/AuthEnterModal/AuthEnterModal";
 import Button from "@/components/atoms/Button/button";
 import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
@@ -13,11 +12,11 @@ import SelectField from "@/components/molecules/SelectField/selectField";
 import useCondo from "@/hooks/queries/condos/useCondo";
 import useResidentsByUserData from "@/hooks/queries/residents/useResidentByUserData";
 import useResidentsByCondoId from "@/hooks/queries/residents/useResidentsByCondoId";
-import useProfile from "@/hooks/queries/useProfile";
 import { successToast, errorToast } from "@/hooks/useAppToast";
 import useAuth from "@/hooks/useAuth";
 import { queryClient } from "@/store/providers/queryClient";
 import { updateFirestoreDoc } from "@/store/services";
+import { storageGet } from "@/store/services/storage";
 import removeDuplicates from "@/utils/removeDuplicates";
 import SelectResidentSchema from "@/validations/employee/SelectResident";
 
@@ -30,10 +29,9 @@ const ValidateDeliverLostFound = ({
   lostFoundData
 }: ValidateDeliverLostFoundProps) => {
   const { userUid } = useAuth();
-  const { data: user } = useProfile<EmployeeEntity>(userUid);
-  const condoId = user?.condominiumCode;
-  const { data: condo } = useCondo(condoId as string);
-  const { data: residents } = useResidentsByCondoId(condoId as string);
+  const condoId = storageGet("condoId") as string;
+  const { data: condo } = useCondo(condoId);
+  const { data: residents } = useResidentsByCondoId(condoId);
   const [modalOpen, setModalOpen] = useState(false);
 
   const [inputValue, setInputValue] = useState("");
