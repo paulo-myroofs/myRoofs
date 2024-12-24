@@ -8,4 +8,5 @@ export interface LostFound {
   deliveredTo: string | null; // status will be updated from here
   description: string;
   imageUrl: string;
+  foundBy: string;
 }
