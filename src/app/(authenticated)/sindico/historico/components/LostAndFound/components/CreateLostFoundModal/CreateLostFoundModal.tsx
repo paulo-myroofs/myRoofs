@@ -8,7 +8,6 @@ import { twMerge } from "tailwind-merge";
 import { z } from "zod";
 
 import { inputClassName } from "@/app/contants";
-import { EmployeeEntity } from "@/common/entities/employee";
 import { LostFound } from "@/common/entities/lostAndFound";
 import Button from "@/components/atoms/Button/button";
 import { DatePicker } from "@/components/atoms/DatePicker/DatePicker";
@@ -16,7 +15,6 @@ import FormErrorLabel from "@/components/atoms/FormError/formError";
 import Label from "@/components/atoms/Label/label";
 import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
 import InputField from "@/components/molecules/InputField/inputField";
-import useProfile from "@/hooks/queries/useProfile";
 import { errorToast, successToast } from "@/hooks/useAppToast";
 import useAuth from "@/hooks/useAuth";
 import { queryClient } from "@/store/providers/queryClient";
@@ -26,6 +24,7 @@ import {
   updateFirestoreDoc
 } from "@/store/services";
 import { deleteImage, uploadImage } from "@/store/services/firebaseStorage";
+import { storageGet } from "@/store/services/storage";
 import { timestampToDate } from "@/utils/timestampToDate";
 import AddLostFoundDataSchema from "@/validations/employee/AddLostFoundData";
 
@@ -39,8 +38,7 @@ const CreateLostFoundModal = ({
   lostFoundData
 }: CreateLostFoundModalProps) => {
   const { userUid } = useAuth();
-  const { data: user } = useProfile<EmployeeEntity>(userUid);
-  const condoId = user?.condominiumCode;
+  const condoId = storageGet("condoId") as string;
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState<File | string | null>(null);
   const inputUpload = useRef<HTMLInputElement | null>(null);
@@ -96,7 +94,8 @@ const CreateLostFoundModal = ({
       foundLocal: data.foundAt,
       description: data.description,
       imageUrl: imageUploaded,
-      deliveredTo: lostFoundData?.deliveredTo ?? null
+      deliveredTo: lostFoundData?.deliveredTo ?? null,
+      foundBy: userUid
     };
 
     if (lostFoundData) {
