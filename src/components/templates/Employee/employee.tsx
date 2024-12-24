@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable prettier/prettier */
 "use client";
 
 import { useEffect } from "react";
@@ -22,7 +24,7 @@ function EmployeeOnlyFeature({ children }: Props): JSX.Element {
 
   const { data: user } = useProfile<EmployeeEntity>(userUid);
   const { data: endedCondosIds } = useEndedCondos((data) =>
-    data.map((item: CondoEntity) => item.id)
+    data.map((item: CondoEntity) => item.id),
   );
   const router = useRouter();
 
@@ -31,7 +33,7 @@ function EmployeeOnlyFeature({ children }: Props): JSX.Element {
       if (endedCondosIds?.includes(user.condominiumCode)) {
         logout();
         errorToast(
-          "O condomínio associado a você foi encerrado. Entre em contato com o seu administrador."
+          "O condomínio associado a você foi encerrado. Entre em contato com o seu administrador.",
         );
       }
     } else {
@@ -43,7 +45,7 @@ function EmployeeOnlyFeature({ children }: Props): JSX.Element {
 }
 
 export default function EmployeeOnlyFeatureWrapper({
-  children
+  children,
 }: Props): JSX.Element {
   return (
     <FetchAuthState>

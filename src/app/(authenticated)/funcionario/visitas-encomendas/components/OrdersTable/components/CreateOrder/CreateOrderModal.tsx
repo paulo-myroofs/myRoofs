@@ -8,7 +8,7 @@ import { z } from "zod";
 
 import { inputClassName } from "@/app/contants";
 import { EmployeeEntity } from "@/common/entities/employee";
-import { OrderEntity } from "@/common/entities/order";
+import { OrderEntity, OrderType } from "@/common/entities/order";
 import Button from "@/components/atoms/Button/button";
 import { DatePicker } from "@/components/atoms/DatePicker/DatePicker";
 import FormErrorLabel from "@/components/atoms/FormError/formError";
@@ -18,7 +18,7 @@ import SelectField from "@/components/molecules/SelectField/selectField";
 import useCondo from "@/hooks/queries/condos/useCondo";
 import useResidentsByCondoId from "@/hooks/queries/residents/useResidentsByCondoId";
 import useProfile from "@/hooks/queries/useProfile";
-import { successToast } from "@/hooks/useAppToast";
+import { errorToast, successToast } from "@/hooks/useAppToast";
 import useAuth from "@/hooks/useAuth";
 import { queryClient } from "@/store/providers/queryClient";
 import {
@@ -30,6 +30,7 @@ import { sendNotification } from "@/store/services/notification";
 import removeDuplicates from "@/utils/removeDuplicates";
 import { timestampToDate } from "@/utils/timestampToDate";
 import AddOrderSchema from "@/validations/employee/AddOrder";
+import InputField from "@molecules/InputField/inputField";
 
 import { CreateOrderModalProps } from "./types";
 
@@ -52,8 +53,27 @@ const CreateOrderModal = ({
       value: item.toLocaleLowerCase()
     })) ?? [];
 
+  const orderTypeOptions = [
+    { label: OrderType.MAIL, value: OrderType.MAIL.toLocaleLowerCase() },
+    { label: OrderType.PACKAGE, value: OrderType.PACKAGE.toLocaleLowerCase() },
+    {
+      label: OrderType.LARGE_PACKAGE,
+      value: OrderType.LARGE_PACKAGE.toLocaleLowerCase()
+    },
+    {
+      label: OrderType.DELIVERY,
+      value: OrderType.DELIVERY.toLocaleLowerCase()
+    },
+    {
+      label: OrderType.FRAGILE_ITEM,
+      value: OrderType.FRAGILE_ITEM.toLocaleLowerCase()
+    },
+    { label: OrderType.OTHER, value: OrderType.OTHER.toLocaleLowerCase() }
+  ];
+
   const {
     handleSubmit,
+    register,
     control,
     watch,
     formState: { errors },
@@ -71,9 +91,12 @@ const CreateOrderModal = ({
       deliverTo:
         residents
           ?.find((item) => item.id === orderData?.deliverTo)
-          ?.name?.toLowerCase() ?? ""
+          ?.name?.toLowerCase() ?? orderData?.deliverTo,
+      orderType: orderData?.orderType ?? "",
+      deliverBy: orderData?.deliverBy ?? ""
     }
   });
+
   const apartmentOptions =
     removeDuplicates(
       residents
@@ -93,9 +116,10 @@ const CreateOrderModal = ({
       ?.filter((item) =>
         watch("formation")
           ? item.formationName.toLocaleLowerCase() === watch("formation")
-          : true && watch("apartment")
-            ? item.housingName === watch("apartment")
-            : true
+          : true
+      )
+      ?.filter((item) =>
+        watch("apartment") ? item.housingName === watch("apartment") : true
       )
       ?.map((item) => ({
         label: item.name,
@@ -124,39 +148,44 @@ const CreateOrderModal = ({
       apartment: data.apartment,
       formation: formationOptions.find((v) => v.value === data.formation)
         ?.label as string,
-      wasDelivered: orderData?.wasDelivered ?? false
+      wasDelivered: orderData?.wasDelivered ?? false,
+      orderType: data.orderType as OrderType,
+      deliverBy: data.deliverBy
     };
-
-    if (orderData) {
-      await updateFirestoreDoc<Omit<OrderEntity, "id">>({
-        documentPath: `/orders/${orderData.id}`,
-        data: finalData
-      });
-      successToast("Encomenda editada com sucesso.");
-    } else {
-      await createFirestoreDoc<Omit<OrderEntity, "id">>({
-        collectionPath: `orders`,
-        data: finalData
-      });
-      successToast("Nova encomenda adicionada.");
-      await sendNotification({
-        content: "Entrega na portaria",
-        title: "Entrega!",
-        date: null,
-        type: "delivery",
-        users: [
-          {
-            tokens: resident?.tokens ?? [],
-            userId: resident?.id ?? ""
-          }
-        ]
-      });
+    try {
+      if (orderData) {
+        await updateFirestoreDoc<Omit<OrderEntity, "id">>({
+          documentPath: `/orders/${orderData.id}`,
+          data: finalData
+        });
+        successToast("Encomenda editada com sucesso.");
+      } else {
+        await createFirestoreDoc<Omit<OrderEntity, "id">>({
+          collectionPath: `orders`,
+          data: finalData
+        });
+        successToast("Nova encomenda adicionada.");
+        await sendNotification({
+          content: "Entrega na portaria",
+          title: "Entrega!",
+          date: null,
+          type: "delivery",
+          users: [
+            {
+              tokens: resident?.tokens ?? [],
+              userId: resident?.id ?? ""
+            }
+          ]
+        });
+      }
+    } catch (error) {
+      errorToast("Erro ao salvar a encomenda.");
+    } finally {
+      setLoading(false);
+      queryClient.invalidateQueries(["orders", condoId]);
+      reset();
+      onOpenChange(false);
     }
-
-    setLoading(false);
-    queryClient.invalidateQueries(["orders", condoId]);
-    reset();
-    onOpenChange(false);
   };
 
   const handleDelete = async () => {
@@ -171,10 +200,15 @@ const CreateOrderModal = ({
     onOpenChange(false);
   };
 
+  const handleClose = () => {
+    reset();
+    onOpenChange(false);
+  };
+
   return (
     <TransitionModal
       isOpen={isOpen}
-      onOpenChange={onOpenChange}
+      onOpenChange={handleClose}
       title="Registrar encomenda"
       description="Insira as informações necessárias para registrar a encomenda"
       confirmBtn={
@@ -190,10 +224,7 @@ const CreateOrderModal = ({
       }
       cancelBtn={
         <Button
-          onClick={() => {
-            reset();
-            onOpenChange(false);
-          }}
+          onClick={handleClose}
           type="button"
           variant="outline-black"
           size="lg"
@@ -238,6 +269,23 @@ const CreateOrderModal = ({
             <FormErrorLabel>{errors.date.message.toString()}</FormErrorLabel>
           )}
         </div>
+        <InputField
+          formErrors={errors}
+          name="deliverBy"
+          className={inputClassName}
+          label="Remetente"
+          register={register}
+          placeholder="Digite o remetente"
+        />
+        <SelectField
+          options={orderTypeOptions}
+          formErrors={errors}
+          name="orderType"
+          className={inputClassName}
+          label="Tipo de Encomenda"
+          control={control}
+          placeholder="Digite o tipo"
+        />
         <div className="grid grid-cols-2 gap-x-2">
           <SelectField
             options={formationOptions}
@@ -246,26 +294,26 @@ const CreateOrderModal = ({
             className={inputClassName}
             label="Formação"
             control={control}
-            placeholder="Digite formação"
+            placeholder="Digite a formação"
           />
           <SelectField
-            options={apartmentOptions}
+            options={watch("formation") ? apartmentOptions : []}
             formErrors={errors}
             name="apartment"
             className={inputClassName}
             label="Apartamento"
             control={control}
-            placeholder="Digite apartamento"
+            placeholder="Digite o apartamento"
           />
         </div>
         <SelectField
           formErrors={errors}
-          options={residentsOptions}
+          options={watch("apartment") ? residentsOptions : []}
           name="deliverTo"
           className={inputClassName}
           label="Destinatário"
           control={control}
-          placeholder="Digite aqui"
+          placeholder="Digite o destinatário"
         />
       </form>
     </TransitionModal>

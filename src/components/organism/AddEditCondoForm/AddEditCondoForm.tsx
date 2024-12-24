@@ -12,6 +12,9 @@ import { useForm } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 import { z } from "zod";
 
+import AddressInputs from "@/app/admin/nova-empresa/components/AddressInputs";
+import { brazilStates } from "@/common/constants/brazilStates";
+import { BrazilStatesOptionsType } from "@/common/entities/common/brazilStatesOptionsType";
 import { CondoEntity } from "@/common/entities/common/condo/condo";
 import { CondoCommonArea } from "@/common/entities/common/condo/condoCommonAreas";
 import Button from "@/components/atoms/Button/button";
@@ -38,12 +41,12 @@ interface InternalOrgInputsType {
   names: string[];
 }
 
-const defaultInternalOrgInput = {
-  type: "Bloco" as "Bloco" | "Torre" | "Unidade" | "Quadra" | "Lote" | "Outro",
+const defaultInternalOrgInput: InternalOrgInputsType = {
+  type: "Bloco",
   names: [""]
 };
 
-interface HousingInputs {
+interface InternalHabitationType {
   type:
     | "Apartamento"
     | "Bangalô"
@@ -52,9 +55,14 @@ interface HousingInputs {
     | "Chalé"
     | "Kitnet"
     | "Studio"
-    | "Outro"; // Usando o tipo que você acabou de definir
-  names: string[];
+    | "Outro";
+  names: [""];
 }
+
+const defaultInternalHabitationIntput: InternalHabitationType = {
+  type: "Apartamento",
+  names: [""]
+};
 
 const AddEditCondoForm = ({
   companyId,
@@ -71,36 +79,54 @@ const AddEditCondoForm = ({
     CondoCommonArea[] | undefined
   >();
   const { data: residents } = useResidentsByCondoId(condoData?.id ?? "");
+  const defaultValues = {
+    name: condoData?.name ?? "",
+    cnpj: condoData?.cnpj ?? "",
+    addressData: {
+      address: condoData?.addressData?.address ?? "",
+      neighborhood: condoData?.addressData?.neighborhood ?? "",
+      state:
+        (brazilStates.find(
+          (item) => item.label === condoData?.addressData?.state
+        )?.value as string) || "",
+      number: condoData?.addressData?.number ?? "",
+      cep: condoData?.addressData?.cep ?? "",
+      city: condoData?.addressData?.city ?? ""
+    },
+    phone: condoData?.phone ? formatToPhoneMask(condoData?.phone) : "",
+    floorsQty: (condoData?.floorsQty ?? "0").toString(),
+    garageSpacesQty: (condoData?.garageQty ?? "0").toString()
+  };
 
   const {
     handleSubmit,
     register,
+    control,
+    setValue,
+    watch,
     formState: { errors },
     reset
   } = useForm<AddCondoForm>({
     mode: "all",
     criteriaMode: "all",
     resolver: zodResolver(AddCondoSchema),
-    values: {
-      name: condoData?.name ?? "",
-      cnpj: condoData?.cnpj ?? "",
-      address: condoData?.address ?? "",
-      phone: condoData?.phone ? formatToPhoneMask(condoData?.phone) : "",
-      floorsQty: (condoData?.floorsQty ?? "0").toString(),
-      garageSpacesQty: (condoData?.garageQty ?? "0").toString()
-    }
+    defaultValues
   });
   const [loading, setLoading] = useState(false);
   const [internalOrgInputs, setInternalOrgInputs] = useState<
     InternalOrgInputsType | undefined
   >();
-  const [otherFormationName, setOtherFormationName] = useState("");
 
-  const [housingInputs, setHousingInputs] = useState<
-    HousingInputs | undefined
+  const [internalHabitationInputs, setInternalHabitationInputs] = useState<
+    InternalHabitationType | undefined
   >();
 
-  const housingNameValue = housingInputs?.names?.[0] ?? "";
+  const [formationOther, setFormationOther] = useState<string>(
+    condoData?.formationOther ?? ""
+  );
+  const [housingOther, setHousingOther] = useState<string>(
+    condoData?.housingOther ?? ""
+  );
 
   const handleForm = async (data: AddCondoForm) => {
     if (!aptManagersIds) return;
@@ -111,6 +137,7 @@ const AddEditCondoForm = ({
     if (!image) {
       return errorToast("Adicione uma imagem da empresa.");
     }
+
     if (!internalOrgInputs) {
       return;
     }
@@ -120,9 +147,12 @@ const AddEditCondoForm = ({
       return errorToast(
         "Adicione um nome de formação válidos em Organização Interna."
       );
-    if (internalOrgInputs?.type === "Outro") {
-      internalOrgInputs.names = [otherFormationName];
+
+    if (!internalHabitationInputs) {
+      return;
     }
+    if (!internalHabitationInputs.type)
+      return errorToast("Adicione um tipo de habitação.");
 
     setLoading(true);
 
@@ -152,13 +182,26 @@ const AddEditCondoForm = ({
       name: data.name,
       image: imageUrl,
       cnpj: unmask(data.cnpj),
-      address: data.address,
+      addressData: {
+        address: data.addressData.address || "",
+        neighborhood: data.addressData.neighborhood || "",
+        state: brazilStates.find(
+          (item) => item.value === data.addressData.state
+        )?.label as BrazilStatesOptionsType,
+        city: data.addressData.city || "",
+        number: data.addressData.number || "",
+        cep: data.addressData.cep || ""
+      },
       phone: unmask(data.phone),
-      housingName: housingNameValue,
+      housingType: internalHabitationInputs.type,
+      housingOther:
+        internalHabitationInputs.type === "Outro" ? housingOther : null,
       floorsQty: parseInt(data.floorsQty),
       garageQty: parseInt(data.garageSpacesQty),
       formationType: internalOrgInputs.type,
       formationNames: internalOrgInputs.names,
+      formationOther:
+        internalOrgInputs.type === "Outro" ? formationOther : null,
       activities: null,
       endedAt: null
     };
@@ -171,6 +214,7 @@ const AddEditCondoForm = ({
       if (setEditFalse) {
         setEditFalse();
       }
+      router.push("/sindico/condominio");
       successToast("Condomínio editado.");
     } else {
       await createFirestoreDoc<Omit<CondoEntity, "id">>({
@@ -184,12 +228,12 @@ const AddEditCondoForm = ({
       setCommonAreas(undefined);
       setInternalOrgInputs(defaultInternalOrgInput);
       setImage(null);
+      reset();
+      router.push("/escolher-condominio");
     }
 
-    setLoading(false);
     queryClient.invalidateQueries(["condominium"]);
-    reset();
-    router.push("/escolher-condominio");
+    setLoading(false);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -208,6 +252,13 @@ const AddEditCondoForm = ({
         setImage(condoData.image);
       }
 
+      if (!internalHabitationInputs) {
+        setInternalHabitationInputs({
+          type: condoData.housingType,
+          names: [""]
+        });
+      }
+
       if (!internalOrgInputs) {
         if (condoData.formationNames.length > 0) {
           setInternalOrgInputs({
@@ -217,7 +268,13 @@ const AddEditCondoForm = ({
         }
       }
     }
-  }, [condoData, internalOrgInputs, commonAreas, image]);
+  }, [
+    condoData,
+    internalOrgInputs,
+    internalHabitationInputs,
+    commonAreas,
+    image
+  ]);
 
   const handleCancel = () => {
     reset();
@@ -231,9 +288,16 @@ const AddEditCondoForm = ({
           names: condoData.formationNames
         });
       }
+      if (condoData.housingType) {
+        setInternalHabitationInputs({
+          type: condoData.housingType,
+          names: [""]
+        });
+      }
       setImage(null);
     } else {
       setCommonAreas(undefined);
+      setInternalHabitationInputs(defaultInternalHabitationIntput);
       setInternalOrgInputs(defaultInternalOrgInput);
       setImage(null);
     }
@@ -258,6 +322,7 @@ const AddEditCondoForm = ({
               label="Nome do condomínio"
               register={register}
               placeholder="Digite o nome"
+              disabled={isEditing}
             />
             <InputField
               formErrors={errors}
@@ -267,6 +332,7 @@ const AddEditCondoForm = ({
               label="CNPJ"
               register={register}
               placeholder="Digite o nome"
+              disabled={isEditing}
             />
           </div>
           <div className="flex flex-col gap-1">
@@ -305,13 +371,14 @@ const AddEditCondoForm = ({
             </button>
           </div>
         </div>
-        <InputField
-          name="address"
-          className={inputClassName}
-          label="Endereço"
+        <AddressInputs
+          control={control}
+          inputClassName={inputClassName}
           register={register}
           formErrors={errors}
-          placeholder="Digite seu endereço"
+          zodObj="addressData"
+          setValue={setValue}
+          watchCep={unmask(watch("addressData.cep") ?? "")}
         />
         <InputField
           name="phone"
@@ -339,52 +406,41 @@ const AddEditCondoForm = ({
                 prev
                   ? {
                       ...prev,
-                      type: value as
-                        | "Bloco"
-                        | "Torre"
-                        | "Unidade"
-                        | "Quadra"
-                        | "Lote"
-                        | "Outro",
-                      names: value === "Outro" ? prev.names : [""]
+                      type: value as InternalOrgInputsType["type"]
                     }
                   : {
-                      type: value as
-                        | "Bloco"
-                        | "Torre"
-                        | "Unidade"
-                        | "Quadra"
-                        | "Lote"
-                        | "Outro",
-                      names: value === "Outro" ? [""] : [""]
+                      type: value as InternalOrgInputsType["type"],
+                      names: [""]
                     }
               );
-
-              if (value !== "Outro") {
-                setOtherFormationName("");
+              if (value === "Outro") {
+                setFormationOther("");
+              } else {
+                setFormationOther("");
               }
             }}
             options={[
-              { label: "Torre", value: "Torre" },
               { label: "Bloco", value: "Bloco" },
+              { label: "Torre", value: "Torre" },
               { label: "Unidade", value: "Unidade" },
               { label: "Quadra", value: "Quadra" },
               { label: "Lote", value: "Lote" },
               { label: "Outro", value: "Outro" }
             ]}
+            disabled={isEditing}
           />
         </div>
 
         {internalOrgInputs?.type === "Outro" && (
-          <div className="relative">
-            <InputField
-              className={inputClassName}
-              label="Especificar Outro"
-              value={otherFormationName}
-              onChange={(e) => setOtherFormationName(e.target.value)}
-              placeholder="Digite a formação"
-            />
-          </div>
+          <InputField
+            name="formationOther"
+            className={inputClassName}
+            label="Nome da formação"
+            value={formationOther}
+            onChange={(e) => setFormationOther(e.target.value)}
+            placeholder="Digite o nome da formação"
+            disabled={isEditing}
+          />
         )}
 
         {Array.from(
@@ -393,13 +449,6 @@ const AddEditCondoForm = ({
         ).map((index) => (
           <div className="relative" key={index as number}>
             <InputField
-              // disabled={
-              //   !!residents?.find(
-              //     (r) =>
-              //       r.formationName ===
-              //       internalOrgInputs?.names[index as number]
-              //   )
-              // }
               className={inputClassName + " disabled:opacity-50"}
               label={"Nome da formação " + (index + 1)}
               value={internalOrgInputs?.names[index as number]}
@@ -415,6 +464,7 @@ const AddEditCondoForm = ({
                 })
               }
               placeholder="Digite o nome da formação"
+              disabled={isEditing}
             />
             {!readOnly &&
               index !== 0 &&
@@ -477,39 +527,28 @@ const AddEditCondoForm = ({
         </TitleAtom>
 
         <div className="flex w-full flex-col gap-1">
-          <Label>Unidades Habitacionais</Label>
+          <Label>Tipo de habitação</Label>
           <Select
             className={inputClassName}
-            value={housingInputs?.type ?? ""}
-            onChange={(value) =>
-              setHousingInputs((prev) =>
+            value={internalHabitationInputs?.type ?? ""}
+            onChange={(value) => {
+              setInternalHabitationInputs((prev) =>
                 prev
                   ? {
                       ...prev,
-                      type: value as
-                        | "Apartamento"
-                        | "Bangalô"
-                        | "Casa"
-                        | "Cabana"
-                        | "Chalé"
-                        | "Kitnet"
-                        | "Studio"
-                        | "Outro"
+                      type: value as InternalHabitationType["type"]
                     }
                   : {
-                      type: value as
-                        | "Apartamento"
-                        | "Bangalô"
-                        | "Casa"
-                        | "Cabana"
-                        | "Chalé"
-                        | "Kitnet"
-                        | "Studio"
-                        | "Outro",
+                      type: value as InternalHabitationType["type"],
                       names: [""]
                     }
-              )
-            }
+              );
+              if (value === "Outro") {
+                setHousingOther("");
+              } else {
+                setHousingOther("");
+              }
+            }}
             options={[
               { label: "Apartamento", value: "Apartamento" },
               { label: "Bangalô", value: "Bangalô" },
@@ -520,34 +559,30 @@ const AddEditCondoForm = ({
               { label: "Studio", value: "Studio" },
               { label: "Outro", value: "Outro" }
             ]}
+            disabled={isEditing}
           />
         </div>
-        {housingInputs?.type === "Outro" && (
-          <div className="relative">
-            <InputField
-              className={inputClassName}
-              label="Especificar Outro"
-              value={housingInputs?.names[0] || ""}
-              onChange={(e) =>
-                setHousingInputs((prev) => {
-                  if (!prev) return;
-                  return {
-                    ...prev,
-                    names: [e.target.value]
-                  };
-                })
-              }
-              placeholder="Digite a unidade habitacional"
-            />
-          </div>
+
+        {internalHabitationInputs?.type === "Outro" && (
+          <InputField
+            name="housingOther"
+            className={inputClassName}
+            label="Nome da habitação"
+            value={housingOther}
+            onChange={(e) => setHousingOther(e.target.value)}
+            placeholder="Digite o nome da habitação"
+            disabled={isEditing}
+          />
         )}
+
         <InputField
           name="floorsQty"
-          className={inputClassName}
+          className={`${inputClassName} disabled:opacity-50`}
           label="Número de andares"
           register={register}
           formErrors={errors}
           placeholder="Digite aqui a quantidade de andares"
+          disabled={isEditing}
         />
         <InputField
           name="garageSpacesQty"
@@ -576,7 +611,6 @@ const AddEditCondoForm = ({
           <Button
             variant="outline-black"
             size="md"
-            className="w-[180px]"
             type="button"
             disabled={loading}
             onClick={handleCancel}
@@ -586,7 +620,7 @@ const AddEditCondoForm = ({
           <Button
             variant="icon"
             size="md"
-            className="w-[180px] bg-[#202425]"
+            className=" w-[180px] bg-[#202425]"
             type="submit"
             loading={loading}
           >

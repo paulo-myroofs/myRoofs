@@ -3,10 +3,7 @@ import { DocumentData } from "firebase/firestore";
 
 import { ResidentEntity } from "@/common/entities/resident";
 import { getFirestoreCollection } from "@/store/services";
-import {
-  FORTY_FIVE_MINUTES_IN_MS,
-  ONE_DAY_IN_MS
-} from "@common/constants/generic";
+import { ONE_DAY_IN_MS } from "@common/constants/generic";
 
 export function getResidentsByCondoIdQueryKey(condoCode: string) {
   return ["residents", condoCode];
@@ -31,7 +28,6 @@ const useResidentsByCondoId = <T = ResidentEntity[]>(
     queryKey: getResidentsByCondoIdQueryKey(condoCode),
     queryFn: getResidentsByCondoIdQueryFn(condoCode),
     select,
-    staleTime: FORTY_FIVE_MINUTES_IN_MS,
     cacheTime: ONE_DAY_IN_MS
   });
 };
