@@ -1,9 +1,9 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { formatToCPF } from "brazilian-values";
 
-import { AdministratorEntity } from "@/common/entities/administrator";
+import { AptManagerEntity } from "@/common/entities/aptManager";
 
-export const columns: ColumnDef<AdministratorEntity>[] = [
+export const columns: ColumnDef<AptManagerEntity>[] = [
   {
     header: "Cargo",
     accessorKey: "positionOptions"

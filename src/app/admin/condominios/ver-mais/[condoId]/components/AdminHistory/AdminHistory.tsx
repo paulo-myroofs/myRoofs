@@ -4,10 +4,10 @@ import { useState } from "react";
 
 import { twMerge } from "tailwind-merge";
 
-import { AdministratorEntity } from "@/common/entities/administrator";
+import { AptManagerEntity } from "@/common/entities/aptManager";
 import { DataPaginatedTable } from "@/components/atoms/DataTablePaginated/DataTablePaginated";
 import Input from "@/components/atoms/Input/input";
-import useAdministratorByCondoId from "@/hooks/queries/administrator/useAdministratorByCondoId";
+import useAdministratorByCondoId from "@/hooks/queries/administrator/useAdministratorsByCondoId";
 
 import { columns } from "./Columns";
 
@@ -44,7 +44,7 @@ const AdminHistory = ({ condoId }: AdminHistoryProps) => {
         </div>
         <span className="block h-[0.5px] w-full bg-black" />
         <div className="mx-auto flex w-11/12 max-w-[1200px] items-center justify-center pb-8 sm:py-8">
-          <DataPaginatedTable<AdministratorEntity>
+          <DataPaginatedTable<AptManagerEntity>
             data={filteredData ?? []}
             columns={columns}
           />
