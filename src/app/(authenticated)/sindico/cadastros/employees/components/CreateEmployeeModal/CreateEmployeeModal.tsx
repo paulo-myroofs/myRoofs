@@ -192,7 +192,6 @@ export default function CreateEmployeeModal({
     setLoading(false);
     successToast("Funcionário removido com sucesso.");
     queryClient.invalidateQueries(["employees", condoId]);
-    queryClient.invalidateQueries(["employees", "condo"]);
     onOpenChange(false);
   };
 
