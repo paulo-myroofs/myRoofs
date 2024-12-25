@@ -1,12 +1,42 @@
 // import { useState } from "react";
 
+import { useState } from "react";
+
 import { ColumnDef } from "@tanstack/react-table";
 import { formatToCPF } from "brazilian-values";
-import { Edit } from "lucide-react";
 
 import { AptManagerEntity } from "@/common/entities/aptManager";
+import Button from "@/components/atoms/Button/button";
 
+import AptManagerModal from "./CreateAdmin";
+const Edit = ({ data }: { data: AptManagerEntity }) => {
+  const [modalOpen, setModalOpen] = useState(false);
+
+  return (
+    <>
+      <Button
+        variant={"outline-black"}
+        size="sm"
+        onClick={() => setModalOpen(true)}
+        className="rounded-sm text-[16px]"
+      >
+        Editar
+      </Button>
+
+      <AptManagerModal
+        isOpen={modalOpen}
+        onOpenChange={setModalOpen}
+        adminData={data}
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        handleNewAdmin={function (newAdmin: AptManagerEntity): void {
+          throw new Error("Function not implemented.");
+        }}
+      />
+    </>
+  );
+};
 export const columns: ColumnDef<AptManagerEntity>[] = [
+  { header: "Cargo", accessorKey: "role" },
   {
     header: "Nome",
     accessorKey: "name"
@@ -22,13 +52,8 @@ export const columns: ColumnDef<AptManagerEntity>[] = [
     accessorKey: "email"
   },
   {
-    header: "Empresa",
-    accessorKey: "companyId"
-  },
-  {
     header: "Editar",
     accessorKey: "Editar",
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    cell: ({ row }) => <Edit />
+    cell: ({ row }) => <Edit data={row.original} />
   }
 ];

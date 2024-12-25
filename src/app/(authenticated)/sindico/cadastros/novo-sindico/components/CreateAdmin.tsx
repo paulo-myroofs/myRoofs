@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Timestamp } from "firebase/firestore";
 import { Camera } from "lucide-react";
 import Image from "next/image";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -17,13 +18,17 @@ import Button from "@/components/atoms/Button/button";
 import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
 import InputField from "@/components/molecules/InputField/inputField";
 import { errorToast, successToast } from "@/hooks/useAppToast";
+import { queryClient } from "@/store/providers/queryClient";
 import { setFirestoreDoc, updateFirestoreDoc } from "@/store/services";
+import { createUserAuth } from "@/store/services/auth";
+import { sendEmail } from "@/store/services/email";
 import { deleteImage, uploadImage } from "@/store/services/firebaseStorage";
 // import Button from "@/components/atoms/Button/button";
 import { storageGet } from "@/store/services/storage";
 import AddAptManager from "@/validations/admin/AddAptManager";
 
 import { AdminModalProps } from "./types";
+import useAdministratorsByCondoId, { getAdministratorByCondoIdQueryKey } from "@/hooks/queries/administrator/useAdministratorsByCondoId";
 
 type AddAptManagerForm = z.infer<typeof AddAptManager>;
 const inputClassName = "border-[#DEE2E6] bg-[#F8F9FA]";
@@ -31,7 +36,8 @@ const inputClassName = "border-[#DEE2E6] bg-[#F8F9FA]";
 export default function AptManagerModal({
   isOpen,
   onOpenChange,
-  adminData
+  adminData,
+  handleNewAdmin
 }: AdminModalProps) {
   // const condoId = "12345";
   const condoId = storageGet<string>("condoId") as string;
@@ -83,22 +89,27 @@ export default function AptManagerModal({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleForm: SubmitHandler<AddAptManagerForm> = async (data) => {
     if (!condoId) {
-      return errorToast("Não foi possível encontrar o condomínio.");
+      return errorToast("Erro ao buscar condomínio.");
     }
+
     setLoading(true);
 
     try {
       let imageUrl = adminData?.image;
-      if (typeof image === "string" && !!image) {
+
+      if (image && typeof image !== "string") {
         const { image: url, error: errorUpload } = await uploadImage(
-          image as unknown as File
+          image as File
         );
         if (errorUpload || !url) {
-          throw new Error("Erro ao fazer upload da imagem.");
+          setLoading(false);
+          return errorToast(
+            "Não foi possível fazer upload de imagem, entrar em contato."
+          );
         }
         imageUrl = url;
 
-        if (adminData && adminData.image) {
+        if (adminData?.image) {
           await deleteImage(adminData.image);
         }
       }
@@ -114,38 +125,63 @@ export default function AptManagerModal({
         cep: data.ownerAddressData.cep,
         city: data.ownerAddressData.city,
         state: data.ownerAddressData.state as BrazilStatesOptionsType,
-
         neighborhood: data.ownerAddressData.neighborhood,
         role: "aptManager",
         companyId: condoId,
-        rg: "",
-        emitter: "",
-        profession: "",
+        rg: data.ownerBasicInfo.rg || "",
+        emitter: data.ownerBasicInfo.emitter || "",
+        profession: data.ownerBasicInfo.profession || "",
         maritalStatus: "Solteiro"
       };
 
       if (!adminData) {
+        const password = v4().slice(0, 8);
+
+        const { error: errorEmail } = await sendEmail(newAdmin.email, password);
+
+        if (errorEmail) {
+          setLoading(false);
+          return errorToast(
+            "Não foi possível enviar email com credenciais, entre em contato."
+          );
+        }
+
+        const { error, uid } = await createUserAuth(newAdmin.email, password);
+        if (uid) {
+          newAdmin.id = uid;
+        } else {
+          setLoading(false);
+          return errorToast("Erro ao criar usuário.");
+        }
+
+        if (error || !newAdmin.id) {
+          setLoading(false);
+          return errorToast(error ?? "Algo deu errado.");
+        }
         await setFirestoreDoc<Omit<AptManagerEntity, "id">>({
           docPath: `users/${newAdmin.id}`,
           data: newAdmin
         });
+        console.log("Novo administrador adicionado:", newAdmin);
 
+        handleNewAdmin(newAdmin);
         successToast("Administrador adicionado com sucesso.");
+        queryClient.invalidateQueries(["administrators", condoId]);
       } else {
         await updateFirestoreDoc<Omit<AptManagerEntity, "id">>({
           documentPath: `users/${adminData.id}`,
           data: newAdmin
         });
         successToast("Administrador atualizado com sucesso.");
+        setImage(imageUrl ?? null);
       }
 
-      onOpenChange(false);
       reset();
-      setImage(null);
+      setImage(imageUrl ?? null);
+      onOpenChange(false);
+      queryClient.invalidateQueries(getAdministratorByCondoIdQueryKey(condoId));
     } catch (error) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      errorToast((error as any).message || "Erro ao salvar o administrador.");
-    } finally {
+      errorToast("Erro ao salvar o administrador.");
       setLoading(false);
     }
   };

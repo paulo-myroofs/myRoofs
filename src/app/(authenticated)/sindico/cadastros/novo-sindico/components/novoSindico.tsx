@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 
 import { PlusIcon } from "lucide-react";
@@ -7,7 +8,7 @@ import { AptManagerEntity } from "@/common/entities/aptManager";
 import Button from "@/components/atoms/Button/button";
 import { DataPaginatedTable } from "@/components/atoms/DataTablePaginated/DataTablePaginated";
 import Input from "@/components/atoms/Input/input";
-import useAdministratorByCondoId from "@/hooks/queries/administrator/useAdministratorByCondoId";
+import useAdministratorsByCondoId from "@/hooks/queries/administrator/useAdministratorsByCondoId";
 import { storageGet } from "@/store/services/storage";
 
 import AptManagerModal from "./CreateAdmin";
@@ -28,21 +29,18 @@ const AptManagersTable = () => {
     data: aptManagers,
     isError,
     isLoading
-  } = useAdministratorByCondoId(condoId);
+  } = useAdministratorsByCondoId(condoId);
 
-  // Adicione logs para debug
-  console.log("Condominium ID:", condoId);
-  console.log("Administradores recebidos:", aptManagers);
-  console.log("Erro no hook:", isError);
-  console.log("Carregando:", isLoading);
+  console.log("Administradores do Firestore:", aptManagers);
+  console.log("Administradores locais:", localAptManagers);
 
-  const combinedData = [...(aptManagers ?? []), ...localAptManagers];
+  const combinedData = aptManagers
+    ? [...aptManagers, ...localAptManagers]
+    : localAptManagers;
 
-  const filteredData = combinedData
-    .filter((item): item is AptManagerEntity => "role" in item)
-    .filter((item) =>
-      item.name.toLocaleLowerCase().includes(filterValue.toLocaleLowerCase())
-    );
+  const filteredData = combinedData.filter((item) =>
+    item.name.toLocaleLowerCase().includes(filterValue.toLocaleLowerCase())
+  );
 
   const handleNewAdmin = (newAdmin: AptManagerEntity) => {
     setLocalAptManagers((prev) => [...prev, newAdmin]);
