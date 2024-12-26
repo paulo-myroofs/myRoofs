@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 
 import { PlusIcon } from "lucide-react";
@@ -11,50 +12,26 @@ import Input from "@/components/atoms/Input/input";
 import useAdministratorsByCondoId from "@/hooks/queries/administrator/useAdministratorsByCondoId";
 import { storageGet } from "@/store/services/storage";
 
-import AptManagerModal from "./CreateAdmin";
+import CreateAdminModal from "./CreateAdmin";
 import { columns } from "./novoSindicoColumns";
 
 const boxStyle = "border border-black rounded-[8px]";
 
 const AptManagersTable = () => {
   const condoId = storageGet<string>("condoId") as string;
-
   const [modalOpen, setModalOpen] = useState(false);
-  const [localAptManagers, setLocalAptManagers] = useState<AptManagerEntity[]>(
-    []
-  );
   const [filterValue, setFilterValue] = useState("");
 
-  const {
-    data: aptManagers,
-    isError,
-    isLoading
-  } = useAdministratorsByCondoId(condoId);
+  const { data: aptManagers = [] } = useAdministratorsByCondoId(condoId);
 
-  console.log("Administradores do Firestore:", aptManagers);
-  console.log("Administradores locais:", localAptManagers);
-
-  const combinedData = aptManagers
-    ? [...aptManagers, ...localAptManagers]
-    : localAptManagers;
-
-  const filteredData = combinedData.filter((item) =>
-    item.name.toLocaleLowerCase().includes(filterValue.toLocaleLowerCase())
+  const filteredData = aptManagers?.filter((item) =>
+    item.name.toLowerCase().includes(filterValue.toLowerCase())
   );
-
-  const handleNewAdmin = (newAdmin: AptManagerEntity) => {
-    setLocalAptManagers((prev) => [...prev, newAdmin]);
-  };
 
   if (!condoId) return null;
 
   return (
     <section className="space-y-4">
-      {isLoading && <div>Carregando administradores...</div>}
-      {isError && <div>Erro ao carregar administradores.</div>}
-      {!isLoading && !aptManagers?.length && (
-        <div>Nenhum administrador encontrado.</div>
-      )}
       <div className={twMerge(boxStyle)}>
         <div className="flex flex-col items-center justify-between gap-y-3 px-8 py-4 md:flex-row">
           <h1 className="text-[18px] font-bold sm:text-[24px]">
@@ -70,7 +47,7 @@ const AptManagersTable = () => {
         <span className="block h-[0.5px] w-full bg-black" />
         <div className="mx-auto flex w-11/12 max-w-[1200px] items-center justify-center pb-8 sm:py-8">
           <DataPaginatedTable<AptManagerEntity>
-            data={filteredData}
+            data={filteredData ?? []}
             columns={columns}
           />
         </div>
@@ -80,12 +57,7 @@ const AptManagersTable = () => {
           <PlusIcon size={20} /> Registrar Administrador
         </Button>
       </div>
-      <AptManagerModal
-        isOpen={modalOpen}
-        onOpenChange={setModalOpen}
-        adminData={undefined}
-        handleNewAdmin={handleNewAdmin}
-      />
+      <CreateAdminModal isOpen={modalOpen} onOpenChange={setModalOpen} />
     </section>
   );
 };

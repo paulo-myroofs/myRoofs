@@ -3,7 +3,6 @@
 import { useState, useRef } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Timestamp } from "firebase/firestore";
 import { Camera } from "lucide-react";
 import Image from "next/image";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -14,32 +13,30 @@ import AddressInputsModal from "@/app/admin/nova-empresa/components/AddressInput
 import { brazilStates } from "@/common/constants/brazilStates";
 import { AptManagerEntity } from "@/common/entities/aptManager";
 import { BrazilStatesOptionsType } from "@/common/entities/common/brazilStatesOptionsType";
+import { MaritalStatusOptionsType } from "@/common/entities/common/maritalStatusOptionsType";
 import Button from "@/components/atoms/Button/button";
 import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
 import InputField from "@/components/molecules/InputField/inputField";
+import { getAdministratorByCondoIdQueryKey } from "@/hooks/queries/administrator/useAdministratorsByCondoId";
 import { errorToast, successToast } from "@/hooks/useAppToast";
 import { queryClient } from "@/store/providers/queryClient";
 import { setFirestoreDoc, updateFirestoreDoc } from "@/store/services";
 import { createUserAuth } from "@/store/services/auth";
 import { sendEmail } from "@/store/services/email";
 import { deleteImage, uploadImage } from "@/store/services/firebaseStorage";
-// import Button from "@/components/atoms/Button/button";
 import { storageGet } from "@/store/services/storage";
 import AddAptManager from "@/validations/admin/AddAptManager";
 
 import { AdminModalProps } from "./types";
-import useAdministratorsByCondoId, { getAdministratorByCondoIdQueryKey } from "@/hooks/queries/administrator/useAdministratorsByCondoId";
 
 type AddAptManagerForm = z.infer<typeof AddAptManager>;
 const inputClassName = "border-[#DEE2E6] bg-[#F8F9FA]";
 
-export default function AptManagerModal({
+export default function CreateAdminModal({
   isOpen,
   onOpenChange,
-  adminData,
-  handleNewAdmin
+  adminData
 }: AdminModalProps) {
-  // const condoId = "12345";
   const condoId = storageGet<string>("condoId") as string;
   const [image, setImage] = useState<File | string | null>(
     adminData?.image ?? null
@@ -86,104 +83,97 @@ export default function AptManagerModal({
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleForm: SubmitHandler<AddAptManagerForm> = async (data) => {
     if (!condoId) {
-      return errorToast("Erro ao buscar condomínio.");
+      return errorToast("Erro ao buscar o condomínio.");
     }
 
     setLoading(true);
 
-    try {
-      let imageUrl = adminData?.image;
+    let imageUrl = adminData?.image ?? null;
 
-      if (image && typeof image !== "string") {
-        const { image: url, error: errorUpload } = await uploadImage(
-          image as File
+    if (typeof image !== "string" && !!image) {
+      const { image: url, error: errorUpload } = await uploadImage(
+        image as File
+      );
+
+      if (errorUpload || !url) {
+        setLoading(false);
+        return errorToast(
+          "Não foi possível fazer upload de imagem, entrar em contato."
         );
-        if (errorUpload || !url) {
-          setLoading(false);
-          return errorToast(
-            "Não foi possível fazer upload de imagem, entrar em contato."
-          );
-        }
-        imageUrl = url;
-
-        if (adminData?.image) {
-          await deleteImage(adminData.image);
-        }
       }
+      imageUrl = url;
 
-      const newAdmin: AptManagerEntity = {
-        id: adminData?.id ?? v4(),
-        name: data.ownerBasicInfo.name,
-        cpf: data.ownerBasicInfo.cpf,
-        email: data.ownerEmail,
-        image: imageUrl || "",
-        address: data.ownerAddressData.address,
-        number: data.ownerAddressData.number,
-        cep: data.ownerAddressData.cep,
-        city: data.ownerAddressData.city,
-        state: data.ownerAddressData.state as BrazilStatesOptionsType,
-        neighborhood: data.ownerAddressData.neighborhood,
-        role: "aptManager",
-        companyId: condoId,
-        rg: data.ownerBasicInfo.rg || "",
-        emitter: data.ownerBasicInfo.emitter || "",
-        profession: data.ownerBasicInfo.profession || "",
-        maritalStatus: "Solteiro"
-      };
-
-      if (!adminData) {
-        const password = v4().slice(0, 8);
-
-        const { error: errorEmail } = await sendEmail(newAdmin.email, password);
-
-        if (errorEmail) {
-          setLoading(false);
-          return errorToast(
-            "Não foi possível enviar email com credenciais, entre em contato."
-          );
-        }
-
-        const { error, uid } = await createUserAuth(newAdmin.email, password);
-        if (uid) {
-          newAdmin.id = uid;
-        } else {
-          setLoading(false);
-          return errorToast("Erro ao criar usuário.");
-        }
-
-        if (error || !newAdmin.id) {
-          setLoading(false);
-          return errorToast(error ?? "Algo deu errado.");
-        }
-        await setFirestoreDoc<Omit<AptManagerEntity, "id">>({
-          docPath: `users/${newAdmin.id}`,
-          data: newAdmin
-        });
-        console.log("Novo administrador adicionado:", newAdmin);
-
-        handleNewAdmin(newAdmin);
-        successToast("Administrador adicionado com sucesso.");
-        queryClient.invalidateQueries(["administrators", condoId]);
-      } else {
-        await updateFirestoreDoc<Omit<AptManagerEntity, "id">>({
-          documentPath: `users/${adminData.id}`,
-          data: newAdmin
-        });
-        successToast("Administrador atualizado com sucesso.");
-        setImage(imageUrl ?? null);
+      if (adminData?.image) {
+        await deleteImage(adminData.image);
       }
-
-      reset();
-      setImage(imageUrl ?? null);
-      onOpenChange(false);
-      queryClient.invalidateQueries(getAdministratorByCondoIdQueryKey(condoId));
-    } catch (error) {
-      errorToast("Erro ao salvar o administrador.");
-      setLoading(false);
     }
+
+    const finalData: AptManagerEntity = {
+      id: adminData?.id ?? v4(),
+      name: data.ownerBasicInfo.name,
+      cpf: data.ownerBasicInfo.cpf,
+      email: data.ownerEmail,
+      image: imageUrl || "",
+      address: data.ownerAddressData.address,
+      number: data.ownerAddressData.number,
+      cep: data.ownerAddressData.cep,
+      city: data.ownerAddressData.city,
+      state: data.ownerAddressData.state as BrazilStatesOptionsType,
+      neighborhood: data.ownerAddressData.neighborhood,
+      role: "aptManager",
+      companyId: condoId,
+      rg: data.ownerBasicInfo.rg || "",
+      emitter: data.ownerBasicInfo.emitter || "",
+      profession: data.ownerBasicInfo.profession || "",
+      maritalStatus: data.ownerBasicInfo
+        .maritalStatus as MaritalStatusOptionsType
+    };
+
+    if (!adminData) {
+      const password = v4().slice(0, 8);
+
+      const { error: errorEmail } = await sendEmail(data.ownerEmail, password);
+      if (errorEmail) {
+        setLoading(false);
+        return errorToast(
+          "Não foi possível enviar email com credenciais, entre em contato."
+        );
+      }
+
+      const { error, uid: adminId } = await createUserAuth(
+        data.ownerEmail,
+        password
+      );
+      if (error || !adminId) {
+        setLoading(false);
+        return errorToast(error ?? "Algo deu errado.");
+      }
+
+      await setFirestoreDoc<Omit<AptManagerEntity, "id">>({
+        docPath: `users/${adminId}`,
+        data: {
+          ...finalData
+        } as AptManagerEntity
+      });
+
+      successToast("Administrador cadastrado com sucesso.");
+    } else {
+      await updateFirestoreDoc<Omit<AptManagerEntity, "id">>({
+        documentPath: `users/${adminData.id}`,
+        data: {
+          ...finalData
+        } as AptManagerEntity
+      });
+      setImage(imageUrl);
+      successToast("Administrador atualizado com sucesso.");
+    }
+    setLoading(false);
+    queryClient.invalidateQueries([getAdministratorByCondoIdQueryKey, condoId]);
+    reset();
+    setImage(null);
+    onOpenChange(false);
   };
 
   return (
@@ -204,7 +194,6 @@ export default function AptManagerModal({
           loading={loading}
           onClick={() => {
             handleSubmit(handleForm)();
-            onOpenChange(false);
           }}
         >
           {adminData ? "Salvar Alterações" : "Registrar"}
