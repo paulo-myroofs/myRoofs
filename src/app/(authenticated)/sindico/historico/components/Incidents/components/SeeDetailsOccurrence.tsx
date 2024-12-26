@@ -3,10 +3,12 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
+import { twMerge } from "tailwind-merge";
 import z from "zod";
 
 import { inputClassName } from "@/app/contants";
 import Button from "@/components/atoms/Button/button";
+import Label from "@/components/atoms/Label/label";
 import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
 import InputField from "@/components/molecules/InputField/inputField";
 import TextareaField from "@/components/molecules/TextareaField/TextareaField";
@@ -111,15 +113,19 @@ const SeeDetailsOccurrence: React.FC<SeeDetailsOccurrenceProps> = ({
           width={500}
           className="h-auto w-full"
         />
-        <TextareaField
-          className={inputClassName}
-          label="Descrição da Ocorrência"
-          name="description"
-          disabled={true}
-          formRegister={register}
-          formErrors={errors}
-          placeholder="Descreva a ocorrência"
-        />
+        <div className="gap flex flex-col gap-1">
+          <Label>Descrição da ocorrência</Label>
+          <div
+            className={twMerge(
+              `w-full items-center gap-1 rounded-sm border border-gray-300 px-2 py-2 text-sm outline-none focus:border-black sm:px-4 sm:text-base`,
+              inputClassName
+            )}
+            id="description"
+            style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}
+          >
+            {occurenceData?.details ?? ""}
+          </div>
+        </div>
         <TextareaField
           className={inputClassName}
           label="Resposta do Síndico"
