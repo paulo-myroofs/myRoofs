@@ -27,6 +27,7 @@ const AptManagersTable = () => {
   const filteredData = aptManagers?.filter((item) =>
     item.name.toLowerCase().includes(filterValue.toLowerCase())
   );
+  console.log(aptManagers);
 
   if (!condoId) return null;
 

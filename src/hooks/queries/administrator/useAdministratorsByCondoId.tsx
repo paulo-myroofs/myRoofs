@@ -5,7 +5,7 @@ import { AptManagerEntity } from "@/common/entities/aptManager";
 import { CondoEntity } from "@/common/entities/common/condo/condo";
 import { getFirestoreDoc, getFirestoreCollection } from "@/store/services";
 import {
-  FORTY_FIVE_MINUTES_IN_MS,
+  // FORTY_FIVE_MINUTES_IN_MS,
   ONE_DAY_IN_MS
 } from "@common/constants/generic";
 
@@ -49,7 +49,7 @@ const useAdministratorsByCondoId = <T = AptManagerEntity[],>(
     queryKey: getAdministratorByCondoIdQueryKey(condoCode),
     queryFn: () => getAdministratorByCondoIdQueryKeyFn(condoCode),
     select,
-    staleTime: FORTY_FIVE_MINUTES_IN_MS,
+    staleTime: 0,
     cacheTime: ONE_DAY_IN_MS
   });
 };
