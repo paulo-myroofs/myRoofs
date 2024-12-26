@@ -19,6 +19,8 @@ import SeeOccurrenceDetails from "@/validations/aptManager/SeeOccurrenceDetails"
 
 import { SeeDetailsOccurrenceProps } from "./types";
 
+import { Reaction } from "../types";
+
 type SeeDetailsForm = z.infer<typeof SeeOccurrenceDetails>;
 
 const SeeDetailsOccurrence: React.FC<SeeDetailsOccurrenceProps> = ({
@@ -52,7 +54,8 @@ const SeeDetailsOccurrence: React.FC<SeeDetailsOccurrenceProps> = ({
     await updateFirestoreDoc({
       documentPath: `/occurrences/${occurenceData.id}`,
       data: {
-        response: data.response
+        response: data.response,
+        reaction: Reaction.NONE
       }
     });
 
@@ -135,6 +138,38 @@ const SeeDetailsOccurrence: React.FC<SeeDetailsOccurrenceProps> = ({
           placeholder="Descreva a resposta do síndico"
         />
       </form>
+      <div className="flex w-full justify-center gap-4">
+        {occurenceData.reaction === Reaction.LIKE ? (
+          <Image
+            src="/icons/historic/like_green.svg"
+            alt="Like Icon"
+            width={32}
+            height={32}
+          />
+        ) : (
+          <Image
+            src="/icons/historic/like.svg"
+            alt="Like Icon"
+            width={32}
+            height={32}
+          />
+        )}
+        {occurenceData.reaction === Reaction.DISLIKE ? (
+          <Image
+            src="/icons/historic/dislike_red.svg"
+            alt="Dislike Icon"
+            width={32}
+            height={32}
+          />
+        ) : (
+          <Image
+            src="/icons/historic/dislike.svg"
+            alt="Dislike Icon"
+            width={32}
+            height={32}
+          />
+        )}
+      </div>
     </TransitionModal>
   );
 };

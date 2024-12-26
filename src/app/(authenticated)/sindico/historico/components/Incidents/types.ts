@@ -1,6 +1,12 @@
 import { Status } from "@/common/entities/occurrences";
 import { Timestamp } from "@/common/entities/timestamp";
 
+export enum Reaction {
+  LIKE = "like",
+  DISLIKE = "dislike",
+  NONE = "none"
+}
+
 export interface OccurrenceColumnData {
   id: string;
   userId: string;
@@ -11,4 +17,5 @@ export interface OccurrenceColumnData {
   condoId: string;
   title: string;
   response: string;
+  reaction: Reaction;
 }
