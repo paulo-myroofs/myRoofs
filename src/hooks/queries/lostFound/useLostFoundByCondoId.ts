@@ -3,10 +3,7 @@ import { DocumentData } from "firebase/firestore";
 
 import { LostFound } from "@/common/entities/lostAndFound";
 import { getFirestoreCollection } from "@/store/services";
-import {
-  FORTY_FIVE_MINUTES_IN_MS,
-  ONE_DAY_IN_MS
-} from "@common/constants/generic";
+import { ONE_DAY_IN_MS } from "@common/constants/generic";
 
 export function getLostFoundByCondoIdQueryKey(condoCode: string) {
   return ["lostFound", condoCode];
@@ -28,7 +25,6 @@ const useLostFoundByCondoId = <T = LostFound[]>(
     queryKey: getLostFoundByCondoIdQueryKey(condoCode),
     queryFn: getLostFoundByCondoIdQueryFn(condoCode),
     select,
-    staleTime: FORTY_FIVE_MINUTES_IN_MS,
     cacheTime: ONE_DAY_IN_MS
   });
 };

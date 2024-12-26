@@ -3,10 +3,7 @@ import { DocumentData } from "firebase/firestore";
 
 import { VisitEntity } from "@/common/entities/visits";
 import { getFirestoreCollection } from "@/store/services";
-import {
-  FORTY_FIVE_MINUTES_IN_MS,
-  ONE_DAY_IN_MS
-} from "@common/constants/generic";
+import { ONE_DAY_IN_MS } from "@common/constants/generic";
 
 export function getVisitsByCondoIdQueryKey(condoId: string | undefined) {
   return ["visits", condoId];
@@ -28,7 +25,6 @@ const useVisitsByCondoId = <T = VisitEntity[]>(
     queryKey: getVisitsByCondoIdQueryKey(condoId),
     queryFn: getVisitsByCondoIdQueryFn(condoId),
     select,
-    staleTime: FORTY_FIVE_MINUTES_IN_MS,
     cacheTime: ONE_DAY_IN_MS,
     enabled: !!condoId
   });

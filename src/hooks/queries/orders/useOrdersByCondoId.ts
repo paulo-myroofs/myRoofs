@@ -3,10 +3,7 @@ import { DocumentData } from "firebase/firestore";
 
 import { OrderEntity } from "@/common/entities/order";
 import { getFirestoreCollection } from "@/store/services";
-import {
-  FORTY_FIVE_MINUTES_IN_MS,
-  ONE_DAY_IN_MS
-} from "@common/constants/generic";
+import { ONE_DAY_IN_MS } from "@common/constants/generic";
 
 export function getOrdersByCondoIdQueryKey(condoId: string | undefined) {
   return ["orders", condoId];
@@ -28,7 +25,6 @@ const useOrdersByCondoId = <T = OrderEntity[]>(
     queryKey: getOrdersByCondoIdQueryKey(condoId),
     queryFn: getOrdersByCondoIdQueryFn(condoId),
     select,
-    staleTime: FORTY_FIVE_MINUTES_IN_MS,
     cacheTime: ONE_DAY_IN_MS,
     enabled: !!condoId
   });

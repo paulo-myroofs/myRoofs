@@ -12,4 +12,5 @@ export interface CompanyEntity extends AddressFields {
   endedAt: Timestamp | null;
   finder: string | null;
   createdAt: Timestamp;
+  blockedAt: Timestamp | null;
 }

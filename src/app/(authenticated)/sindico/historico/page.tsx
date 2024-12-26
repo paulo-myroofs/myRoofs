@@ -6,6 +6,7 @@ import Button from "@/components/atoms/Button/button";
 import BookingsTable from "./components/Bookings/Bookings";
 import IncidentsTable from "./components/Incidents/Incidents";
 import LostAndFoundTable from "./components/LostAndFound/LostAndFound";
+import OrdersTable from "./components/OrdersTable/OrdersTable";
 import VisitsTable from "./components/Visits/VisitsTable";
 import WarningTable from "./components/Waning/Warnings";
 import { ActiveTabs } from "./types";
@@ -18,7 +19,8 @@ const Historico = () => {
     "Ocorrências",
     "Reservas",
     "Visitantes",
-    "Achados e Perdidos"
+    "Achados e Perdidos",
+    "Encomendas"
   ];
 
   return (
@@ -44,6 +46,7 @@ const Historico = () => {
       {activeTab === "Reservas" && <BookingsTable />}
       {activeTab === "Visitantes" && <VisitsTable />}
       {activeTab === "Achados e Perdidos" && <LostAndFoundTable />}
+      {activeTab === "Encomendas" && <OrdersTable />}
     </section>
   );
 };
