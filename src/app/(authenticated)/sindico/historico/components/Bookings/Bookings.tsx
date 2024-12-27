@@ -25,9 +25,10 @@ const BookingsTable = () => {
     <section className="mx-auto w-11/12 max-w-[1500px] space-y-4">
       <div className="space-y-4">
         <div className={twMerge(boxStyle)}>
-          <div className="flex items-center justify-between px-8 py-4">
+          <div className="flex flex-col items-center justify-between gap-y-2 px-8 py-4 sm:flex-row">
             <h1 className="text-[18px] font-bold sm:text-[24px]">
-              Histórico de Reservas
+              <span className="hidden sm:inline">Histórico de reservas</span>
+              <span className="inline sm:hidden">Reservas</span>
             </h1>
 
             <Input

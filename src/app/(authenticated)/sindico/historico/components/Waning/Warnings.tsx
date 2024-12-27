@@ -64,7 +64,7 @@ const WarningTable = () => {
   return (
     <section className="space-y-4">
       <div className={twMerge(boxStyle)}>
-        <div className="flex items-center justify-between px-8 py-4">
+        <div className="flex flex-col items-center justify-between gap-y-2 px-8 py-4 sm:flex-row">
           <h1 className="text-[18px] font-bold sm:text-[24px]">
             <span className="hidden sm:inline">Histórico de avisos</span>
             <span className="inline sm:hidden">Avisos</span>
@@ -73,7 +73,7 @@ const WarningTable = () => {
           <div className="flex items-center gap-x-2">
             <FilterSelect
               filterName="Enviado por"
-              className="min-w-[180px]"
+              className="min-w-[150px]"
               options={[
                 { label: "Morador", value: "resident" },
                 { label: "Síndico", value: "condo" }
@@ -85,7 +85,7 @@ const WarningTable = () => {
             />
             <Input
               className={
-                "min-w-[300px] border border-[#DEE2E6] bg-[#F8F9FA] focus:border-[#DEE2E6]"
+                "min-w-[250px] border border-[#DEE2E6] bg-[#F8F9FA] focus:border-[#DEE2E6]"
               }
               placeholder="Pesquise um aviso pelo título"
               value={filterValue}

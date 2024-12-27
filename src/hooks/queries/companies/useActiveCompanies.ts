@@ -16,7 +16,10 @@ export const getActiveCompaniesQueryFn = () => {
   return () =>
     getFirestoreCollection<CompanyEntity[]>({
       collectionPath: "companies",
-      filters: [{ field: "endedAt", operator: "==", value: null }]
+      filters: [
+        { field: "endedAt", operator: "==", value: null },
+        { field: "blockedAt", operator: "==", value: null }
+      ]
     }).then((res) => res.data);
 };
 

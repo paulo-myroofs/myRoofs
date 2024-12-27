@@ -6,6 +6,7 @@ import Button from "@/components/atoms/Button/button";
 import BookingsTable from "./components/Bookings/Bookings";
 import IncidentsTable from "./components/Incidents/Incidents";
 import LostAndFoundTable from "./components/LostAndFound/LostAndFound";
+import OrdersTable from "./components/OrdersTable/OrdersTable";
 import VisitsTable from "./components/Visits/VisitsTable";
 import WarningTable from "./components/Waning/Warnings";
 import { ActiveTabs } from "./types";
@@ -18,12 +19,14 @@ const Historico = () => {
     "Ocorrências",
     "Reservas",
     "Visitantes",
-    "Achados e Perdidos"
+    "Achados e Perdidos",
+    "Encomendas"
   ];
 
   return (
     <section className="mx-auto w-11/12 max-w-[1500px] space-y-8">
-      <div className="flex items-center gap-x-2 ">
+      {/* Tabs container */}
+      <div className="flex flex-wrap justify-center gap-2 lg:flex-nowrap">
         {tabs.map((tab) => (
           <Button
             key={tab}
@@ -39,11 +42,13 @@ const Historico = () => {
           </Button>
         ))}
       </div>
+      {/* Render the corresponding table */}
       {activeTab === "Avisos" && <WarningTable />}
       {activeTab === "Ocorrências" && <IncidentsTable />}
       {activeTab === "Reservas" && <BookingsTable />}
       {activeTab === "Visitantes" && <VisitsTable />}
       {activeTab === "Achados e Perdidos" && <LostAndFoundTable />}
+      {activeTab === "Encomendas" && <OrdersTable />}
     </section>
   );
 };

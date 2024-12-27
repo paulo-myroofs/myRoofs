@@ -3,35 +3,64 @@ import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import Link from "next/link";
 
-import { OccurrenceEntity } from "@/common/entities/occurrences";
+import { OccurrenceEntity, Status } from "@/common/entities/occurrences";
 import Button from "@/components/atoms/Button/button";
 import Tag from "@/components/atoms/Tag/Tag";
-import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
 import useProfile from "@/hooks/queries/useProfile";
+import { errorToast, successToast } from "@/hooks/useAppToast";
+import { queryClient } from "@/store/providers/queryClient";
+import { updateFirestoreDoc } from "@/store/services";
 import { extractFilename } from "@/utils/extractFilename";
+
+import SeeDetailsOccurrence from "./components/SeeDetailsOccurrence";
+import { OccurrenceColumnData } from "./types";
 
 const GetUserName = ({ userId }: { userId: string }) => {
   const { data: name } = useProfile(userId, (data) => data.name);
   return <p>{name}</p>;
 };
-const GetStatus = ({ status }: { status: OccurrenceEntity["status"] }) => {
+
+const GetStatus = ({ data }: { data: OccurrenceColumnData }) => {
+  const handleUpdate = async () => {
+    const nextStatus =
+      data.status === Status.CLOSED
+        ? Status.WAITING
+        : data.status === Status.WAITING
+          ? Status.REFUSED
+          : Status.CLOSED;
+
+    const { error } = await updateFirestoreDoc<OccurrenceEntity>({
+      documentPath: `/occurrences/${data.id}`,
+      data: { status: nextStatus }
+    });
+
+    if (error) {
+      return errorToast("Erro ao atualizar o status da ocorrência");
+    }
+
+    successToast("Status da ocorrência atualizado com sucesso");
+    queryClient.invalidateQueries(["occurrences", data.condoId]);
+  };
+
   return (
     <Tag
       variant={
-        status === "encerrado"
+        data.status === Status.CLOSED
           ? "greenBlack"
-          : status === "recusado"
+          : data.status === Status.REFUSED
             ? "red"
             : "yellowBlack"
       }
       size="smLarge"
+      onClick={handleUpdate}
+      className="cursor-pointer transition-transform hover:scale-105"
     >
-      {status.slice(0, 1).toUpperCase() + status.slice(1)}
+      {data.status.charAt(0).toUpperCase() + data.status.slice(1).toLowerCase()}
     </Tag>
   );
 };
 
-const SeeMore = ({ details }: { details: OccurrenceEntity["details"] }) => {
+const SeeMore = ({ data }: { data: OccurrenceColumnData }) => {
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <>
@@ -44,25 +73,16 @@ const SeeMore = ({ details }: { details: OccurrenceEntity["details"] }) => {
         Ver Mais
       </Button>
 
-      <TransitionModal
-        hasButtons={false}
+      <SeeDetailsOccurrence
         isOpen={modalOpen}
-        onOpenChange={() => setModalOpen((prev) => !prev)}
-        title="Detalhes da ocorrência"
-      >
-        <textarea
-          disabled={true}
-          rows={4}
-          className="w-full items-center gap-1 rounded-sm border border-gray-300 px-2 py-2 text-sm opacity-60 outline-none focus:border-black sm:px-4 sm:text-base"
-        >
-          {details}
-        </textarea>
-      </TransitionModal>
+        onOpenChange={setModalOpen}
+        occurenceData={data}
+      />
     </>
   );
 };
 
-export const columns: ColumnDef<OccurrenceEntity>[] = [
+export const columns: ColumnDef<OccurrenceColumnData>[] = [
   {
     accessorKey: "title",
     header: "Título",
@@ -102,11 +122,11 @@ export const columns: ColumnDef<OccurrenceEntity>[] = [
   {
     accessorKey: "month",
     header: "Status",
-    cell: ({ row }) => <GetStatus status={row.original.status} />
+    cell: ({ row }) => <GetStatus data={row.original} />
   },
   {
     accessorKey: "detalhes",
     header: "Detalhes",
-    cell: ({ row }) => <SeeMore details={row.original.details} />
+    cell: ({ row }) => <SeeMore data={row.original} />
   }
 ];

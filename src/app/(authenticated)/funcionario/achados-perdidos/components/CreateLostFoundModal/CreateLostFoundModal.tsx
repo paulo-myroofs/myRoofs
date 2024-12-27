@@ -96,7 +96,8 @@ const CreateLostFoundModal = ({
       foundLocal: data.foundAt,
       description: data.description,
       imageUrl: imageUploaded,
-      deliveredTo: lostFoundData?.deliveredTo ?? null
+      deliveredTo: lostFoundData?.deliveredTo ?? null,
+      foundBy: userUid
     };
 
     if (lostFoundData) {

@@ -3,4 +3,5 @@ export type ActiveTabs =
   | "Ocorrências"
   | "Reservas"
   | "Visitantes"
-  | "Achados e Perdidos";
+  | "Achados e Perdidos"
+  | "Encomendas";
