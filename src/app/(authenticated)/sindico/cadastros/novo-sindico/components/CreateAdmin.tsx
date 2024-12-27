@@ -6,11 +6,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { isCPF } from "brazilian-values";
 import { Camera } from "lucide-react";
 import Image from "next/image";
-import { useForm } from "react-hook-form";
-import { v4 as uuidV4, v4 } from "uuid";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { v4 as uuidV4 } from "uuid";
 import { z } from "zod";
 
-import AptManagerData from "@/app/admin/condominios/ver-mais/[condoId]/components/AptManagerData/AptManagerData";
+// import AptManagerData from "@/app/admin/condominios/ver-mais/[condoId]/components/AptManagerData/AptManagerData";
 import AddressInputsModal from "@/app/admin/nova-empresa/components/AddressInputsModal";
 import { brazilStates } from "@/common/constants/brazilStates";
 import { maritalStatusOptions } from "@/common/constants/maritalStatusOptions";
@@ -101,87 +101,114 @@ export default function CreateAdminModal({
     }
   };
 
-  const handleForm = async (data: AddAptManagerForm) => {
-    if (!condo) return;
+  const handleForm: SubmitHandler<AddAptManagerForm> = async (data) => {
+    if (!condo) {
+      return errorToast("Erro ao buscar condomínio.");
+    }
     if (!isCPF(unmask(data.ownerBasicInfo.cpf))) {
       return errorToast("CPF não é válido.");
     }
 
     setLoading(true);
 
-    const password = uuidV4().slice(0, 8);
+    try {
+      let imageUrl = adminData?.image ?? null;
+      if (typeof image !== "string" && image) {
+        // eslint-disable-next-line prettier/prettier
+      const { image: url, error: errorUpload } = await uploadImage(image as File);
+        if (errorUpload || !url) {
+          setLoading(false);
+          return errorToast(
+            "Não foi possível fazer upload de imagem, entre em contato."
+          );
+        }
+        imageUrl = url;
 
-    const { error: errorEmail } = await sendEmail(data.ownerEmail, password);
-    if (errorEmail) {
-      setLoading(false);
-      return errorToast(
-        "Não foi possível enviar email com credenciais, entre em contato."
-      );
-    }
+        if (adminData?.image) {
+          await deleteImage(adminData.image);
+        }
+      }
 
-    const { error, uid: aptManagerId } = await createUserAuth(
-      data.ownerEmail,
-      password
-    );
-    if (error || !aptManagerId) {
-      setLoading(false);
-      return errorToast(error ?? "Algo deu errado.");
-    }
+      const aptManagerData = {
+        // id: aptManagerId ?? v4(),
+        companyId: user?.companyId as string,
+        role: "aptManager" as const,
+        name: data.ownerBasicInfo.name,
+        email: data.ownerEmail,
+        image: imageUrl,
+        cpf: unmask(data.ownerBasicInfo.cpf),
+        rg: unmask(data.ownerBasicInfo.rg),
+        emitter: data.ownerBasicInfo.emitter,
+        profession: data.ownerBasicInfo.profession,
+        maritalStatus: maritalStatusOptions.find(
+          (item) => item.value === data.ownerBasicInfo.maritalStatus
+        )?.label as MaritalStatusOptionsType,
+        address: data.ownerAddressData.address,
+        neighborhood: data.ownerAddressData.neighborhood,
+        state: brazilStates.find(
+          (item) => item.value === data.ownerAddressData.state
+        )?.label as BrazilStatesOptionsType,
+        number: data.ownerAddressData.number,
+        cep: unmask(data.ownerAddressData.cep),
+        city: data.ownerAddressData.city,
+        isSecondary: true
+      };
 
-    const aptManagerData = {
-      // id: aptManagerId ?? v4(),
-      companyId: user?.companyId as string,
-      role: "aptManager" as const,
-      name: data.ownerBasicInfo.name,
-      email: data.ownerEmail,
-      image: typeof image === "string" ? image : "",
-      cpf: unmask(data.ownerBasicInfo.cpf),
-      rg: unmask(data.ownerBasicInfo.rg),
-      emitter: data.ownerBasicInfo.emitter,
-      profession: data.ownerBasicInfo.profession,
-      maritalStatus: maritalStatusOptions.find(
-        (item) => item.value === data.ownerBasicInfo.maritalStatus
-      )?.label as MaritalStatusOptionsType,
-      address: data.ownerAddressData.address,
-      neighborhood: data.ownerAddressData.neighborhood,
-      state: brazilStates.find(
-        (item) => item.value === data.ownerAddressData.state
-      )?.label as BrazilStatesOptionsType,
-      number: data.ownerAddressData.number,
-      cep: unmask(data.ownerAddressData.cep),
-      city: data.ownerAddressData.city,
-      isSecondary: true
-    };
+      if (!adminData) {
+        const password = uuidV4().slice(0, 8);
 
-    if (typeof image !== "string" && image) {
-      const { image: url, error: errorUpload } = await uploadImage(image);
-      if (errorUpload || !url) {
-        setLoading(false);
-        return errorToast(
-          "Não foi possível fazer upload de imagem, entre em contato."
+        const { error: errorEmail } = await sendEmail(
+          data.ownerEmail,
+          password
         );
+        if (errorEmail) {
+          setLoading(false);
+          return errorToast(
+            "Não foi possível enviar email com credenciais, entre em contato."
+          );
+        }
+
+        const { error, uid: aptManagerId } = await createUserAuth(
+          data.ownerEmail,
+          password
+        );
+        if (error || !aptManagerId) {
+          setLoading(false);
+          return errorToast(error ?? "Algo deu errado.");
+        }
+        await setFirestoreDoc<Omit<AptManagerEntity, "id">>({
+          docPath: `users/${aptManagerId}`,
+          data: {
+            ...aptManagerData
+          } as AptManagerEntity
+        });
+
+        await updateFirestoreDoc<CondoEntity>({
+          documentPath: `/condominium/${condoId}`,
+          data: {
+            aptManagersIds: [...(condo?.aptManagersIds || []), aptManagerId]
+          }
+        });
+        successToast("Administrador cadastrado com sucesso.");
+      } else {
+        await updateFirestoreDoc<Omit<AptManagerEntity, "id">>({
+          documentPath: `/users/${adminData.id}`,
+          data: {
+            ...aptManagerData
+          } as AptManagerEntity
+        });
+        setImage(imageUrl);
+        successToast("Administrador atualizado.");
       }
-      aptManagerData.image = url;
+      setLoading(false);
+      queryClient.invalidateQueries(getAdministratorByCondoIdQueryKey(condoId));
+      setImage(null);
+      reset();
+      onOpenChange(false);
+    } catch (error) {
+      setLoading(false);
+      return errorToast("error");
     }
-
-    await setFirestoreDoc<Omit<AptManagerEntity, "id">>({
-      docPath: `users/${aptManagerId}`,
-      data: {
-        ...aptManagerData
-      }
-    });
-
-    await updateFirestoreDoc<CondoEntity>({
-      documentPath: `/condominium/${condoId}`,
-      data: { aptManagersIds: [...(condo?.aptManagersIds || []), aptManagerId] }
-    });
-
-    queryClient.invalidateQueries(getAdministratorByCondoIdQueryKey(condoId));
-    // console.log(getAdministratorByCondoIdQueryKey(condoId));
-    // console.log(aptManagerId);
-    successToast("Novo administrador adicionado.");
-    setLoading(false);
-    reset();
   };
 
   const handleDelete = async () => {
@@ -189,9 +216,9 @@ export default function CreateAdminModal({
     setLoading(true);
     if (adminData.image) await deleteImage(adminData.image);
     await deleteFirestoreDoc({ documentPath: `/users/${adminData.id}` });
-    await deleteUserAuth(adminData.email);
+    await deleteUserAuth(adminData.id);
 
-    queryClient.invalidateQueries([condoId]);
+    queryClient.invalidateQueries(["aptManagers", condoId]);
     successToast("Funcionário removido com sucesso.");
     setLoading(false);
     onOpenChange(false);
