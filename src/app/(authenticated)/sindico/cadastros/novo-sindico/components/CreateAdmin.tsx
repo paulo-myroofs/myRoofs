@@ -21,6 +21,7 @@ import { MaritalStatusOptionsType } from "@/common/entities/common/maritalStatus
 import Button from "@/components/atoms/Button/button";
 import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
 import InputField from "@/components/molecules/InputField/inputField";
+import SelectField from "@/components/molecules/SelectField/selectField";
 import { getAdministratorByCondoIdQueryKey } from "@/hooks/queries/administrator/useAdministratorsByCondoId";
 import useCondo from "@/hooks/queries/condos/useCondo";
 import useProfile from "@/hooks/queries/useProfile";
@@ -372,13 +373,13 @@ export default function CreateAdminModal({
           />
         </div>
         <div className="w-full">
-          <InputField
-            name="ownerBasicInfo.maritalStatus"
-            className={"w-full border-[#DEE2E6] bg-[#F8F9FA]"}
+          <SelectField
+            name={"ownerBasicInfo.maritalStatus"}
+            className={inputClassName}
             label="Estado Civil"
-            register={register}
+            control={control}
             formErrors={errors}
-            placeholder="Selecione"
+            options={maritalStatusOptions}
           />
         </div>
         <div className="w-full">
