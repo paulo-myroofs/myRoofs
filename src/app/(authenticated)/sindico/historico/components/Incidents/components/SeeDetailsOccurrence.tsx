@@ -40,7 +40,8 @@ const SeeDetailsOccurrence: React.FC<SeeDetailsOccurrenceProps> = ({
     values: {
       title: occurenceData?.title ?? "",
       description: occurenceData?.details ?? "",
-      response: occurenceData?.response ?? ""
+      return: occurenceData?.return ?? "",
+      reaction: occurenceData?.reaction ?? Reaction.NONE
     }
   });
 
@@ -54,8 +55,8 @@ const SeeDetailsOccurrence: React.FC<SeeDetailsOccurrenceProps> = ({
     await updateFirestoreDoc({
       documentPath: `/occurrences/${occurenceData.id}`,
       data: {
-        response: data.response,
-        reaction: Reaction.NONE
+        response: data.return,
+        reaction: data.reaction
       }
     });
 
@@ -132,7 +133,7 @@ const SeeDetailsOccurrence: React.FC<SeeDetailsOccurrenceProps> = ({
         <TextareaField
           className={inputClassName}
           label="Resposta do Síndico"
-          name="response"
+          name="return"
           formRegister={register}
           formErrors={errors}
           placeholder="Descreva a resposta do síndico"

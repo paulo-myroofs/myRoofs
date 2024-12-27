@@ -16,6 +16,6 @@ export interface OccurrenceColumnData {
   details: string;
   condoId: string;
   title: string;
-  response: string;
+  return: string;
   reaction: Reaction;
 }
