@@ -38,6 +38,7 @@ export const getAdministratorByCondoIdQueryKeyFn = async (
   if (adminError) {
     return;
   }
+
   return adminData;
 };
 

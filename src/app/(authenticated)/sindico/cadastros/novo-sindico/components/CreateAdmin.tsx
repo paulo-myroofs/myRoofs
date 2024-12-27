@@ -7,9 +7,10 @@ import { isCPF } from "brazilian-values";
 import { Camera } from "lucide-react";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
-import { v4 as uuidV4 } from "uuid";
+import { v4 as uuidV4, v4 } from "uuid";
 import { z } from "zod";
 
+import AptManagerData from "@/app/admin/condominios/ver-mais/[condoId]/components/AptManagerData/AptManagerData";
 import AddressInputsModal from "@/app/admin/nova-empresa/components/AddressInputsModal";
 import { brazilStates } from "@/common/constants/brazilStates";
 import { maritalStatusOptions } from "@/common/constants/maritalStatusOptions";
@@ -128,6 +129,7 @@ export default function CreateAdminModal({
     }
 
     const aptManagerData = {
+      // id: aptManagerId ?? v4(),
       companyId: user?.companyId as string,
       role: "aptManager" as const,
       name: data.ownerBasicInfo.name,
@@ -162,9 +164,11 @@ export default function CreateAdminModal({
       aptManagerData.image = url;
     }
 
-    await setFirestoreDoc<AptManagerEntity>({
+    await setFirestoreDoc<Omit<AptManagerEntity, "id">>({
       docPath: `users/${aptManagerId}`,
-      data: aptManagerData
+      data: {
+        ...aptManagerData
+      }
     });
 
     await updateFirestoreDoc<CondoEntity>({
@@ -173,6 +177,8 @@ export default function CreateAdminModal({
     });
 
     queryClient.invalidateQueries(getAdministratorByCondoIdQueryKey(condoId));
+    // console.log(getAdministratorByCondoIdQueryKey(condoId));
+    // console.log(aptManagerId);
     successToast("Novo administrador adicionado.");
     setLoading(false);
     reset();

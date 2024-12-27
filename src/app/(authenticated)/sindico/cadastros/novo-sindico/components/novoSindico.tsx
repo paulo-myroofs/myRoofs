@@ -58,7 +58,7 @@ const AptManagersTable = () => {
           <PlusIcon size={20} /> Registrar Administrador
         </Button>
       </div>
-      <CreateAdminModal isOpen={modalOpen} onOpenChange={setModalOpen} />
+      <CreateAdminModal isOpen={modalOpen} onOpenChange={setModalOpen}/>
     </section>
   );
 };
