@@ -28,7 +28,7 @@ const IncidentsTable = () => {
   return (
     <section className="space-y-4">
       <div className={twMerge(boxStyle)}>
-        <div className="flex items-center justify-between px-8 py-4">
+        <div className="flex flex-col items-center justify-between gap-y-2 px-8 py-4 sm:flex-row">
           <h1 className="text-[18px] font-bold sm:text-[24px]">
             <span className="hidden sm:inline">Histórico de ocorrências</span>
             <span className="inline sm:hidden">Ocorrências</span>
@@ -36,7 +36,7 @@ const IncidentsTable = () => {
 
           <Input
             className={
-              "max-w-[300px] border border-[#DEE2E6] bg-[#F8F9FA] focus:border-[#DEE2E6]"
+              "w-full border border-[#DEE2E6] bg-[#F8F9FA] focus:border-[#DEE2E6] sm:max-w-[400px]"
             }
             placeholder="Pesquise um ocorrência pelo título"
             value={filterValue}

@@ -32,7 +32,10 @@ const VisitsTable = () => {
       <section className="space-y-4">
         <div className={twMerge(boxStyle)}>
           <div className="flex flex-col items-center justify-between gap-y-2 px-8 py-4 sm:flex-row">
-            <h1 className="text-[18px] font-bold sm:text-[24px]">Visitantes</h1>
+            <h1 className="text-[18px] font-bold sm:text-[24px]">
+              <span className="hidden sm:inline">Histórico de visitantes</span>
+              <span className="inline sm:hidden">Visitantes</span>
+            </h1>
             <Input
               className={
                 "w-full border border-[#DEE2E6] bg-[#F8F9FA] focus:border-[#DEE2E6] sm:max-w-[400px]"

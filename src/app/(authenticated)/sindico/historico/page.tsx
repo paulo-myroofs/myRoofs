@@ -25,7 +25,8 @@ const Historico = () => {
 
   return (
     <section className="mx-auto w-11/12 max-w-[1500px] space-y-8">
-      <div className="flex items-center gap-x-2 ">
+      {/* Tabs container */}
+      <div className="flex flex-wrap justify-center gap-2 lg:flex-nowrap">
         {tabs.map((tab) => (
           <Button
             key={tab}
@@ -41,6 +42,7 @@ const Historico = () => {
           </Button>
         ))}
       </div>
+      {/* Render the corresponding table */}
       {activeTab === "Avisos" && <WarningTable />}
       {activeTab === "Ocorrências" && <IncidentsTable />}
       {activeTab === "Reservas" && <BookingsTable />}
