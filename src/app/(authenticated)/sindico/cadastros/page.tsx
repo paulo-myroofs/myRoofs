@@ -7,7 +7,7 @@ import Link from "next/link";
 import Button from "@atoms/Button/button";
 
 import EmployeesTable from "./employees/employees";
-import AptManagersTable from "./novo-sindico/components/novoSindico";
+import AptManagersTable from "./new-admin/components/novoSindico";
 import ResidentsTable from "./residents/residents";
 
 export default function MoradoresFuncionariosCadastrados() {
