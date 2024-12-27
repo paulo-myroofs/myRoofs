@@ -33,7 +33,7 @@ const IncidentsTable = () => {
             details: item.details,
             condoId: condoId as string,
             title: item.title,
-            response: item.response,
+            return: item.return,
             reaction: item.reaction
           }) as OccurrenceColumnData
       )
