@@ -1,8 +1,15 @@
 import { AddressFields } from "./adressFields";
 import { MaritalStatusOptionsType } from "./common/maritalStatusOptionsType";
 
+export enum Status {
+  ACTIVE = "ativo",
+  INACTIVE = "inativo",
+  UNDEFINED = "indefinido"
+}
+
 export interface AptManagerEntity extends AddressFields {
   id: string;
+  image: string | null;
   role: "aptManager";
   isSecondary?: boolean;
   companyId: string;
@@ -12,5 +19,7 @@ export interface AptManagerEntity extends AddressFields {
   rg: string;
   emitter: string;
   profession: string;
+  adminRole: string;
   maritalStatus: MaritalStatusOptionsType;
+  status: Status;
 }

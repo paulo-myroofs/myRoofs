@@ -46,7 +46,7 @@ const SelectField = <T extends FieldValues>({
             onChange={(selectedValue) => field.onChange(selectedValue)}
             options={options}
             value={field.value || ""}
-            className={cn("truncate", className)} // Adicionando truncate aqui
+            className={cn("truncate", className)}
             placeholder={placeholder}
             emptyPlaceholder={emptyPlaceholder}
           />

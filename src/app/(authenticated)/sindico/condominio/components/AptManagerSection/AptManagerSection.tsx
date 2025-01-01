@@ -50,7 +50,9 @@ const AptManagerSection = ({ aptManagerId }: { aptManagerId: string }) => {
         maritalStatus:
           maritalStatusOptions?.find(
             (v) => v.label === aptManager?.maritalStatus
-          )?.value ?? ""
+          )?.value ?? "",
+        status: aptManager?.status ?? "",
+        adminRole: aptManager?.role ?? ""
       },
       ownerAddressData: {
         address: aptManager?.address ?? "",
