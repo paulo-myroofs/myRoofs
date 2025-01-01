@@ -12,7 +12,7 @@ import { v7 as uuid, v4 as uuidV4 } from "uuid";
 
 import { brazilStates } from "@/common/constants/brazilStates";
 import { maritalStatusOptions } from "@/common/constants/maritalStatusOptions";
-import { AptManagerEntity } from "@/common/entities/aptManager";
+import { AptManagerEntity, Status } from "@/common/entities/aptManager";
 import { BrazilStatesOptionsType } from "@/common/entities/common/brazilStatesOptionsType";
 import { MaritalStatusOptionsType } from "@/common/entities/common/maritalStatusOptionsType";
 import { CompanyEntity } from "@/common/entities/company";
@@ -70,6 +70,7 @@ const NewCompany = () => {
       rg: aptManager?.rg || "",
       emitter: aptManager?.emitter || "",
       profession: aptManager?.profession || "",
+      adminRole: "Responsável Legal",
       maritalStatus:
         (maritalStatusOptions.find(
           (item) => item.label === aptManager?.maritalStatus
@@ -131,6 +132,7 @@ const NewCompany = () => {
           rg: aptManager.rg || "",
           emitter: aptManager.emitter || "",
           profession: aptManager.profession || "",
+          adminRole: "Responsável Legal",
           maritalStatus:
             (maritalStatusOptions.find(
               (item) => item.label === aptManager.maritalStatus
@@ -223,12 +225,14 @@ const NewCompany = () => {
         )?.label as BrazilStatesOptionsType,
         number: data.ownerAddressData.number,
         cep: unmask(data.ownerAddressData.cep),
-        city: data.ownerAddressData.city
+        city: data.ownerAddressData.city,
+        adminRole: data.ownerBasicInfo.adminRole,
+        status: Status.INACTIVE
       };
 
       await setFirestoreDoc<AptManagerEntity>({
         docPath: `users/${aptManagerId}`,
-        data: aptManagerData
+        data: { ...aptManagerData, image: imageUrl }
       });
 
       const companyData = {

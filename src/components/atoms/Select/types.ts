@@ -4,6 +4,7 @@ export interface SelectProps {
   options: Array<{
     label: string;
     value: string;
+    disabled?: boolean;
   }>;
   placeholder?: string;
   className?: ComponentProps<"div">["className"];

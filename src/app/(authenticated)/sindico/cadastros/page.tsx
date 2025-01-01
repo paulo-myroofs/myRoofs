@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 
-import Link from "next/link";
-
 import Button from "@atoms/Button/button";
 
 import EmployeesTable from "./employees/employees";
@@ -39,14 +37,6 @@ export default function MoradoresFuncionariosCadastrados() {
             </Button>
           ))}
         </div>
-
-        <Link
-          href={"/sindico/cadastros/novo-sindico"}
-          className="font-medium tracking-wide hover:underline"
-        >
-          {" "}
-          Adicionar síndico{" "}
-        </Link>
       </div>
 
       {activeTab === "Moradores" && <ResidentsTable />}

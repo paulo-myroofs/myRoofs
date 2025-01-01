@@ -4,10 +4,7 @@ import { DocumentData } from "firebase/firestore";
 import { AptManagerEntity } from "@/common/entities/aptManager";
 import { CondoEntity } from "@/common/entities/common/condo/condo";
 import { getFirestoreDoc, getFirestoreCollection } from "@/store/services";
-import {
-  // FORTY_FIVE_MINUTES_IN_MS,
-  ONE_DAY_IN_MS
-} from "@common/constants/generic";
+import { ONE_DAY_IN_MS } from "@common/constants/generic";
 
 export function getAdministratorByCondoIdQueryKey(condoCode: string) {
   return ["administrators", condoCode];
@@ -50,7 +47,6 @@ const useAdministratorsByCondoId = <T = AptManagerEntity[],>(
     queryKey: getAdministratorByCondoIdQueryKey(condoCode),
     queryFn: () => getAdministratorByCondoIdQueryKeyFn(condoCode),
     select,
-    staleTime: 0,
     cacheTime: ONE_DAY_IN_MS
   });
 };

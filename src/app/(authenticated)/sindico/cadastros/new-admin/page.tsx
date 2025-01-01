@@ -10,7 +10,7 @@ import { z } from "zod";
 import AptManagerInputs from "@/app/admin/nova-empresa/components/AptManagerInputs/AptManagerInputs";
 import { brazilStates } from "@/common/constants/brazilStates";
 import { maritalStatusOptions } from "@/common/constants/maritalStatusOptions";
-import { AptManagerEntity } from "@/common/entities/aptManager";
+import { AptManagerEntity, Status } from "@/common/entities/aptManager";
 import { BrazilStatesOptionsType } from "@/common/entities/common/brazilStatesOptionsType";
 import { CondoEntity } from "@/common/entities/common/condo/condo";
 import { MaritalStatusOptionsType } from "@/common/entities/common/maritalStatusOptionsType";
@@ -90,6 +90,7 @@ const NovoSindico = () => {
       rg: unmask(data.ownerBasicInfo.rg),
       emitter: data.ownerBasicInfo.emitter,
       profession: data.ownerBasicInfo.profession,
+      adminRole: data.ownerBasicInfo.adminRole,
       maritalStatus: maritalStatusOptions.find(
         (item) => item.value === data.ownerBasicInfo.maritalStatus
       )?.label as MaritalStatusOptionsType,
@@ -101,8 +102,8 @@ const NovoSindico = () => {
       number: data.ownerAddressData.number,
       cep: unmask(data.ownerAddressData.cep),
       city: data.ownerAddressData.city,
-      isSecondary: true,
-      image: ""
+      image: "",
+      status: Status.INACTIVE
     };
 
     await setFirestoreDoc<AptManagerEntity>({

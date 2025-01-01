@@ -22,12 +22,11 @@ const AptManagersTable = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [filterValue, setFilterValue] = useState("");
 
-  const { data: aptManagers = [] } = useAdministratorsByCondoId(condoId);
+  const { data: aptManagers } = useAdministratorsByCondoId(condoId);
 
   const filteredData = aptManagers?.filter((item) =>
     item.name.toLowerCase().includes(filterValue.toLowerCase())
   );
-  console.log(aptManagers);
 
   if (!condoId) return null;
 

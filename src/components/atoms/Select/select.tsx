@@ -69,6 +69,7 @@ const Select = ({
                   }
                   setOpen(false);
                 }}
+                disabled={option.disabled}
               >
                 {option.label}
                 <Check

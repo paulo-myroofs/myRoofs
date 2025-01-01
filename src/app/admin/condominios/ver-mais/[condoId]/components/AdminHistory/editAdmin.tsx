@@ -6,11 +6,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { isCPF } from "brazilian-values";
 import { Camera } from "lucide-react";
 import Image from "next/image";
+import { useParams } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { v4 as uuidV4 } from "uuid";
 import { z } from "zod";
 
 // import AptManagerData from "@/app/admin/condominios/ver-mais/[condoId]/components/AptManagerData/AptManagerData";
+import { AdminModalProps } from "@/app/(authenticated)/sindico/cadastros/new-admin/components/types";
 import AddressInputsModal from "@/app/admin/nova-empresa/components/AddressInputsModal";
 import { brazilStates } from "@/common/constants/brazilStates";
 import { maritalStatusOptions } from "@/common/constants/maritalStatusOptions";
@@ -24,9 +26,7 @@ import InputField from "@/components/molecules/InputField/inputField";
 import SelectField from "@/components/molecules/SelectField/selectField";
 import { getAdministratorByCondoIdQueryKey } from "@/hooks/queries/administrator/useAdministratorsByCondoId";
 import useCondo from "@/hooks/queries/condos/useCondo";
-import useProfile from "@/hooks/queries/useProfile";
 import { errorToast, successToast } from "@/hooks/useAppToast";
-import useAuth from "@/hooks/useAuth";
 import { queryClient } from "@/store/providers/queryClient";
 import {
   deleteFirestoreDoc,
@@ -36,11 +36,8 @@ import {
 import { createUserAuth, deleteUserAuth } from "@/store/services/auth";
 import { sendEmail } from "@/store/services/email";
 import { deleteImage, uploadImage } from "@/store/services/firebaseStorage";
-import { storageGet } from "@/store/services/storage";
 import unmask from "@/utils/unmask";
 import AddAptManager from "@/validations/admin/AddAptManager";
-
-import { AdminModalProps } from "./types";
 
 type AddAptManagerForm = z.infer<typeof AddAptManager>;
 const inputClassName = "border-[#DEE2E6] bg-[#F8F9FA]";
@@ -59,16 +56,12 @@ export default function CreateAdminModal({
   onOpenChange,
   adminData
 }: AdminModalProps) {
-  const condoId = storageGet<string>("condoId") as string;
+  const { condoId } = useParams<{ condoId: string }>();
   const { data: condo } = useCondo(condoId);
-  const { userUid } = useAuth();
-  const { data: user } = useProfile<AptManagerEntity>(userUid);
-
   const [image, setImage] = useState<File | string | null>(
     adminData?.image ?? null
   );
   const [loading, setLoading] = useState(false);
-
   const {
     handleSubmit,
     register,
@@ -148,7 +141,7 @@ export default function CreateAdminModal({
 
       const aptManagerData = {
         // id: aptManagerId ?? v4(),
-        companyId: user?.companyId as string,
+        companyId: adminData?.companyId as string,
         role: "aptManager" as const,
         name: data.ownerBasicInfo.name,
         email: data.ownerEmail,
@@ -171,7 +164,7 @@ export default function CreateAdminModal({
         number: data.ownerAddressData.number,
         cep: unmask(data.ownerAddressData.cep),
         city: data.ownerAddressData.city,
-        status: Status.INACTIVE
+        status: data.ownerBasicInfo.status
       };
 
       if (!adminData) {
