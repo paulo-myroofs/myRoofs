@@ -199,7 +199,7 @@ export default function CreateEmployeeModal({
     <TransitionModal
       isOpen={isOpen}
       title={
-        employeeData ? "Informações do Fucionário" : "Cadastro de Funcionários"
+        employeeData ? "Informações do Funcionário" : "Cadastro de Funcionários"
       }
       description={
         employeeData

@@ -13,7 +13,7 @@ const address = z.object({
   number: z.string({ required_error: "Número é obrigatório" })
 });
 
-const validateCPF = (cpf: string): boolean => {
+export const validateCPF = (cpf: string): boolean => {
   // Remove caracteres não numéricos
   cpf = cpf.replace(/[^\d]+/g, "");
 

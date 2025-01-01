@@ -13,7 +13,7 @@ import { queryClient } from "@/store/providers/queryClient";
 import { updateFirestoreDoc } from "@/store/services";
 import { activateUserAuth, deactivateUserAuth } from "@/store/services/auth";
 
-import AptManagerModal from "./editAdmin";
+import AptManagerModal from "./createAdmin";
 
 const Edit = ({ data }: { data: AptManagerEntity }) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -63,10 +63,10 @@ const GetStatus = ({ data }: { data: AptManagerEntity }) => {
     }
 
     if (error) {
-      return errorToast("Erro ao atualizar o status do administrador");
+      return errorToast("Erro ao atualizar o status do adminstrador");
     }
 
-    successToast("Status do administrador atualizado com sucesso");
+    successToast("Status do adminstrador atualizado com sucesso");
     queryClient.invalidateQueries(["users", data.id]);
   };
 

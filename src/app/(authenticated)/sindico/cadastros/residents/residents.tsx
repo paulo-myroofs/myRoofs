@@ -16,6 +16,7 @@ const boxStyle = "border border-black rounded-[8px]";
 
 const ResidentsTable = () => {
   const condoId = storageGet<string>("condoId");
+
   const [filterValue, setFilterValue] = useState("");
   const { data: residents } = useResidentsByCondoId(condoId as string);
   const filteredData = residents?.filter((item) =>

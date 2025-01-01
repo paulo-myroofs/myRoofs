@@ -2,20 +2,20 @@
 
 import { useState } from "react";
 
-import Link from "next/link";
-
 import Button from "@atoms/Button/button";
 
+import AptManagersTable from "./administration/components/newAdmin";
 import EmployeesTable from "./employees/employees";
 import ResidentsTable from "./residents/residents";
 
 export default function MoradoresFuncionariosCadastrados() {
-  const [activeTab, setActiveTab] = useState<"Moradores" | "Funcionários">(
-    "Moradores"
-  );
-  const tabs: Array<"Moradores" | "Funcionários"> = [
+  const [activeTab, setActiveTab] = useState<
+    "Moradores" | "Funcionários" | "Administradores"
+  >("Moradores");
+  const tabs: Array<"Moradores" | "Funcionários" | "Administradores"> = [
     "Moradores",
-    "Funcionários"
+    "Funcionários",
+    "Administradores"
   ];
 
   return (
@@ -37,18 +37,11 @@ export default function MoradoresFuncionariosCadastrados() {
             </Button>
           ))}
         </div>
-
-        <Link
-          href={"/sindico/cadastros/novo-sindico"}
-          className="font-medium tracking-wide hover:underline"
-        >
-          {" "}
-          Adicionar síndico{" "}
-        </Link>
       </div>
 
       {activeTab === "Moradores" && <ResidentsTable />}
       {activeTab === "Funcionários" && <EmployeesTable />}
+      {activeTab === "Administradores" && <AptManagersTable />}
     </main>
   );
 }

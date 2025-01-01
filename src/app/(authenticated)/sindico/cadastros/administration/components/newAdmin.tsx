@@ -2,40 +2,43 @@
 
 import { useState } from "react";
 
+import { PlusIcon } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 
 import { AptManagerEntity } from "@/common/entities/aptManager";
+import Button from "@/components/atoms/Button/button";
 import { DataPaginatedTable } from "@/components/atoms/DataTablePaginated/DataTablePaginated";
 import Input from "@/components/atoms/Input/input";
-import useAdministratorByCondoId from "@/hooks/queries/administrator/useAdministratorByCondoId";
+import useAdministratorsByCondoId from "@/hooks/queries/administrator/useAdministratorByCondoId";
+import { storageGet } from "@/store/services/storage";
 
-import { columns } from "./Columns";
+import CreateAdminModal from "./createAdmin";
+import { columns } from "./newAdminColumns";
 
 const boxStyle = "border border-black rounded-[8px]";
 
-interface AdminHistoryProps {
-  condoId: string;
-}
-
-const AdminHistory = ({ condoId }: AdminHistoryProps) => {
+const AptManagersTable = () => {
+  const condoId = storageGet<string>("condoId") as string;
+  const [modalOpen, setModalOpen] = useState(false);
   const [filterValue, setFilterValue] = useState("");
-  const { data: administrator } = useAdministratorByCondoId(condoId);
 
-  const filteredData = administrator?.filter((item) =>
-    item.name.toLocaleLowerCase().includes(filterValue.toLocaleLowerCase())
+  const { data: aptManagers } = useAdministratorsByCondoId(condoId);
+
+  const filteredData = aptManagers?.filter((item) =>
+    item.name.toLowerCase().includes(filterValue.toLowerCase())
   );
+
+  if (!condoId) return null;
 
   return (
     <section className="space-y-4">
       <div className={twMerge(boxStyle)}>
         <div className="flex flex-col items-center justify-between gap-y-3 px-8 py-4 md:flex-row">
           <h1 className="text-[18px] font-bold sm:text-[24px]">
-            Adminstradores
+            Administradores
           </h1>
           <Input
-            className={
-              "max-w-[300px] border border-[#DEE2E6] bg-[#F8F9FA] focus:border-[#DEE2E6]"
-            }
+            className="max-w-[300px] border border-[#DEE2E6] bg-[#F8F9FA] focus:border-[#DEE2E6]"
             placeholder="Pesquise pelo nome"
             value={filterValue}
             onChange={(e) => setFilterValue(e.target.value)}
@@ -49,8 +52,14 @@ const AdminHistory = ({ condoId }: AdminHistoryProps) => {
           />
         </div>
       </div>
+      <div className="flex w-full justify-end">
+        <Button variant="icon" size="lg" onClick={() => setModalOpen(true)}>
+          <PlusIcon size={20} /> Registrar Administrador
+        </Button>
+      </div>
+      <CreateAdminModal isOpen={modalOpen} onOpenChange={setModalOpen} />
     </section>
   );
 };
 
-export default AdminHistory;
+export default AptManagersTable;
