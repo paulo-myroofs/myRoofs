@@ -48,7 +48,7 @@ function AptManagerOnlyFeature({ children }: Props): JSX.Element {
         router.push("/escolher-condominio");
       }
     }
-  }, [userUid, router, condoId, user, pathname]);
+  }, [userUid, router, condoId, user, pathname, endedCompaniesIds]);
 
   return children;
 }
