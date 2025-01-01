@@ -8,9 +8,9 @@ import { ResidentEntity } from "@/common/entities/resident";
 import { DataPaginatedTable } from "@/components/atoms/DataTablePaginated/DataTablePaginated";
 import Input from "@/components/atoms/Input/input";
 import useResidentsByCondoId from "@/hooks/queries/residents/useResidentsByCondoId";
+import { storageGet } from "@/store/services/storage";
 
 import { columns } from "./residentsColumns";
-import { storageGet } from "@/store/services/storage";
 
 const boxStyle = "border border-black rounded-[8px]";
 

@@ -4,8 +4,8 @@ import { useState } from "react";
 
 import Button from "@atoms/Button/button";
 
-import EmployeesTable from "./employees/employees";
 import AptManagersTable from "./administration/components/newAdmin";
+import EmployeesTable from "./employees/employees";
 import ResidentsTable from "./residents/residents";
 
 export default function MoradoresFuncionariosCadastrados() {
