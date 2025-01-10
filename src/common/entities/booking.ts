@@ -8,7 +8,7 @@ export interface BookingEntity {
   formation: string;
   apartment: string;
   periods: PeriodsType[];
-  date: Timestamp;
+  dates: Timestamp;
   area: string; // nome da área comum
   paymentDoc: string;
   guestsDoc: string;
