@@ -1,9 +1,11 @@
 import { Timestamp } from "@/common/entities/timestamp";
 
 export const timestampToDate = (data: Timestamp): Date => {
-
-  
-  if (!data || typeof data.seconds !== "number" || typeof data.nanoseconds !== "number") {
+  if (
+    !data ||
+    typeof data.seconds !== "number" ||
+    typeof data.nanoseconds !== "number"
+  ) {
     throw new Error("Invalid Timestamp object");
   }
 
