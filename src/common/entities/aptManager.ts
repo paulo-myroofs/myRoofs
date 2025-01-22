@@ -4,7 +4,7 @@ import { MaritalStatusOptionsType } from "./common/maritalStatusOptionsType";
 export enum Status {
   ACTIVE = "ativo",
   INACTIVE = "inativo",
-  UNDEFINED = "indefinido"
+  UNDEFINED = "indefinido",
 }
 
 export interface AptManagerEntity extends AddressFields {
@@ -22,4 +22,6 @@ export interface AptManagerEntity extends AddressFields {
   adminRole: string;
   maritalStatus: MaritalStatusOptionsType;
   status: Status;
+  startDate: string;
+  blockDate: string;
 }
