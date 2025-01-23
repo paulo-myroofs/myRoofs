@@ -32,7 +32,9 @@ const GetStatus = ({ data }: { data: AptManagerEntity }) => {
 };
 
 export const columns: ColumnDef<AptManagerEntity>[] = [
-  { header: "Cargo", accessorKey: "adminRole" },
+  { 
+    header: "Cargo",
+    accessorKey: "adminRole" },
   {
     header: "Nome",
     accessorKey: "name"
@@ -48,16 +50,16 @@ export const columns: ColumnDef<AptManagerEntity>[] = [
     accessorKey: "email"
   },
   {
-    accessorKey: "month",
     header: "Status",
+    accessorKey: "month",
     cell: ({ row }) => <GetStatus data={row.original} />
   },
   {
     header: "Data de Início",
-    accessorKey: "startDate",
+    accessorKey: "createdAt",
   },
   {
     header: "Data de Bloqueio",
-    accessorKey: "blockDate",
+    accessorKey: "blockedAt",
   },
 ];

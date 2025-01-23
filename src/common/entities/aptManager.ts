@@ -22,6 +22,6 @@ export interface AptManagerEntity extends AddressFields {
   adminRole: string;
   maritalStatus: MaritalStatusOptionsType;
   status: Status;
-  startDate: string;
-  blockDate: string;
+  createdAt: string;
+  blockedAt: string;
 }
