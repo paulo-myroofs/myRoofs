@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { timestampToDate } from "@/utils/timestampToDate";
 
 import { ColumnDef } from "@tanstack/react-table";
 import { formatToCPF } from "brazilian-values";
@@ -57,6 +58,13 @@ export const columns: ColumnDef<AptManagerEntity>[] = [
   {
     header: "Data de Início",
     accessorKey: "createdAt",
+    cell: ({ row }) => (
+      <p>
+        {row.original.createdAt
+          ? timestampToDate(row.original.createdAt).toLocaleDateString()
+          : ""}
+      </p>
+    )
   },
   {
     header: "Data de Bloqueio",
