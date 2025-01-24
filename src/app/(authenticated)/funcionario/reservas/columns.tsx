@@ -39,8 +39,8 @@ const SeeFiles = ({ data }: { data: BookingEntity }) => {
 };
 
 const GetDatePeriod = ({ data }: { data: BookingEntity }) => {
-  const { date, periods } = data;
-  const dateString = timestampToDate(date).toLocaleDateString();
+  const { dates, periods } = data;
+  const dateString = timestampToDate(dates).toLocaleDateString();
   const auxTranslate = {
     morning: "Manhã",
     afternoon: "Tarde",
