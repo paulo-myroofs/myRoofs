@@ -26,7 +26,6 @@ import { sendEmail } from "@/store/services/email";
 import { storageGet } from "@/store/services/storage";
 import unmask from "@/utils/unmask";
 import AddAptManagerSchema from "@/validations/admin/AddAptManager";
-import { Timestamp } from "firebase/firestore";
 
 type AddAptManagerForm = z.infer<typeof AddAptManagerSchema>;
 
@@ -104,9 +103,7 @@ const NovoSindico = () => {
       cep: unmask(data.ownerAddressData.cep),
       city: data.ownerAddressData.city,
       image: "",
-      status: Status.INACTIVE,
-      createdAt: Timestamp.fromDate(new Date()),
-      blockedAt: null,
+      status: Status.INACTIVE
     };
 
     await setFirestoreDoc<AptManagerEntity>({

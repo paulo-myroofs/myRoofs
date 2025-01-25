@@ -41,7 +41,6 @@ import unmask from "@/utils/unmask";
 import AddAptManager from "@/validations/admin/AddAptManager";
 
 import { AdminModalProps } from "./types";
-import { Timestamp } from "firebase/firestore";
 
 type AddAptManagerForm = z.infer<typeof AddAptManager>;
 const inputClassName = "border-[#DEE2E6] bg-[#F8F9FA]";
@@ -172,9 +171,7 @@ export default function CreateAdminModal({
         number: data.ownerAddressData.number,
         cep: unmask(data.ownerAddressData.cep),
         city: data.ownerAddressData.city,
-        status: Status.INACTIVE,
-        createdAt: Timestamp.now(),
-        blockedAt: null,
+        status: Status.INACTIVE
       };
 
       if (!adminData) {
