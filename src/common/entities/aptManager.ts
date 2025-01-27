@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 import { AddressFields } from "./adressFields";
 import { MaritalStatusOptionsType } from "./common/maritalStatusOptionsType";
 
@@ -22,4 +24,6 @@ export interface AptManagerEntity extends AddressFields {
   adminRole: string;
   maritalStatus: MaritalStatusOptionsType;
   status: Status;
+  createdAt: Timestamp;
+  blockedAt: Timestamp | null;
 }

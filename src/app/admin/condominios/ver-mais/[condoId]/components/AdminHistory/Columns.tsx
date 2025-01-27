@@ -116,5 +116,21 @@ export const columns: ColumnDef<AptManagerEntity>[] = [
     header: "Editar",
     accessorKey: "Editar",
     cell: ({ row }) => <Edit data={row.original} />
+  },
+  {
+    header: "Data de Criação",
+    accessorKey: "createdAt",
+    cell: ({ row }) =>
+      row.original.createdAt
+        ? row.original.createdAt.toDate().toLocaleDateString() // Converte Timestamp para Date
+        : "Não disponível",
+  },
+  {
+    header: "Data de Bloqueio",
+    accessorKey: "blockedAt",
+    cell: ({ row }) =>
+      row.original.blockedAt
+        ? row.original.blockedAt.toDate().toLocaleDateString() // Converte Timestamp para Date
+        : "Não bloqueado",    
   }
 ];

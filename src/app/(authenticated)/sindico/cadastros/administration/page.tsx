@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isCPF } from "brazilian-values";
+import { Timestamp } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import { v4 as uuidV4 } from "uuid";
 import { z } from "zod";
@@ -103,7 +104,9 @@ const NovoSindico = () => {
       cep: unmask(data.ownerAddressData.cep),
       city: data.ownerAddressData.city,
       image: "",
-      status: Status.INACTIVE
+      status: Status.INACTIVE,
+      createdAt: Timestamp.now(),
+      blockedAt: null
     };
 
     await setFirestoreDoc<AptManagerEntity>({
