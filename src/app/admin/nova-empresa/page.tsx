@@ -232,7 +232,7 @@ const NewCompany = () => {
 
       await setFirestoreDoc<AptManagerEntity>({
         docPath: `users/${aptManagerId}`,
-        data: { ...aptManagerData, image: imageUrl }
+        data: { ...aptManagerData, image: imageUrl, createdAt: Timestamp.now(), blockedAt: null }
       });
 
       const companyData = {
