@@ -40,15 +40,8 @@ const Edit = ({ data }: { data: AptManagerEntity }) => {
 const GetStatus = ({ data }: { data: AptManagerEntity }) => {
   const handleUpdate = async () => {
     const curStatus = data.status;
-    let nextStatus =
-      curStatus === Status.ACTIVE
-        ? Status.INACTIVE
-        : curStatus === Status.INACTIVE
-          ? Status.ACTIVE
-          : Status.UNDEFINED;
-    if (curStatus === Status.UNDEFINED) {
-      nextStatus = Status.ACTIVE;
-    }
+    const nextStatus =
+      curStatus === Status.ACTIVE ? Status.INACTIVE : Status.ACTIVE;
     const { error } = await updateFirestoreDoc<AptManagerEntity>({
       documentPath: `/users/${data.id}`,
       data: { status: nextStatus }

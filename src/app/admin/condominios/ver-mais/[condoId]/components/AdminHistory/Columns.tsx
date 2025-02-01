@@ -1,6 +1,6 @@
 // import { useState } from "react";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { ColumnDef } from "@tanstack/react-table";
 import { formatToCPF } from "brazilian-values";
@@ -38,36 +38,48 @@ const Edit = ({ data }: { data: AptManagerEntity }) => {
 };
 
 const GetStatus = ({ data }: { data: AptManagerEntity }) => {
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState(data.status || Status.INACTIVE);
+  useEffect(() => {
+    console.log("🎯 O status foi atualizado:", status);
+  }, [status]);
+
   const handleUpdate = async () => {
-    const curStatus = data.status;
-    let nextStatus =
-      curStatus === Status.ACTIVE
-        ? Status.INACTIVE
-        : curStatus === Status.INACTIVE
-          ? Status.ACTIVE
-          : Status.UNDEFINED;
-    if (curStatus === Status.UNDEFINED) {
-      nextStatus = Status.ACTIVE;
+    if (loading) return;
+    setLoading(true);
+    try {
+      const curStatus = data.status;
+      const nextStatus =
+        curStatus === Status.ACTIVE ? Status.INACTIVE : Status.ACTIVE;
+      const { error } = await updateFirestoreDoc<AptManagerEntity>({
+        documentPath: `/users/${data.id}`,
+        data: { status: nextStatus }
+      });
+      if (curStatus === Status.ACTIVE && nextStatus === Status.INACTIVE) {
+        const { error } = await deactivateUserAuth(data.id);
+        if (error) throw new Error(error);
+      } else if (
+        curStatus === Status.INACTIVE &&
+        nextStatus === Status.ACTIVE
+      ) {
+        const { error } = await activateUserAuth(data.id);
+        if (error) throw new Error(error);
+      }
+      if (error) {
+        return errorToast("Erro ao atualizar o status do administrador");
+      }
+      successToast("Status do administrador atualizado com sucesso");
+      queryClient.invalidateQueries(["users", data.id]);
+      setStatus(nextStatus);
+    } catch (error) {
+      errorToast(
+        (error as Error).message ||
+          "Erro ao atualizar o status do administrador"
+      );
+    } finally {
+      setLoading(false);
     }
-    const { error } = await updateFirestoreDoc<AptManagerEntity>({
-      documentPath: `/users/${data.id}`,
-      data: { status: nextStatus }
-    });
-
-    if (curStatus === Status.ACTIVE && nextStatus === Status.INACTIVE) {
-      const { error } = await deactivateUserAuth(data.id);
-      return error;
-    } else if (curStatus === Status.INACTIVE && nextStatus === Status.ACTIVE) {
-      const { error } = await activateUserAuth(data.id);
-      return error;
-    }
-
-    if (error) {
-      return errorToast("Erro ao atualizar o status do administrador");
-    }
-
-    successToast("Status do administrador atualizado com sucesso");
-    queryClient.invalidateQueries(["users", data.id]);
+    console.log("🎯 Atualizando...");
   };
 
   return (
@@ -81,12 +93,16 @@ const GetStatus = ({ data }: { data: AptManagerEntity }) => {
       }
       size="smLarge"
       onClick={handleUpdate}
-      className="cursor-pointer transition-transform hover:scale-105"
+      className={`cursor-pointer transition-transform hover:scale-105 ${
+        loading ? "cursor-not-allowed opacity-50" : ""
+      }`}
     >
-      {data.status
-        ? data.status.charAt(0).toUpperCase() +
-          data.status.slice(1).toLowerCase()
-        : "Indefinido"}
+      {loading
+        ? "Atualizando..."
+        : data.status
+          ? data.status.charAt(0).toUpperCase() +
+            data.status.slice(1).toLowerCase()
+          : "Indefinido"}
     </Tag>
   );
 };
@@ -122,15 +138,15 @@ export const columns: ColumnDef<AptManagerEntity>[] = [
     accessorKey: "createdAt",
     cell: ({ row }) =>
       row.original.createdAt
-        ? row.original.createdAt.toDate().toLocaleDateString() // Converte Timestamp para Date
-        : "Não disponível",
+        ? row.original.createdAt.toDate().toLocaleDateString()
+        : "Não disponível"
   },
   {
     header: "Data de Bloqueio",
     accessorKey: "blockedAt",
     cell: ({ row }) =>
       row.original.blockedAt
-        ? row.original.blockedAt.toDate().toLocaleDateString() // Converte Timestamp para Date
-        : "Não bloqueado",    
+        ? row.original.blockedAt.toDate().toLocaleDateString()
+        : "Não bloqueado"
   }
 ];
