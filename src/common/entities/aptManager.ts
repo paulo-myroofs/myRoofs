@@ -1,11 +1,12 @@
 import { Timestamp } from "firebase/firestore";
+
 import { AddressFields } from "./adressFields";
 import { MaritalStatusOptionsType } from "./common/maritalStatusOptionsType";
 
 export enum Status {
   ACTIVE = "ativo",
   INACTIVE = "inativo",
-  UNDEFINED = "indefinido",
+  UNDEFINED = "indefinido"
 }
 
 export interface AptManagerEntity extends AddressFields {
@@ -24,5 +25,5 @@ export interface AptManagerEntity extends AddressFields {
   maritalStatus: MaritalStatusOptionsType;
   status: Status;
   createdAt: Timestamp;
-  blockedAt: Timestamp | null;  
+  blockedAt: Timestamp | null;
 }

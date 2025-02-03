@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isCPF } from "brazilian-values";
+import { Timestamp } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import { v4 as uuidV4 } from "uuid";
 import { z } from "zod";
@@ -26,7 +27,6 @@ import { sendEmail } from "@/store/services/email";
 import { storageGet } from "@/store/services/storage";
 import unmask from "@/utils/unmask";
 import AddAptManagerSchema from "@/validations/admin/AddAptManager";
-import { Timestamp } from "firebase/firestore";
 
 type AddAptManagerForm = z.infer<typeof AddAptManagerSchema>;
 
@@ -106,7 +106,7 @@ const NovoSindico = () => {
       image: "",
       status: Status.INACTIVE,
       createdAt: Timestamp.fromDate(new Date()),
-      blockedAt: null,
+      blockedAt: null
     };
 
     await setFirestoreDoc<AptManagerEntity>({
