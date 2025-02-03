@@ -19,7 +19,7 @@ export default function MoradoresFuncionariosCadastrados() {
   ];
 
   return (
-    <main className="mx-auto  w-11/12 max-w-[1500px] space-y-8">
+    <main className="mx-auto w-11/12 max-w-[1500px] space-y-8">
       <div className="flex items-center justify-between">
         <div className="flex max-w-[800px] items-center gap-2">
           {tabs.map((tab) => (

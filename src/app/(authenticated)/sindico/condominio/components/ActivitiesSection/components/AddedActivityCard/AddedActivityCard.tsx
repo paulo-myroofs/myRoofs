@@ -31,7 +31,7 @@ const AddedActivityCard = ({
           />
         )}
       </div>
-      <div className="space-y-1 text-[14px] sm:text-[20px] ">
+      <div className="space-y-1 text-[14px] sm:text-[20px]">
         <p className="font-semibold">{activity.name}</p>
         <p> {activity.local}</p>
         <p> {activity.daysHours}</p>
@@ -39,7 +39,7 @@ const AddedActivityCard = ({
       </div>
 
       {!readOnly && (
-        <div className="absolute right-5 top-3 z-20 flex gap-2">
+        <div className="absolute top-3 right-5 z-20 flex gap-2">
           <button
             type="button"
             onClick={onEdit}

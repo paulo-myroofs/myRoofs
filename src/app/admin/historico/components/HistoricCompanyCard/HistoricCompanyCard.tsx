@@ -12,7 +12,7 @@ const HistoricCompanyCard = ({
   createdAt
 }: HistoricCompanyCardProps) => {
   return (
-    <Card className="w-full border-bordaPreta font-bold sm:w-80">
+    <Card className="border-bordaPreta w-full font-bold sm:w-80">
       <CardHeader>
         <Image
           src={image}
@@ -25,7 +25,7 @@ const HistoricCompanyCard = ({
         <CardTitle className="text-xl">{title}</CardTitle>
       </CardHeader>
       <CardContent className="mt-[-1.2rem] flex">
-        <p className="flex gap-x-2 font-regular ">
+        <p className="font-regular flex gap-x-2">
           <span>{timestampToDate(createdAt).toLocaleDateString()}</span>
           <span>-</span>
           <span>{timestampToDate(endedAt).toLocaleDateString()}</span>

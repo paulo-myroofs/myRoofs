@@ -40,7 +40,7 @@ const Select = ({
           disabled={disabled}
           aria-expanded={open}
           className={cn(
-            "w-full items-center justify-between rounded-sm border-[#DEE2E6] bg-[#F8F9FA] px-2 text-[14px] font-normal hover:scale-100 hover:border-black disabled:opacity-50 disabled:hover:border-[#DEE2E6] sm:px-4 sm:text-base ",
+            "w-full items-center justify-between rounded-sm border-[#DEE2E6] bg-[#F8F9FA] px-2 text-[14px] font-normal hover:scale-100 hover:border-black disabled:opacity-50 disabled:hover:border-[#DEE2E6] sm:px-4 sm:text-base",
             className
           )}
         >
@@ -54,7 +54,7 @@ const Select = ({
           <ChevronDown className="h-5 w-5" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="min-w-[200px] bg-[#F8F9FA] p-0 ">
+      <PopoverContent className="min-w-[200px] bg-[#F8F9FA] p-0">
         <Command>
           <CommandInput placeholder={placeholder} className="h-9" />
           <CommandEmpty>{emptyPlaceholder}</CommandEmpty>

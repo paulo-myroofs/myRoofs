@@ -11,13 +11,13 @@ const IconsSelector = ({ activeIcon, setActiveIcon }: IconsSelectorProps) => {
         <div className="flex flex-col items-center gap-1" key={data.type}>
           <button
             type="button"
-            className={`flex h-[54px] w-[54px] items-center justify-center overflow-hidden rounded-full border border-verde-escuro transition-all ${activeIcon === data.type && "scale-110"} ${activeIcon && activeIcon !== data.type && "opacity-50"} `}
+            className={`border-verde-escuro flex h-[54px] w-[54px] items-center justify-center overflow-hidden rounded-full border transition-all ${activeIcon === data.type && "scale-110"} ${activeIcon && activeIcon !== data.type && "opacity-50"} `}
             onClick={() => setActiveIcon(data.type)}
           >
             {data.icon()}
           </button>
           <p
-            className={`mb-2 text-center text-xs ${activeIcon === data.type && "mb-0 mt-2 scale-110"} ${activeIcon && activeIcon !== data.type && "opacity-50"} transition-all`}
+            className={`mb-2 text-center text-xs ${activeIcon === data.type && "mt-2 mb-0 scale-110"} ${activeIcon && activeIcon !== data.type && "opacity-50"} transition-all`}
           >
             {data.name}
           </p>

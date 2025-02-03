@@ -11,7 +11,7 @@ const HistoryCompanyCard = ({
   image
 }: HistoryCompanyCardProps) => {
   return (
-    <Card className="w-64 border-bordaPreta font-bold xl:w-80">
+    <Card className="border-bordaPreta w-64 font-bold xl:w-80">
       <CardHeader>
         <Image
           src={image}
@@ -23,7 +23,7 @@ const HistoryCompanyCard = ({
         <CardTitle className="text-xl">{title}</CardTitle>
       </CardHeader>
       <CardContent className="mt-[-1.2rem]">
-        <a className="cursor-pointer font-regular underline">
+        <a className="font-regular cursor-pointer underline">
           {startDate} - {endDate}
         </a>
       </CardContent>

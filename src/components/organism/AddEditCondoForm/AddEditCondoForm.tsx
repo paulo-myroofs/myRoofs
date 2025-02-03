@@ -349,7 +349,7 @@ const AddEditCondoForm = ({
               type="button"
               onClick={() => inputUpload?.current?.click()}
               className={twMerge(
-                "relative flex h-[130px] w-full items-center justify-center gap-1 overflow-hidden rounded-sm border border-gray-300 px-3 text-sm text-black/50 outline-none transition-all hover:opacity-60",
+                "relative flex h-[130px] w-full items-center justify-center gap-1 overflow-hidden rounded-sm border border-gray-300 px-3 text-sm text-black/50 transition-all outline-none hover:opacity-60",
                 inputClassName
               )}
             >
@@ -474,7 +474,7 @@ const AddEditCondoForm = ({
               ) && (
                 <X
                   size={18}
-                  className="absolute right-0 top-0 opacity-70 hover:opacity-100"
+                  className="absolute top-0 right-0 opacity-70 hover:opacity-100"
                   onClick={() =>
                     setInternalOrgInputs((prev) => {
                       if (!prev) return;
@@ -620,7 +620,7 @@ const AddEditCondoForm = ({
           <Button
             variant="icon"
             size="md"
-            className=" w-[180px] bg-[#202425]"
+            className="w-[180px] bg-[#202425]"
             type="submit"
             loading={loading}
           >

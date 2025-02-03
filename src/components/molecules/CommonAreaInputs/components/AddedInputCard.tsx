@@ -27,7 +27,7 @@ const AddedInputCard = ({
       <div className="flex h-[60px] w-[60px] items-center justify-center rounded-full border border-[#202425] sm:h-[80px] sm:w-[80px]">
         {iconImageSvg}
       </div>
-      <div className="space-y-1 sm:text-[20px] ">
+      <div className="space-y-1 sm:text-[20px]">
         <p className="font-semibold">{commonArea.name}</p>
         <p className="text-[14px] sm:text-base">
           Capacidade:{" "}
@@ -38,7 +38,7 @@ const AddedInputCard = ({
       </div>
 
       {!readOnly && (
-        <div className="absolute right-5 top-3 z-20 flex gap-2">
+        <div className="absolute top-3 right-5 z-20 flex gap-2">
           <button
             type="button"
             onClick={onEdit}

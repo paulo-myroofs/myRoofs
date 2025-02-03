@@ -12,7 +12,7 @@ const CommentInput = ({ onSend, ...inputProps }: CommentInputProps) => {
         e.preventDefault();
         onSend();
       }}
-      className="border-gray flex items-center rounded-sm border-2 bg-white px-4 py-2 "
+      className="border-gray flex items-center rounded-sm border-2 bg-white px-4 py-2"
     >
       <input
         type="text"

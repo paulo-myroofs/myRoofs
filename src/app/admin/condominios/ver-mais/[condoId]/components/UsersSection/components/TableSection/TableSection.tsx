@@ -14,7 +14,7 @@ const TableSection = <T,>({ title, data, columns }: TableSectionProps<T>) => {
         <div
           className={twMerge(
             boxStyle,
-            "rounded-sm px-3 py-2  text-sm sm:px-6 sm:text-[18px]"
+            "rounded-sm px-3 py-2 text-sm sm:px-6 sm:text-[18px]"
           )}
         >
           {`Total: ${data.length}`}

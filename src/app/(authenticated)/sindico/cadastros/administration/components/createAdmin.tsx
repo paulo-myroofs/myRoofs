@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isCPF } from "brazilian-values";
+import { Timestamp } from "firebase/firestore";
 import { Camera } from "lucide-react";
 import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -41,7 +42,6 @@ import unmask from "@/utils/unmask";
 import AddAptManager from "@/validations/admin/AddAptManager";
 
 import { AdminModalProps } from "./types";
-import { Timestamp } from "firebase/firestore";
 
 type AddAptManagerForm = z.infer<typeof AddAptManager>;
 const inputClassName = "border-[#DEE2E6] bg-[#F8F9FA]";
@@ -174,7 +174,7 @@ export default function CreateAdminModal({
         city: data.ownerAddressData.city,
         status: Status.INACTIVE,
         createdAt: Timestamp.now(),
-        blockedAt: null,
+        blockedAt: null
       };
 
       if (!adminData) {
@@ -292,7 +292,7 @@ export default function CreateAdminModal({
         <button
           type="button"
           onClick={handleDelete}
-          className="absolute right-5 top-5 transition-all hover:scale-110"
+          className="absolute top-5 right-5 transition-all hover:scale-110"
         >
           <Image
             src={"/icons/commonArea/trash.svg"}

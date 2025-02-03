@@ -139,7 +139,7 @@ const DocsCondoSection = () => {
   }, [condo, inputsData]);
 
   return (
-    <section className="mx-auto w-full max-w-[1300px] space-y-8 ">
+    <section className="mx-auto w-full max-w-[1300px] space-y-8">
       <div className={cn("mt-4 space-y-4", !isEdit && "opacity-60")}>
         {finalData.map((item) => {
           const inputData = inputsData ? inputsData[item.key] : undefined;
@@ -147,7 +147,7 @@ const DocsCondoSection = () => {
             <div className="relative flex flex-col gap-1" key={item.key}>
               {isEdit && !!inputData && (
                 <X
-                  className=" absolute right-5 top-10 z-20 cursor-pointer opacity-100 transition-all hover:scale-110"
+                  className="absolute top-10 right-5 z-20 cursor-pointer opacity-100 transition-all hover:scale-110"
                   onClick={(e) => {
                     e.stopPropagation();
                     setInputsData((prev) =>
@@ -169,7 +169,7 @@ const DocsCondoSection = () => {
                 type="button"
                 onClick={() => item.ref?.current?.click()}
                 className={twMerge(
-                  "relative flex h-[130px] w-full items-center justify-center gap-1 overflow-hidden rounded-sm border border-gray-300 px-3 text-sm text-black/50 outline-none transition-all hover:opacity-60",
+                  "relative flex h-[130px] w-full items-center justify-center gap-1 overflow-hidden rounded-sm border border-gray-300 px-3 text-sm text-black/50 transition-all outline-none hover:opacity-60",
                   inputClassName
                 )}
               >
@@ -218,7 +218,7 @@ const DocsCondoSection = () => {
           <Button
             variant="icon"
             size="md"
-            className=" w-[180px] bg-[#202425]"
+            className="w-[180px] bg-[#202425]"
             type="button"
             onClick={handleSave}
             loading={loading}

@@ -36,7 +36,7 @@ const SeeDetails = ({ isOpen, onOpenChange, bookingData }: SeeDetailsProps) => {
             href={item.file ?? "#"}
             target={item.file ? "_blank" : undefined}
             className={twMerge(
-              "hover: relative flex h-[130px]  w-full items-center justify-center gap-1 overflow-hidden truncate rounded-sm border border-gray-300 px-3 text-base  outline-none transition-all ",
+              "hover: relative flex h-[130px] w-full items-center justify-center gap-1 truncate overflow-hidden rounded-sm border border-gray-300 px-3 text-base transition-all outline-none",
               inputClassName
             )}
           >

@@ -58,7 +58,7 @@ export function DataPaginatedTable<T>({
           className={`h-6 w-6 rounded-full transition-all ${
             i === currentPageIndex
               ? "bg-[#E6E6E6] text-black"
-              : "bg-transparent opacity-60 hover:bg-gray-200    "
+              : "bg-transparent opacity-60 hover:bg-gray-200"
           } disabled:opacity-30`}
           onClick={() => table.setPageIndex(i)}
         >

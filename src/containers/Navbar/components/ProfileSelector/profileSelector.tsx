@@ -39,7 +39,7 @@ const ProfileSelect = ({ options }: ProfileSelectProps) => {
           <User color="#00FF5F" />
         </button>
       </PopoverTrigger>
-      <PopoverContent className="w-[180px] bg-[#F8F9FA] p-0 ">
+      <PopoverContent className="w-[180px] bg-[#F8F9FA] p-0">
         <Command>
           <CommandGroup className="max-h-[300px] overflow-y-auto">
             {options.map((option) => (

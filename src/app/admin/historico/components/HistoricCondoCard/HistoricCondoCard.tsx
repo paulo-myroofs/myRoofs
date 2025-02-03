@@ -17,7 +17,7 @@ const HistoricCondoCard = ({
   const isCompanyActive = !company?.endedAt;
 
   return (
-    <Card className="w-full border-bordaPreta font-bold sm:w-80">
+    <Card className="border-bordaPreta w-full font-bold sm:w-80">
       <CardHeader>
         <Image
           src={image}
@@ -30,8 +30,8 @@ const HistoricCondoCard = ({
         <CardTitle className="text-xl">{title}</CardTitle>
       </CardHeader>
       <CardContent className="mt-[-1.2rem] flex flex-col gap-2">
-        <p className="flex gap-x-2 font-regular ">{`${company?.name} (${isCompanyActive ? "Ativa" : "Encerrada"})`}</p>
-        <p className="flex gap-x-2 font-regular ">
+        <p className="font-regular flex gap-x-2">{`${company?.name} (${isCompanyActive ? "Ativa" : "Encerrada"})`}</p>
+        <p className="font-regular flex gap-x-2">
           <span>{timestampToDate(createdAt).toLocaleDateString()}</span>
           <span>-</span>
           <span>{timestampToDate(endedAt).toLocaleDateString()}</span>

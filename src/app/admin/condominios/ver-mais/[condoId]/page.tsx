@@ -31,7 +31,7 @@ const MoreInfoCondo = () => {
   const data = [
     {
       trigger: (
-        <div className="flex items-center gap-4 py-2 text-base font-regular md:text-[21px]">
+        <div className="font-regular flex items-center gap-4 py-2 text-base md:text-[21px]">
           <User2 strokeWidth={2} />
           <span>Usuários</span>
         </div>
@@ -40,7 +40,7 @@ const MoreInfoCondo = () => {
     },
     {
       trigger: (
-        <div className="flex items-center gap-4 py-2 text-base font-regular md:text-[21px]">
+        <div className="font-regular flex items-center gap-4 py-2 text-base md:text-[21px]">
           <File strokeWidth={2} />
           <span>Dados do condomínio</span>
         </div>
@@ -49,7 +49,7 @@ const MoreInfoCondo = () => {
     },
     {
       trigger: (
-        <div className="flex items-center gap-4 py-2 text-base font-regular md:text-[21px]">
+        <div className="font-regular flex items-center gap-4 py-2 text-base md:text-[21px]">
           <Users2 strokeWidth={2} />
           <span>Dados do responsável legal</span>
         </div>
@@ -60,7 +60,7 @@ const MoreInfoCondo = () => {
     },
     {
       trigger: (
-        <div className="flex items-center gap-4 py-2 text-base font-regular md:text-[21px]">
+        <div className="font-regular flex items-center gap-4 py-2 text-base md:text-[21px]">
           <Users2 strokeWidth={2} />
           <span>Histórico de administradores</span>
         </div>

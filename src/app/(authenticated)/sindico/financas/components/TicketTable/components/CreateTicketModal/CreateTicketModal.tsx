@@ -156,7 +156,7 @@ const CreateTicketModal = ({
         <Button
           variant="icon"
           size="lg"
-          className=" w-[210px] bg-[#202425]"
+          className="w-[210px] bg-[#202425]"
           loading={loading}
           onClick={handleSubmit(handleForm)}
         >
@@ -269,7 +269,7 @@ const CreateTicketModal = ({
             type="button"
             onClick={() => inputUpload?.current?.click()}
             className={twMerge(
-              "relative flex h-[130px] w-full items-center justify-center gap-1 overflow-hidden rounded-sm border border-gray-300 px-3 text-sm text-black/50 outline-none transition-all hover:opacity-60",
+              "relative flex h-[130px] w-full items-center justify-center gap-1 overflow-hidden rounded-sm border border-gray-300 px-3 text-sm text-black/50 transition-all outline-none hover:opacity-60",
               inputClassName
             )}
           >

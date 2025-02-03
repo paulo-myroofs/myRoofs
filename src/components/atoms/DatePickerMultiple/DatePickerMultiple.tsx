@@ -14,14 +14,14 @@ export function DatePickerMultiple({
   setDates
 }: DatePickerMultipleProps) {
   return (
-    <div className="flex h-full w-full flex-shrink-0 items-start justify-between gap-5 ">
+    <div className="flex h-full w-full flex-shrink-0 items-start justify-between gap-5">
       <Calendar
         mode="multiple"
         selected={dates}
         onSelect={(days) => setDates(days)}
         initialFocus
       />
-      <div className="flex max-h-[315px]  flex-wrap gap-4 overflow-y-auto ">
+      <div className="flex max-h-[315px] flex-wrap gap-4 overflow-y-auto">
         {" "}
         {dates?.map((item) => (
           <p

@@ -26,7 +26,7 @@ const ProductCard = ({
   onRemove
 }: ProductCardProps) => {
   return (
-    <Card className="relative w-full max-w-[310px] rounded-lg border-bordaPreta shadow-md sm:max-w-[350px]">
+    <Card className="border-bordaPreta relative w-full max-w-[310px] rounded-lg shadow-md sm:max-w-[350px]">
       <CardHeader className="relative flex flex-row items-center justify-center">
         <CardTitle className="w-fit text-2xl font-bold">{title}</CardTitle>
         {onRemove && (
@@ -38,7 +38,7 @@ const ProductCard = ({
           </button>
         )}
       </CardHeader>
-      <Separator className="mt-[-8px] bg-cinza-claro" />
+      <Separator className="bg-cinza-claro mt-[-8px]" />
       <div className="relative h-[200px] w-full overflow-hidden rounded-full">
         <Image
           src={image}
@@ -49,19 +49,19 @@ const ProductCard = ({
         />
       </div>
       <CardContent>
-        <p className="text-sm font-medium text-bordaPreta">{description}</p>
+        <p className="text-bordaPreta text-sm font-medium">{description}</p>
         <div className="mt-4 flex items-center gap-4">
           <Button variant="outline" className="border-green-600 text-black">
             {value === 0 && "Gratuito"}
             {value === null && "A combinar"}
             {!!value && `R$ ${value}`}
           </Button>
-          <Separator orientation="vertical" className="h-10 bg-cinza-claro" />
+          <Separator orientation="vertical" className="bg-cinza-claro h-10" />
           <span className="text-green-600">{cardType}</span>
         </div>
       </CardContent>
       <CardFooter>
-        <div className="h-[140px] w-full rounded-2xl border border-cinza-claro p-4">
+        <div className="border-cinza-claro h-[140px] w-full rounded-2xl border p-4">
           <p className="text-sm font-medium">Contato:</p>
           <div className="mt-2 flex items-center">
             <span>{name}</span>

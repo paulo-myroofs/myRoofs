@@ -56,7 +56,7 @@ export default function LoginPage() {
           src="/vector-line-2.svg"
           width={100}
           height={50}
-          className="absolute bottom-0 right-0 z-0 lg:hidden"
+          className="absolute right-0 bottom-0 z-0 lg:hidden"
           alt="Vector de estilo"
         />
 
@@ -124,7 +124,7 @@ export default function LoginPage() {
             </Button>
             <button
               type="button"
-              className="mt-6 text-verde-principal transition-all hover:scale-[103%] hover:underline"
+              className="text-verde-principal mt-6 transition-all hover:scale-[103%] hover:underline"
               onClick={handleForgotPassword}
             >
               {" "}

@@ -1,15 +1,9 @@
-import { useState } from "react";
-import { timestampToDate } from "@/utils/timestampToDate";
-
 import { ColumnDef } from "@tanstack/react-table";
 import { formatToCPF } from "brazilian-values";
 
 import { AptManagerEntity, Status } from "@/common/entities/aptManager";
-import Button from "@/components/atoms/Button/button";
 import Tag from "@/components/atoms/Tag/Tag";
-
-
-import AptManagerModal from "./createAdmin";
+import { timestampToDate } from "@/utils/timestampToDate";
 
 const GetStatus = ({ data }: { data: AptManagerEntity }) => {
   return (
@@ -18,8 +12,8 @@ const GetStatus = ({ data }: { data: AptManagerEntity }) => {
         data.status === Status.ACTIVE
           ? "greenBlack"
           : data.status === Status.INACTIVE
-          ? "red"
-          : "yellowBlack"
+            ? "red"
+            : "yellowBlack"
       }
       size="smLarge"
       className="transition-transform"
@@ -33,9 +27,10 @@ const GetStatus = ({ data }: { data: AptManagerEntity }) => {
 };
 
 export const columns: ColumnDef<AptManagerEntity>[] = [
-  { 
+  {
     header: "Cargo",
-    accessorKey: "adminRole" },
+    accessorKey: "adminRole"
+  },
   {
     header: "Nome",
     accessorKey: "name"
@@ -68,6 +63,6 @@ export const columns: ColumnDef<AptManagerEntity>[] = [
   },
   {
     header: "Data de Bloqueio",
-    accessorKey: "blockedAt",
-  },
+    accessorKey: "blockedAt"
+  }
 ];

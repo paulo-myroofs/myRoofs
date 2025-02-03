@@ -143,7 +143,7 @@ const ValidateDeliverLostFound = ({
         <Button
           variant="icon"
           size="lg"
-          className=" w-[210px] bg-[#202425]"
+          className="w-[210px] bg-[#202425]"
           form="select-form"
         >
           Validar

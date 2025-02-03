@@ -142,7 +142,7 @@ const Perfil = () => {
         type="button"
         onClick={() => inputUpload?.current?.click()}
         className={twMerge(
-          `relative flex h-[150px] w-[150px] items-center justify-center gap-1 overflow-hidden rounded-full border border-gray-300 px-3 text-sm text-black/50 outline-none transition-all hover:opacity-60 ${!isEdit && "pointer-events-none opacity-70"}`,
+          `relative flex h-[150px] w-[150px] items-center justify-center gap-1 overflow-hidden rounded-full border border-gray-300 px-3 text-sm text-black/50 transition-all outline-none hover:opacity-60 ${!isEdit && "pointer-events-none opacity-70"}`,
           inputClassName
         )}
       >
@@ -239,7 +239,7 @@ const Perfil = () => {
           </Button>
           <Button
             variant="basicBlack"
-            className=" rounded-full"
+            className="rounded-full"
             loading={loading}
             onClick={handleSubmit(handleForm)}
           >

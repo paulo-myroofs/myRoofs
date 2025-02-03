@@ -7,7 +7,7 @@ import { CompanyCardProps } from "./types";
 
 const CompanyCard = ({ title, image, href }: CompanyCardProps) => {
   return (
-    <Card className="w-full border-bordaPreta font-bold sm:w-80">
+    <Card className="border-bordaPreta w-full font-bold sm:w-80">
       <CardHeader>
         <Image
           src={image}
@@ -22,7 +22,7 @@ const CompanyCard = ({ title, image, href }: CompanyCardProps) => {
       <CardContent className="mt-[-1.2rem] flex">
         <Link
           href={href}
-          className="ml-auto cursor-pointer font-regular underline"
+          className="font-regular ml-auto cursor-pointer underline"
         >
           Ver Mais
         </Link>

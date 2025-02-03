@@ -26,7 +26,7 @@ const Condo = () => {
   const data = [
     {
       trigger: (
-        <div className="flex items-center gap-4 py-2 text-base font-regular md:text-[21px]">
+        <div className="font-regular flex items-center gap-4 py-2 text-base md:text-[21px]">
           <User2 strokeWidth={2} />
           <span>Meu Perfil</span>
         </div>
@@ -35,7 +35,7 @@ const Condo = () => {
     },
     {
       trigger: (
-        <div className="flex items-center gap-4 py-2 text-base font-regular md:text-[21px]">
+        <div className="font-regular flex items-center gap-4 py-2 text-base md:text-[21px]">
           <File strokeWidth={2} />
           <span>Informações do condomínio</span>
         </div>
@@ -44,7 +44,7 @@ const Condo = () => {
     },
     {
       trigger: (
-        <div className="flex items-center gap-4 py-2 text-base font-regular md:text-[21px]">
+        <div className="font-regular flex items-center gap-4 py-2 text-base md:text-[21px]">
           <Folder strokeWidth={2} />
           <span>Documentação do condomínio</span>
         </div>
@@ -53,7 +53,7 @@ const Condo = () => {
     },
     {
       trigger: (
-        <div className="flex items-center gap-4 py-2 text-base font-regular md:text-[21px]">
+        <div className="font-regular flex items-center gap-4 py-2 text-base md:text-[21px]">
           <Activity strokeWidth={2} />
           <span>Atividades do condomínio</span>
         </div>

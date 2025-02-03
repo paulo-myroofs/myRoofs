@@ -116,11 +116,11 @@ const AptManagerSection = ({ aptManagerId }: { aptManagerId: string }) => {
 
   return (
     <form
-      className="mx-auto flex w-full max-w-[1300px] flex-col items-end  gap-4"
+      className="mx-auto flex w-full max-w-[1300px] flex-col items-end gap-4"
       onSubmit={handleSubmit(handleForm)}
     >
       <div
-        className={` mt-4 w-full space-y-4 ${!isEditActive && "pointer-events-none opacity-70"}`}
+        className={`mt-4 w-full space-y-4 ${!isEditActive && "pointer-events-none opacity-70"}`}
       >
         <AptManagerInputs<AddAptManagerForm>
           setValue={setValue}

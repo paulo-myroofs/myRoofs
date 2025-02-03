@@ -26,7 +26,7 @@ export default function AdminPage() {
   }
 
   return (
-    <section className="mx-auto w-11/12 max-w-[1500px]  space-y-16">
+    <section className="mx-auto w-11/12 max-w-[1500px] space-y-16">
       <div className="space-y-8">
         <TitleAtom> Histórico de Empresas </TitleAtom>
         {companies && companies.length > 0 ? (

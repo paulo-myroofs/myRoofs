@@ -28,7 +28,7 @@ const WarningCard = ({
   return (
     <>
       <BorderWrapper
-        className={`relative flex flex-col gap-6 rounded-md p-6 md:flex-row `}
+        className={`relative flex flex-col gap-6 rounded-md p-6 md:flex-row`}
       >
         <div className="relative h-[70px] w-[70px] flex-shrink-0 overflow-hidden rounded-full">
           <Image
@@ -47,7 +47,7 @@ const WarningCard = ({
                 {updatedAtDate.toLocaleDateString()} - {finalHours}
               </p>
             </div>
-            <div className="absolute right-5 top-3 z-20 flex gap-2">
+            <div className="absolute top-3 right-5 z-20 flex gap-2">
               {onEdit && (
                 <button
                   type="button"
@@ -86,7 +86,7 @@ const WarningCard = ({
               <Link
                 href={fileUrl}
                 target="_blank"
-                className="mt-8  text-[#2A27CE] hover:underline"
+                className="mt-8 text-[#2A27CE] hover:underline"
               >
                 {extractFilename(fileUrl)}
               </Link>

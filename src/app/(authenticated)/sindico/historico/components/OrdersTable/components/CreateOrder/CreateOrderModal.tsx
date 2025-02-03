@@ -217,7 +217,7 @@ const CreateOrderModal = ({
         <Button
           variant="icon"
           size="lg"
-          className=" w-[210px] bg-[#202425]"
+          className="w-[210px] bg-[#202425]"
           loading={loading}
           onClick={handleSubmit(handleForm)}
         >
@@ -244,7 +244,7 @@ const CreateOrderModal = ({
           <button
             type="button"
             onClick={handleDelete}
-            className="absolute right-5 top-5 transition-all hover:scale-110"
+            className="absolute top-5 right-5 transition-all hover:scale-110"
           >
             <Image
               src={"/icons/commonArea/trash.svg"}

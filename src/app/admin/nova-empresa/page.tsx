@@ -232,7 +232,12 @@ const NewCompany = () => {
 
       await setFirestoreDoc<AptManagerEntity>({
         docPath: `users/${aptManagerId}`,
-        data: { ...aptManagerData, image: imageUrl, createdAt: Timestamp.now(), blockedAt: null }
+        data: {
+          ...aptManagerData,
+          image: imageUrl,
+          createdAt: Timestamp.now(),
+          blockedAt: null
+        }
       });
 
       const companyData = {
@@ -342,10 +347,10 @@ const NewCompany = () => {
 
   return (
     <form
-      className="mx-auto mb-40  block w-11/12 max-w-[885px] space-y-8"
+      className="mx-auto mb-40 block w-11/12 max-w-[885px] space-y-8"
       onSubmit={handleSubmit(handleForm)}
     >
-      <div className="space-y-4 ">
+      <div className="space-y-4">
         <TitleAtom className="text-center">
           {" "}
           {company ? "Editar Empresa" : "Nova Empresa"}
@@ -385,7 +390,7 @@ const NewCompany = () => {
               type="button"
               onClick={() => inputUpload?.current?.click()}
               className={twMerge(
-                "relative flex h-[130px] w-full items-center justify-center gap-1 overflow-hidden rounded-sm border border-gray-300 px-3 text-sm text-black/50 outline-none transition-all hover:opacity-60",
+                "relative flex h-[130px] w-full items-center justify-center gap-1 overflow-hidden rounded-sm border border-gray-300 px-3 text-sm text-black/50 transition-all outline-none hover:opacity-60",
                 inputClassName
               )}
             >

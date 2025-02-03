@@ -19,7 +19,7 @@ const AssemblyWarnings = () => {
   return (
     <>
       <BorderWrapper className="flex flex-col items-center gap-y-8 p-4 sm:p-8">
-        <h1 className=" text-[20px] font-semibold sm:text-[24px]">
+        <h1 className="text-[20px] font-semibold sm:text-[24px]">
           Assembleias
         </h1>
 
@@ -40,7 +40,7 @@ const AssemblyWarnings = () => {
         </div>
 
         <Button
-          className="mx-auto flex  items-center gap-4"
+          className="mx-auto flex items-center gap-4"
           variant="outline-black"
           size="lg"
           onClick={() => setCreateWarningOpen(true)}

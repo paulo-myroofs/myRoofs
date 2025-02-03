@@ -130,7 +130,7 @@ const CommonAreaInputs = ({
               <Button
                 variant="icon"
                 size="md"
-                className=" w-[180px] bg-[#202425]"
+                className="w-[180px] bg-[#202425]"
                 type="button"
                 onClick={() => setAreInputsValid(true)}
               >
@@ -193,7 +193,7 @@ const CommonAreaInputs = ({
               variant="outline-black"
               size="md"
               type="button"
-              className="mb-4 mt-2"
+              className="mt-2 mb-4"
               onClick={
                 toEditCommonArea
                   ? () => {
@@ -214,7 +214,7 @@ const CommonAreaInputs = ({
             <Button
               variant="icon"
               size="md"
-              className="mb-4 mt-2 bg-[#202425]"
+              className="mt-2 mb-4 bg-[#202425]"
               type="button"
               onClick={() => handleAddEdit(toEditCommonArea ? "edit" : "add")}
             >

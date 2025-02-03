@@ -281,7 +281,7 @@ export default function CreateAdminModal({
         <button
           type="button"
           onClick={handleDelete}
-          className="absolute right-5 top-5 transition-all hover:scale-110"
+          className="absolute top-5 right-5 transition-all hover:scale-110"
         >
           <Image
             src={"/icons/commonArea/trash.svg"}

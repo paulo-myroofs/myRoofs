@@ -61,7 +61,7 @@ const FilterSelect = ({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="min-w-[200px] bg-[#F8F9FA] p-0 ">
+      <PopoverContent className="min-w-[200px] bg-[#F8F9FA] p-0">
         <Command>
           <CommandInput placeholder={placeholder} className="h-9" />
           <CommandEmpty>{emptyPlaceholder}</CommandEmpty>

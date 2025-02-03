@@ -24,13 +24,13 @@ const ChooseCondo = () => {
   };
 
   return (
-    <main className="relative flex h-full min-h-screen w-full items-center justify-center overflow-hidden  bg-[#0D1714]">
+    <main className="relative flex h-full min-h-screen w-full items-center justify-center overflow-hidden bg-[#0D1714]">
       <Image
         src={"/vector-line.svg"}
         width={1000}
         height={400}
         alt="Vetor de estilização"
-        className="absolute -left-10 -top-[10%] -rotate-12"
+        className="absolute -top-[10%] -left-10 -rotate-12"
       />
 
       <div className="z-20 my-32 w-11/12 max-w-[1400px] rounded-[20px] bg-[#F1F3F5] py-12 text-center md:p-10">
@@ -80,7 +80,7 @@ const ChooseCondo = () => {
         src={"/vector-line.svg"}
         width={1000}
         height={400}
-        className="absolute -bottom-10 -right-20 -rotate-[20deg]"
+        className="absolute -right-20 -bottom-10 -rotate-[20deg]"
         alt="Vetor de estilização"
       />
     </main>

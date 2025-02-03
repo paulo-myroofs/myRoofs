@@ -231,7 +231,7 @@ const CreateVisitsModal = ({
         <Button
           variant="icon"
           size="lg"
-          className=" w-[210px] bg-[#202425]"
+          className="w-[210px] bg-[#202425]"
           loading={loading}
           onClick={handleSubmit(handleForm)}
         >
@@ -254,7 +254,7 @@ const CreateVisitsModal = ({
         <button
           type="button"
           onClick={handleDelete}
-          className="absolute right-5 top-5 transition-all hover:scale-110"
+          className="absolute top-5 right-5 transition-all hover:scale-110"
         >
           <Image
             src={"/icons/commonArea/trash.svg"}
@@ -266,7 +266,7 @@ const CreateVisitsModal = ({
       )}
       <form
         onSubmit={handleSubmit(handleForm)}
-        className={`flex flex-col gap-y-4 `}
+        className={`flex flex-col gap-y-4`}
       >
         <div className={"flex flex-col gap-1"}>
           <Label>Data</Label>

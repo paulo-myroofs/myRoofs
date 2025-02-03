@@ -27,7 +27,7 @@ function ResponsiveMenu({
       </div>
 
       {/* Conteúdo interativo com z-index maior */}
-      <button onClick={onCloseMenu} className="absolute left-4 top-6 z-20">
+      <button onClick={onCloseMenu} className="absolute top-6 left-4 z-20">
         <FiX size={32} color="black" />
       </button>
 
@@ -83,7 +83,7 @@ export default function Navbar({
           <ProfileSelect options={profileSelectOptions} />
         )}
       </div>
-      <ul className="align-center order-2 hidden h-full items-center lg:flex lg:gap-[4rem] xl:gap-[6rem] ">
+      <ul className="align-center order-2 hidden h-full items-center lg:flex lg:gap-[4rem] xl:gap-[6rem]">
         {menuItems.map((button) => (
           <li
             key={button.label}
@@ -93,14 +93,14 @@ export default function Navbar({
               {button.label}
             </Link>
             {pathname === button.href && (
-              <span className="absolute bottom-2 left-0 right-0 h-[2px] bg-green-500"></span>
+              <span className="absolute right-0 bottom-2 left-0 h-[2px] bg-green-500"></span>
             )}
-            <span className="absolute bottom-2 left-0 right-0 h-[2.1px] origin-right scale-x-0 transform bg-green-500 transition-transform duration-300 ease-in-out group-hover:h-[2.1px] group-hover:origin-left group-hover:scale-x-100"></span>
+            <span className="absolute right-0 bottom-2 left-0 h-[2.1px] origin-right scale-x-0 transform bg-green-500 transition-transform duration-300 ease-in-out group-hover:h-[2.1px] group-hover:origin-left group-hover:scale-x-100"></span>
           </li>
         ))}
       </ul>
 
-      <h1 className="order-2 ml-auto flex cursor-pointer items-center  space-x-2 lg:hidden">
+      <h1 className="order-2 ml-auto flex cursor-pointer items-center space-x-2 lg:hidden">
         <Logo />
       </h1>
       {isMenuOpen && (

@@ -17,7 +17,7 @@ const InfoCondoSection = () => {
   const [isEdit, setIsEdit] = useState(false);
 
   return (
-    <section className="mx-auto w-full max-w-[1300px] space-y-8 ">
+    <section className="mx-auto w-full max-w-[1300px] space-y-8">
       <AddEditCondoForm
         companyId={aptManager?.companyId as string}
         aptManagersIds={condo?.aptManagersIds as string[]}

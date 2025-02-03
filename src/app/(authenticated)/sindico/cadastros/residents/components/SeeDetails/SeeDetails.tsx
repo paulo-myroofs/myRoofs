@@ -49,7 +49,7 @@ const SeeDetails = ({
       childrenClassName="space-y-4"
     >
       <form
-        className={` w-full space-y-4 opacity-80`}
+        className={`w-full space-y-4 opacity-80`}
         onSubmit={(e) => e.preventDefault()}
       >
         <InputField

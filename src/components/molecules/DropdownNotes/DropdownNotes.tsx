@@ -51,7 +51,7 @@ const DropdownNotes = ({ className, storageKey }: DropdownNotesProps) => {
         <Button
           aria-expanded={open}
           className={cn(
-            "relative  w-full max-w-[350px] items-center rounded-full bg-[#202425] px-2 text-center text-[14px] font-normal text-white sm:w-[400px] sm:px-4 sm:text-[20px]",
+            "relative w-full max-w-[350px] items-center rounded-full bg-[#202425] px-2 text-center text-[14px] font-normal text-white sm:w-[400px] sm:px-4 sm:text-[20px]",
             className
           )}
         >
@@ -59,7 +59,7 @@ const DropdownNotes = ({ className, storageKey }: DropdownNotesProps) => {
           <ChevronDown className="absolute right-8 h-6 w-6 justify-self-end" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="min-w-[350px] bg-[#F8F9FA] p-0 sm:min-w-[400px] ">
+      <PopoverContent className="min-w-[350px] bg-[#F8F9FA] p-0 sm:min-w-[400px]">
         <Command>
           <CommandGroup className="max-h-[300px] overflow-y-auto">
             {options.map((option) => (
@@ -103,7 +103,7 @@ const DropdownNotes = ({ className, storageKey }: DropdownNotesProps) => {
               />
               <button
                 form="add-note"
-                className=" flex w-1/4 items-center justify-center rounded-md border border-[#202425] bg-[#202425] py-2"
+                className="flex w-1/4 items-center justify-center rounded-md border border-[#202425] bg-[#202425] py-2"
               >
                 <Check className="text-white" />
               </button>

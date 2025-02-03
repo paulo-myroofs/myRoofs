@@ -76,7 +76,7 @@ const SeeDetailsOccurrence: React.FC<SeeDetailsOccurrenceProps> = ({
         <Button
           variant="icon"
           size="lg"
-          className=" w-[210px] bg-[#202425]"
+          className="w-[210px] bg-[#202425]"
           onClick={handleSubmit(handleForm)}
           loading={loading}
         >
@@ -99,7 +99,7 @@ const SeeDetailsOccurrence: React.FC<SeeDetailsOccurrenceProps> = ({
       }
     >
       <form
-        className={` w-full space-y-4 opacity-80`}
+        className={`w-full space-y-4 opacity-80`}
         onSubmit={handleSubmit(handleForm)}
       >
         <InputField

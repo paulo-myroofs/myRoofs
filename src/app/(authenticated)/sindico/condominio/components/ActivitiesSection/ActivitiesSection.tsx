@@ -161,7 +161,7 @@ const ActivitiesSection = () => {
               <Button
                 variant="icon"
                 size="md"
-                className=" w-[180px] bg-[#202425]"
+                className="w-[180px] bg-[#202425]"
                 type="button"
                 onClick={() => setAreInputsValid(true)}
               >
@@ -219,7 +219,7 @@ const ActivitiesSection = () => {
               type="button"
               onClick={() => inputUpload?.current?.click()}
               className={twMerge(
-                "relative flex h-[130px] w-full items-center justify-center gap-1 overflow-hidden rounded-sm border border-gray-300 px-3 text-sm text-black/50 outline-none transition-all hover:opacity-60",
+                "relative flex h-[130px] w-full items-center justify-center gap-1 overflow-hidden rounded-sm border border-gray-300 px-3 text-sm text-black/50 transition-all outline-none hover:opacity-60",
                 inputClassName
               )}
             >

@@ -39,7 +39,7 @@ const Reservas = () => {
 
             <Input
               className={
-                "max-w-[300px] border border-[#DEE2E6] bg-[#F8F9FA] hover:border-[#DEE2E6] "
+                "max-w-[300px] border border-[#DEE2E6] bg-[#F8F9FA] hover:border-[#DEE2E6]"
               }
               placeholder="Pesquise pela área reservada"
               value={filterValue}
