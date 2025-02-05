@@ -73,7 +73,6 @@ const GetStatus = ({ data }: { data: AptManagerEntity }) => {
           : "Erro ao atualizar o status do administrador"
       );
     } finally {
-      setOptimisticStatus(data.status);
       setLoading(false);
     }
   };
