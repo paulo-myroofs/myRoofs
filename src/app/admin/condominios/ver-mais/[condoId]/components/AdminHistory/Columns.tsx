@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 
 import { ColumnDef } from "@tanstack/react-table";
 import { formatToCPF } from "brazilian-values";
+import { Timestamp } from "firebase/firestore";
 
 import { AptManagerEntity, Status } from "@/common/entities/aptManager";
 import Button from "@/components/atoms/Button/button";
@@ -131,17 +132,27 @@ export const columns: ColumnDef<AptManagerEntity>[] = [
   {
     header: "Data de Criação",
     accessorKey: "createdAt",
-    cell: ({ row }) =>
-      row.original.createdAt
-        ? row.original.createdAt.toDate().toLocaleDateString()
-        : "Não disponível"
+    cell: ({ row }) => {
+      const createdAt = row.original.createdAt;
+      const date =
+        createdAt instanceof Timestamp
+          ? createdAt.toDate()
+          : new Date(createdAt);
+      return createdAt ? date.toLocaleDateString() : "Não disponível";
+    }
   },
   {
     header: "Data de Bloqueio",
     accessorKey: "blockedAt",
-    cell: ({ row }) =>
-      row.original.blockedAt
-        ? row.original.blockedAt.toDate().toLocaleDateString()
-        : "Não bloqueado"
+    cell: ({ row }) => {
+      const blockedAt = row.original.blockedAt;
+      const date =
+        blockedAt instanceof Timestamp
+          ? blockedAt.toDate()
+          : blockedAt
+            ? new Date(blockedAt)
+            : null;
+      return date ? date.toLocaleDateString() : "Não bloqueado";
+    }
   }
 ];
