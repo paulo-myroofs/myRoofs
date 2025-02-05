@@ -39,22 +39,21 @@ const Edit = ({ data }: { data: AptManagerEntity }) => {
 
 const GetStatus = ({ data }: { data: AptManagerEntity }) => {
   const [loading, setLoading] = useState(false);
-  const [previousStatus, setPreviousStatus] = useState(data.status);
-
+  const [optimisticStatus, setOptimisticStatus] = useState<string | undefined>(
+    data.status
+  );
   useEffect(() => {
-    if (previousStatus !== data.status) {
-      setLoading(false);
-      setPreviousStatus(data.status);
-    }
-  }, [data.status, previousStatus]);
+    setOptimisticStatus(data.status);
+  }, [data.status]);
 
   const handleUpdate = async () => {
     if (loading) return;
     setLoading(true);
     try {
-      const curStatus = data.status;
+      const curStatus = optimisticStatus;
       const nextStatus =
         curStatus === Status.ACTIVE ? Status.INACTIVE : Status.ACTIVE;
+      setOptimisticStatus(nextStatus);
       await updateFirestoreDoc<AptManagerEntity>({
         documentPath: `/users/${data.id}`,
         data: { status: nextStatus }
@@ -64,14 +63,17 @@ const GetStatus = ({ data }: { data: AptManagerEntity }) => {
       } else {
         await activateUserAuth(data.id);
       }
-      queryClient.invalidateQueries(["users", data.id]);
-      successToast("Status do administrador está sendo atualizado");
+      await queryClient.invalidateQueries(["users", data.id]);
+      successToast("Status do administrador atualizado com sucesso");
     } catch (error) {
+      setOptimisticStatus(data.status);
       errorToast(
         error instanceof Error
           ? error.message
           : "Erro ao atualizar o status do administrador"
       );
+    } finally {
+      setOptimisticStatus(data.status);
       setLoading(false);
     }
   };
@@ -79,9 +81,9 @@ const GetStatus = ({ data }: { data: AptManagerEntity }) => {
   return (
     <Tag
       variant={
-        data.status === Status.ACTIVE
+        optimisticStatus === Status.ACTIVE
           ? "greenBlack"
-          : data.status === Status.INACTIVE
+          : optimisticStatus === Status.INACTIVE
             ? "red"
             : "yellowBlack"
       }
@@ -93,9 +95,9 @@ const GetStatus = ({ data }: { data: AptManagerEntity }) => {
     >
       {loading
         ? "Atualizando..."
-        : data.status
-          ? data.status.charAt(0).toUpperCase() +
-            data.status.slice(1).toLowerCase()
+        : optimisticStatus
+          ? optimisticStatus.charAt(0).toUpperCase() +
+            optimisticStatus.slice(1).toLowerCase()
           : "Indefinido"}
     </Tag>
   );
