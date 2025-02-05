@@ -1,6 +1,6 @@
 // import { useState } from "react";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { ColumnDef } from "@tanstack/react-table";
 import { formatToCPF } from "brazilian-values";
@@ -39,7 +39,14 @@ const Edit = ({ data }: { data: AptManagerEntity }) => {
 
 const GetStatus = ({ data }: { data: AptManagerEntity }) => {
   const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState(data.status || Status.INACTIVE);
+  const [previousStatus, setPreviousStatus] = useState(data.status);
+
+  useEffect(() => {
+    if (previousStatus !== data.status) {
+      setLoading(false);
+      setPreviousStatus(data.status);
+    }
+  }, [data.status, previousStatus]);
 
   const handleUpdate = async () => {
     if (loading) return;
@@ -58,15 +65,13 @@ const GetStatus = ({ data }: { data: AptManagerEntity }) => {
         await activateUserAuth(data.id);
       }
       queryClient.invalidateQueries(["users", data.id]);
-      setStatus(nextStatus);
-      successToast("Status do administrador atualizado com sucesso");
+      successToast("Status do administrador está sendo atualizado");
     } catch (error) {
       errorToast(
         error instanceof Error
           ? error.message
           : "Erro ao atualizar o status do administrador"
       );
-    } finally {
       setLoading(false);
     }
   };
@@ -74,9 +79,9 @@ const GetStatus = ({ data }: { data: AptManagerEntity }) => {
   return (
     <Tag
       variant={
-        status === Status.ACTIVE
+        data.status === Status.ACTIVE
           ? "greenBlack"
-          : status === Status.INACTIVE
+          : data.status === Status.INACTIVE
             ? "red"
             : "yellowBlack"
       }
@@ -88,8 +93,9 @@ const GetStatus = ({ data }: { data: AptManagerEntity }) => {
     >
       {loading
         ? "Atualizando..."
-        : status
-          ? status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()
+        : data.status
+          ? data.status.charAt(0).toUpperCase() +
+            data.status.slice(1).toLowerCase()
           : "Indefinido"}
     </Tag>
   );

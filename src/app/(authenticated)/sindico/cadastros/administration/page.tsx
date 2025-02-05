@@ -105,7 +105,7 @@ const NovoSindico = () => {
       city: data.ownerAddressData.city,
       image: "",
       status: Status.INACTIVE,
-      createdAt: Timestamp.now(),
+      createdAt: Timestamp.fromDate(new Date()),
       blockedAt: null
     };
 

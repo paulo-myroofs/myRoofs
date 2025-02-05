@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isCPF } from "brazilian-values";
+import { Timestamp } from "firebase/firestore";
 import { Camera } from "lucide-react";
 import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -171,7 +172,9 @@ export default function CreateAdminModal({
         number: data.ownerAddressData.number,
         cep: unmask(data.ownerAddressData.cep),
         city: data.ownerAddressData.city,
-        status: Status.INACTIVE
+        status: Status.INACTIVE,
+        createdAt: Timestamp.now(),
+        blockedAt: null
       };
 
       if (!adminData) {
