@@ -54,10 +54,14 @@ const GetStatus = ({ data }: { data: AptManagerEntity }) => {
       const curStatus = optimisticStatus;
       const nextStatus =
         curStatus === Status.ACTIVE ? Status.INACTIVE : Status.ACTIVE;
+      const blockedAt = nextStatus === Status.INACTIVE ? Timestamp.now() : null;
       setOptimisticStatus(nextStatus);
       await updateFirestoreDoc<AptManagerEntity>({
         documentPath: `/users/${data.id}`,
-        data: { status: nextStatus }
+        data: {
+          status: nextStatus,
+          blockedAt
+        }
       });
       if (curStatus === Status.ACTIVE) {
         await deactivateUserAuth(data.id);
