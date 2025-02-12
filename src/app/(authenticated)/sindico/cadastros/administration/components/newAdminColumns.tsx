@@ -46,6 +46,11 @@ export const columns: ColumnDef<AptManagerEntity>[] = [
     accessorKey: "email"
   },
   {
+    header: "Status",
+    accessorKey: "month",
+    cell: ({ row }) => <GetStatus data={row.original} />
+  },
+  {
     header: "Data de Criação",
     accessorKey: "createdAt",
     cell: ({ row }) => {
