@@ -55,7 +55,6 @@ const GetStatus = ({ data }: { data: AptManagerEntity }) => {
       const nextStatus =
         curStatus === Status.ACTIVE ? Status.INACTIVE : Status.ACTIVE;
       const blockedAt = nextStatus === Status.INACTIVE ? Timestamp.now() : null;
-      setOptimisticStatus(nextStatus);
       await updateFirestoreDoc<AptManagerEntity>({
         documentPath: `/users/${data.id}`,
         data: {
@@ -68,6 +67,7 @@ const GetStatus = ({ data }: { data: AptManagerEntity }) => {
       } else {
         await activateUserAuth(data.id);
       }
+      setOptimisticStatus(nextStatus);
       await queryClient.invalidateQueries(["users", data.id]);
       successToast("Status do administrador atualizado com sucesso");
     } catch (error) {
