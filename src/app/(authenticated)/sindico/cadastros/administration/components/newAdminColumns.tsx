@@ -1,9 +1,9 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { formatToCPF } from "brazilian-values";
+import { Timestamp } from "firebase/firestore";
 
 import { AptManagerEntity, Status } from "@/common/entities/aptManager";
 import Tag from "@/components/atoms/Tag/Tag";
-import { timestampToDate } from "@/utils/timestampToDate";
 
 const GetStatus = ({ data }: { data: AptManagerEntity }) => {
   return (
@@ -51,18 +51,29 @@ export const columns: ColumnDef<AptManagerEntity>[] = [
     cell: ({ row }) => <GetStatus data={row.original} />
   },
   {
-    header: "Data de Início",
+    header: "Data de Criação",
     accessorKey: "createdAt",
-    cell: ({ row }) => (
-      <p>
-        {row.original.createdAt
-          ? timestampToDate(row.original.createdAt).toLocaleDateString()
-          : ""}
-      </p>
-    )
+    cell: ({ row }) => {
+      const createdAt = row.original.createdAt;
+      const date =
+        createdAt instanceof Timestamp
+          ? createdAt.toDate()
+          : new Date(createdAt);
+      return createdAt ? date.toLocaleDateString() : "Não disponível";
+    }
   },
   {
     header: "Data de Bloqueio",
-    accessorKey: "blockedAt"
+    accessorKey: "blockedAt",
+    cell: ({ row }) => {
+      const blockedAt = row.original.blockedAt;
+      const date =
+        blockedAt instanceof Timestamp
+          ? blockedAt.toDate()
+          : blockedAt
+            ? new Date(blockedAt)
+            : null;
+      return date ? date.toLocaleDateString() : "Não bloqueado";
+    }
   }
 ];

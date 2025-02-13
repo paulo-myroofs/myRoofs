@@ -94,7 +94,7 @@ export default function CreateAdminModal({
           maritalStatusOptions.find(
             (item) => item.label === adminData?.maritalStatus
           )?.value ?? "",
-        status: adminData?.status ?? Status.UNDEFINED
+        status: adminData?.status ?? Status.ACTIVE
       },
       ownerAddressData: {
         cep: adminData?.cep ?? "",

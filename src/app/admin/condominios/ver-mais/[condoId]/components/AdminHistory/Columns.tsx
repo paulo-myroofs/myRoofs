@@ -1,9 +1,10 @@
 // import { useState } from "react";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { ColumnDef } from "@tanstack/react-table";
 import { formatToCPF } from "brazilian-values";
+import { Timestamp } from "firebase/firestore";
 
 import { AptManagerEntity, Status } from "@/common/entities/aptManager";
 import Button from "@/components/atoms/Button/button";
@@ -38,55 +39,70 @@ const Edit = ({ data }: { data: AptManagerEntity }) => {
 };
 
 const GetStatus = ({ data }: { data: AptManagerEntity }) => {
+  const [loading, setLoading] = useState(false);
+  const [optimisticStatus, setOptimisticStatus] = useState<string | undefined>(
+    data.status
+  );
+  useEffect(() => {
+    setOptimisticStatus(data.status);
+  }, [data.status]);
+
   const handleUpdate = async () => {
-    const curStatus = data.status;
-    let nextStatus =
-      curStatus === Status.ACTIVE
-        ? Status.INACTIVE
-        : curStatus === Status.INACTIVE
-          ? Status.ACTIVE
-          : Status.UNDEFINED;
-    if (curStatus === Status.UNDEFINED) {
-      nextStatus = Status.ACTIVE;
+    if (loading) return;
+    setLoading(true);
+    try {
+      const curStatus = optimisticStatus;
+      const nextStatus =
+        curStatus === Status.ACTIVE ? Status.INACTIVE : Status.ACTIVE;
+      const blockedAt = nextStatus === Status.INACTIVE ? Timestamp.now() : null;
+      await updateFirestoreDoc<AptManagerEntity>({
+        documentPath: `/users/${data.id}`,
+        data: {
+          status: nextStatus,
+          blockedAt
+        }
+      });
+      if (curStatus === Status.ACTIVE) {
+        await deactivateUserAuth(data.id);
+      } else {
+        await activateUserAuth(data.id);
+      }
+      setOptimisticStatus(nextStatus);
+      await queryClient.invalidateQueries(["users", data.id]);
+      successToast("Status do administrador atualizado com sucesso");
+    } catch (error) {
+      setOptimisticStatus(data.status);
+      errorToast(
+        error instanceof Error
+          ? error.message
+          : "Erro ao atualizar o status do administrador"
+      );
+    } finally {
+      setLoading(false);
     }
-    const { error } = await updateFirestoreDoc<AptManagerEntity>({
-      documentPath: `/users/${data.id}`,
-      data: { status: nextStatus }
-    });
-
-    if (curStatus === Status.ACTIVE && nextStatus === Status.INACTIVE) {
-      const { error } = await deactivateUserAuth(data.id);
-      return error;
-    } else if (curStatus === Status.INACTIVE && nextStatus === Status.ACTIVE) {
-      const { error } = await activateUserAuth(data.id);
-      return error;
-    }
-
-    if (error) {
-      return errorToast("Erro ao atualizar o status do administrador");
-    }
-
-    successToast("Status do administrador atualizado com sucesso");
-    queryClient.invalidateQueries(["users", data.id]);
   };
 
   return (
     <Tag
       variant={
-        data.status === Status.ACTIVE
+        optimisticStatus === Status.ACTIVE
           ? "greenBlack"
-          : data.status === Status.INACTIVE
+          : optimisticStatus === Status.INACTIVE
             ? "red"
             : "yellowBlack"
       }
       size="smLarge"
       onClick={handleUpdate}
-      className="cursor-pointer transition-transform hover:scale-105"
+      className={`cursor-pointer transition-transform hover:scale-105 ${
+        loading ? "cursor-not-allowed opacity-50" : ""
+      }`}
     >
-      {data.status
-        ? data.status.charAt(0).toUpperCase() +
-          data.status.slice(1).toLowerCase()
-        : "Indefinido"}
+      {loading
+        ? "Atualizando..."
+        : optimisticStatus
+          ? optimisticStatus.charAt(0).toUpperCase() +
+            optimisticStatus.slice(1).toLowerCase()
+          : "Indefinido"}
     </Tag>
   );
 };
@@ -116,5 +132,31 @@ export const columns: ColumnDef<AptManagerEntity>[] = [
     header: "Editar",
     accessorKey: "Editar",
     cell: ({ row }) => <Edit data={row.original} />
+  },
+  {
+    header: "Data de Criação",
+    accessorKey: "createdAt",
+    cell: ({ row }) => {
+      const createdAt = row.original.createdAt;
+      const date =
+        createdAt instanceof Timestamp
+          ? createdAt.toDate()
+          : new Date(createdAt);
+      return createdAt ? date.toLocaleDateString() : "Não disponível";
+    }
+  },
+  {
+    header: "Data de Bloqueio",
+    accessorKey: "blockedAt",
+    cell: ({ row }) => {
+      const blockedAt = row.original.blockedAt;
+      const date =
+        blockedAt instanceof Timestamp
+          ? blockedAt.toDate()
+          : blockedAt
+            ? new Date(blockedAt)
+            : null;
+      return date ? date.toLocaleDateString() : "Não bloqueado";
+    }
   }
 ];
