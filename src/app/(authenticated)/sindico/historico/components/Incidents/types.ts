@@ -18,4 +18,7 @@ export interface OccurrenceColumnData {
   title: string;
   return: string;
   reaction: Reaction;
+  formationName: string;
+  appartmentNumber: string;
+  responseDate: Timestamp;
 }
