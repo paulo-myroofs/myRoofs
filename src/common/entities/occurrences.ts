@@ -18,4 +18,7 @@ export interface OccurrenceEntity {
   return: string;
   reaction: "link" | "deslike" | "none";
   response: string;
+  formationName: string;
+  appartmentNumber: Number;
+  responseDate: Timestamp;
 }
