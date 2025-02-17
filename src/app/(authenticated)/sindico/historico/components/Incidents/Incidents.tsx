@@ -17,6 +17,8 @@ import { columns } from "./columns";
 import { OccurrenceColumnData } from "./types";
 import Button from "@/components/atoms/Button/button";
 
+import useCondo from "@/hooks/queries/condos/useCondo";
+
 const boxStyle = "border border-black rounded-[8px]";
 
 const IncidentsTable = () => {
@@ -46,6 +48,8 @@ const IncidentsTable = () => {
       item.title.toLocaleLowerCase().includes(filterValue.toLocaleLowerCase())
   );
 
+  const { data: condo} = useCondo(condoId as string);
+
   if (!condoId) return;
 
   return (
@@ -53,7 +57,7 @@ const IncidentsTable = () => {
       <div className={twMerge(boxStyle)}>
         <div className="flex items-center justify-between gap-y-2 px-8 py-4 sm:flex-row">
           <h1 className="text-[18px] font-bold sm:text-[24px]">
-            <span className="hidden sm:inline">Histórico de ocorrências - CondoName</span>
+            <span className="hidden sm:inline">Histórico de ocorrências - {condo?.name}</span>
             <span className="inline sm:hidden">Ocorrências</span>
           </h1>
 
