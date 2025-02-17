@@ -1,10 +1,11 @@
-import { Path } from "react-hook-form";
+import { Path, PathValue } from "react-hook-form";
 import { z } from "zod";
 
 import { inputClassName } from "@/app/contants";
 import { maritalStatusOptions } from "@/common/constants/maritalStatusOptions";
 import InputField from "@/components/molecules/InputField/inputField";
 import SelectField from "@/components/molecules/SelectField/selectField";
+import { MaskRg } from "@/utils/maskRG";
 import unmask from "@/utils/unmask";
 import AddAptManagerSchema from "@/validations/admin/AddAptManager";
 
@@ -68,6 +69,14 @@ const AptManagerInputs = <T extends AddAptManagerForm>({
         register={register}
         formErrors={errors}
         placeholder="Digite o RG"
+        onInput={(e) => {
+          const input = e.target as HTMLInputElement;
+          input.value = MaskRg(input.value);
+          setValue(
+            "ownerBasicInfo.rg" as Path<T>,
+            input.value as unknown as PathValue<T, Path<T>>
+          );
+        }}
       />
       <InputField
         name={"ownerBasicInfo.profession" as Path<T>}
