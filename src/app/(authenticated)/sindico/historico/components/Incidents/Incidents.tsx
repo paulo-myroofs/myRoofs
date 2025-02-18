@@ -52,9 +52,30 @@ const IncidentsTable = () => {
 
   if (!condoId) return;
 
+  const handlePrint = () => {
+    window.print();
+  }
+
   return (
     <section className="space-y-4">
-      <div className={twMerge(boxStyle)}>
+      <style>
+        {`
+          @media print {
+            body * {
+              visibility: hidden;
+            }
+            .printable-area, .printable-area * {
+              visibility: visible;
+            }
+            .printable-area {
+              position: absolute;
+              left: 0;
+              top: 0;
+              width: 100%;
+            }
+          }
+        `}</style>
+      <div className={twMerge(boxStyle, "printable-area")}>
         <div className="flex items-center justify-between gap-y-2 px-8 py-4 sm:flex-row">
           <h1 className="text-[18px] font-bold sm:text-[24px]">
             <span className="hidden sm:inline">Histórico de ocorrências - {condo?.name}</span>
@@ -62,7 +83,10 @@ const IncidentsTable = () => {
           </h1>
 
           <div className="flex items-center gap-x-2 w-auto lg:w-[410px] md:w-[410px] ml-2">
-            <Button className="text-2xs items-center gap-x-2 p-2 sm:p-3 min-w-0 w-auto sm:w-36">
+            <Button
+            className="text-2xs items-center gap-x-2 p-2 sm:p-3 min-w-0 w-auto sm:w-36"
+            onClick={handlePrint}
+            >
               <Image src="/icons/historic/download_button.svg" width={15} height={15} alt="download Icon"></Image>
               <span className="hidden sm:flex">Imprimir</span>
             </Button>
