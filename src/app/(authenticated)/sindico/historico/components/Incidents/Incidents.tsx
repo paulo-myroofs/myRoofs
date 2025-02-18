@@ -3,21 +3,19 @@
 
 import { useState } from "react";
 
+import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 
-import Image from "next/image";
-
 import { OccurrenceEntity } from "@/common/entities/occurrences";
+import Button from "@/components/atoms/Button/button";
 import { DataPaginatedTable } from "@/components/atoms/DataTablePaginated/DataTablePaginated";
 import Input from "@/components/atoms/Input/input";
 import useOccurrencesByCondoId from "@/hooks/queries/condos/occurrences/useOccurrencesByCondoId";
+import useCondo from "@/hooks/queries/condos/useCondo";
 import { storageGet } from "@/store/services/storage";
 
 import { columns } from "./columns";
 import { OccurrenceColumnData } from "./types";
-import Button from "@/components/atoms/Button/button";
-
-import useCondo from "@/hooks/queries/condos/useCondo";
 
 const boxStyle = "border border-black rounded-[8px]";
 
@@ -48,13 +46,13 @@ const IncidentsTable = () => {
       item.title.toLocaleLowerCase().includes(filterValue.toLocaleLowerCase())
   );
 
-  const { data: condo} = useCondo(condoId as string);
+  const { data: condo } = useCondo(condoId as string);
 
   if (!condoId) return;
 
   const handlePrint = () => {
     window.print();
-  }
+  };
 
   return (
     <section className="space-y-4">
@@ -74,20 +72,28 @@ const IncidentsTable = () => {
               width: 100%;
             }
           }
-        `}</style>
+        `}
+      </style>
       <div className={twMerge(boxStyle, "printable-area")}>
         <div className="flex items-center justify-between gap-y-2 px-8 py-4 sm:flex-row">
           <h1 className="text-[18px] font-bold sm:text-[24px]">
-            <span className="hidden sm:inline">Histórico de ocorrências - {condo?.name}</span>
+            <span className="hidden sm:inline">
+              Histórico de ocorrências - {condo?.name}
+            </span>
             <span className="inline sm:hidden">Ocorrências</span>
           </h1>
 
-          <div className="flex items-center gap-x-2 w-auto lg:w-[410px] md:w-[410px] ml-2">
+          <div className="ml-2 flex w-auto items-center gap-x-2 md:w-[410px] lg:w-[410px]">
             <Button
-            className="text-2xs items-center gap-x-2 p-2 sm:p-3 min-w-0 w-auto sm:w-36"
-            onClick={handlePrint}
+              className="text-2xs w-auto min-w-0 items-center gap-x-2 p-2 sm:w-36 sm:p-3"
+              onClick={handlePrint}
             >
-              <Image src="/icons/historic/download_button.svg" width={15} height={15} alt="download Icon"></Image>
+              <Image
+                src="/icons/historic/download_button.svg"
+                width={15}
+                height={15}
+                alt="download Icon"
+              ></Image>
               <span className="hidden sm:flex">Imprimir</span>
             </Button>
             <Input
