@@ -149,7 +149,7 @@ const TicketTable = () => {
           onClick={() => setModalOpen(true)}
         >
           {" "}
-          <PlusIcon size={20} /> Registrar Balancete{" "}
+          <PlusIcon size={20} /> Registrar Boleto{" "}
         </Button>
       </div>
 
