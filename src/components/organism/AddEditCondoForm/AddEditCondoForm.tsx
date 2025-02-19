@@ -322,7 +322,6 @@ const AddEditCondoForm = ({
               label="Nome do condomínio"
               register={register}
               placeholder="Digite o nome"
-              disabled={isEditing}
             />
             <InputField
               formErrors={errors}
@@ -332,7 +331,6 @@ const AddEditCondoForm = ({
               label="CNPJ"
               register={register}
               placeholder="Digite o nome"
-              disabled={isEditing}
             />
           </div>
           <div className="flex flex-col gap-1">
