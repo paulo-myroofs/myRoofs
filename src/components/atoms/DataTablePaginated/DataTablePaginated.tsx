@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
+  getPaginationRowModel,
   Table as TableType,
   useReactTable
 } from "@tanstack/react-table";
@@ -31,14 +33,41 @@ export function DataPaginatedTable<T>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
     initialState: {
       pagination: {
-        pageSize: data.length
+        pageSize: 6
       }
     }
   });
 
   const table = (optionalTable ?? basicTableData) as TableType<T>;
+
+  const currentPageIndex = table.getState().pagination.pageIndex;
+  const totalPages = table.getPageCount();
+
+  const renderPageButtons = () => {
+    const pageButtons = [];
+    const startPage = Math.max(currentPageIndex - 1, 0);
+    const endPage = Math.min(currentPageIndex + 1, totalPages - 1);
+
+    for (let i = startPage; i <= endPage; i++) {
+      pageButtons.push(
+        <button
+          key={i}
+          className={`h-6 w-6 rounded-full transition-all ${
+            i === currentPageIndex
+              ? "bg-[#E6E6E6] text-black"
+              : "bg-transparent opacity-60 hover:bg-gray-200    "
+          } disabled:opacity-30`}
+          onClick={() => table.setPageIndex(i)}
+        >
+          {i + 1}
+        </button>
+      );
+    }
+    return pageButtons;
+  };
 
   return (
     <div className="w-full space-y-4">
@@ -124,6 +153,25 @@ export function DataPaginatedTable<T>({
           )}
         </div>
       </div>
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center space-x-2 px-2">
+          <button
+            className="h-4 w-4 transition-all hover:scale-[103%] disabled:cursor-not-allowed disabled:opacity-30"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            <ChevronLeftIcon className="h-4 w-4" />
+          </button>
+          {renderPageButtons()}
+          <button
+            className="h-4 w-4 transition-all hover:scale-[103%] disabled:cursor-not-allowed disabled:opacity-30"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            <ChevronRightIcon className="h-4 w-4" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
