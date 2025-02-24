@@ -322,7 +322,6 @@ const AddEditCondoForm = ({
               label="Nome do condomínio"
               register={register}
               placeholder="Digite o nome"
-              disabled={isEditing}
             />
             <InputField
               formErrors={errors}
@@ -332,7 +331,6 @@ const AddEditCondoForm = ({
               label="CNPJ"
               register={register}
               placeholder="Digite o nome"
-              disabled={isEditing}
             />
           </div>
           <div className="flex flex-col gap-1">
@@ -451,20 +449,26 @@ const AddEditCondoForm = ({
             <InputField
               className={inputClassName + " disabled:opacity-50"}
               label={"Nome da formação " + (index + 1)}
-              value={internalOrgInputs?.names[index as number]}
+              value={internalOrgInputs?.names[index as number] ?? ""}
               onChange={(e) =>
-                setInternalOrgInputs((prev) => {
-                  if (!prev) return;
-                  return {
-                    ...prev,
-                    names: prev.names.map((item, ind) =>
-                      index === ind ? e.target.value : item
-                    )
-                  };
-                })
+                setInternalOrgInputs((prev) =>
+                  prev
+                    ? {
+                        ...prev,
+                        names: prev.names.map((item, ind) =>
+                          index === ind ? e.target.value : item
+                        )
+                      }
+                    : undefined
+                )
               }
               placeholder="Digite o nome da formação"
-              disabled={isEditing}
+              disabled={
+                isEditing &&
+                condoData?.formationNames?.includes(
+                  internalOrgInputs?.names[index as number] ?? ""
+                )
+              }
             />
             {!readOnly &&
               index !== 0 &&
@@ -476,13 +480,14 @@ const AddEditCondoForm = ({
                   size={18}
                   className="absolute right-0 top-0 opacity-70 hover:opacity-100"
                   onClick={() =>
-                    setInternalOrgInputs((prev) => {
-                      if (!prev) return;
-                      return {
-                        ...prev,
-                        names: prev?.names.filter((_, ind) => ind !== index)
-                      };
-                    })
+                    setInternalOrgInputs((prev) =>
+                      prev
+                        ? {
+                            ...prev,
+                            names: prev?.names.filter((_, ind) => ind !== index)
+                          }
+                        : undefined
+                    )
                   }
                 />
               )}
