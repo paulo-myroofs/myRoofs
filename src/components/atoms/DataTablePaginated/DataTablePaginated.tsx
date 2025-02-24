@@ -23,20 +23,24 @@ import {
 export function DataPaginatedTable<T>({
   data,
   columns,
-  optionalTable
+  optionalTable,
+  disablePagination = false
 }: {
   data: T[];
   columns: ColumnDef<T, any>[];
   optionalTable?: TableType<T>;
+  disablePagination?: boolean;
 }) {
   const basicTableData = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    getPaginationRowModel: disablePagination
+      ? undefined
+      : getPaginationRowModel(),
     initialState: {
       pagination: {
-        pageSize: 6
+        pageSize: disablePagination ? Infinity : 6
       }
     }
   });
@@ -153,7 +157,7 @@ export function DataPaginatedTable<T>({
           )}
         </div>
       </div>
-      {totalPages > 1 && (
+      {!disablePagination && totalPages > 1 && (
         <div className="flex items-center justify-center space-x-2 px-2">
           <button
             className="h-4 w-4 transition-all hover:scale-[103%] disabled:cursor-not-allowed disabled:opacity-30"
