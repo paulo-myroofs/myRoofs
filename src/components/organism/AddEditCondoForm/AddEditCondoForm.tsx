@@ -466,7 +466,7 @@ const AddEditCondoForm = ({
               disabled={
                 isEditing &&
                 condoData?.formationNames?.includes(
-                  internalOrgInputs?.names[index as number]
+                  internalOrgInputs?.names[index as number] ?? ""
                 )
               }
             />

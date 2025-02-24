@@ -3,7 +3,6 @@
 
 import { useState } from "react";
 
-import { useReactTable, getCoreRowModel } from "@tanstack/react-table";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 
@@ -48,17 +47,6 @@ const IncidentsTable = () => {
   );
 
   const { data: condo } = useCondo(condoId as string);
-
-  const tableInstance = useReactTable({
-    data: filteredData ?? [],
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    initialState: {
-      pagination: {
-        pageSize: Infinity
-      }
-    }
-  });
 
   if (!condoId) return null;
 
@@ -123,7 +111,7 @@ const IncidentsTable = () => {
           <DataPaginatedTable<OccurrenceColumnData>
             data={filteredData ?? []}
             columns={columns}
-            optionalTable={tableInstance}
+            disablePagination={true}
           />
         </div>
       </div>
