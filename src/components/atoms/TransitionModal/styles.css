@@ -1,4 +1,3 @@
-
 /* Para navegadores baseados no WebKit (Chrome, Safari) */
 ::-webkit-scrollbar {
   width: 8px; /* Largura da barra de rolagem vertical */
@@ -7,7 +6,7 @@
 
 ::-webkit-scrollbar-track {
   background: #f1f1f1; /* Cor do trilho da barra de rolagem */
-  margin-block: 10px
+  margin-block: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
