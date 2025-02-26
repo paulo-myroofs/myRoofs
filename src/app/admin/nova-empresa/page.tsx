@@ -45,7 +45,7 @@ const NewCompany = () => {
   const companyId = searchParams.get("companyId");
   const { data: company } = useCompany(companyId as string);
   const { data: aptManager } = useProfile<AptManagerEntity>(
-    company?.aptManagerId as string
+    company?.aptManagerId as string,
   );
   const defaultValues = {
     name: company?.name || "",
@@ -62,7 +62,7 @@ const NewCompany = () => {
           ?.value as string) || "",
       city: company?.city || "",
       number: company?.number || "",
-      cep: company?.cep || ""
+      cep: company?.cep || "",
     },
     ownerBasicInfo: {
       name: aptManager?.name || "",
@@ -73,8 +73,8 @@ const NewCompany = () => {
       adminRole: "Responsável Legal",
       maritalStatus:
         (maritalStatusOptions.find(
-          (item) => item.label === aptManager?.maritalStatus
-        )?.value as string) || ""
+          (item) => item.label === aptManager?.maritalStatus,
+        )?.value as string) || "",
     },
     ownerAddressData: {
       address: aptManager?.address || "",
@@ -84,8 +84,8 @@ const NewCompany = () => {
           ?.value as string) || "",
       city: aptManager?.city || "",
       number: aptManager?.number || "",
-      cep: aptManager?.cep || ""
-    }
+      cep: aptManager?.cep || "",
+    },
   };
   const {
     handleSubmit,
@@ -94,12 +94,12 @@ const NewCompany = () => {
     watch,
     formState: { errors },
     reset,
-    setValue
+    setValue,
   } = useForm<AddCompanyForm>({
     mode: "all",
     criteriaMode: "all",
     resolver: zodResolver(AddCompanySchema),
-    defaultValues
+    defaultValues,
   });
   const [loading, setLoading] = useState(false);
 
@@ -124,7 +124,7 @@ const NewCompany = () => {
               ?.value as string) || "",
           number: company.number || "",
           cep: company.cep || "",
-          city: company.city || ""
+          city: company.city || "",
         },
         ownerBasicInfo: {
           name: aptManager.name || "",
@@ -135,8 +135,8 @@ const NewCompany = () => {
           adminRole: "Responsável Legal",
           maritalStatus:
             (maritalStatusOptions.find(
-              (item) => item.label === aptManager.maritalStatus
-            )?.value as string) || ""
+              (item) => item.label === aptManager.maritalStatus,
+            )?.value as string) || "",
         },
         ownerAddressData: {
           address: aptManager.address || "",
@@ -146,8 +146,8 @@ const NewCompany = () => {
               ?.value as string) || "",
           number: aptManager.number || "",
           cep: aptManager.cep || "",
-          city: aptManager.city || ""
-        }
+          city: aptManager.city || "",
+        },
       });
     }
   }, [aptManager, company, reset]);
@@ -170,13 +170,13 @@ const NewCompany = () => {
     let imageUrl = "";
     if (image instanceof File) {
       const { image: imageUploaded, error: errorUpload } = await uploadImage(
-        image as File
+        image as File,
       );
 
       if (errorUpload || !imageUploaded) {
         setLoading(false);
         return errorToast(
-          "Não foi possível fazer upload de imagem, entrar em contato."
+          "Não foi possível fazer upload de imagem, entrar em contato.",
         );
       }
       imageUrl = imageUploaded;
@@ -190,7 +190,7 @@ const NewCompany = () => {
 
       const { error, uid: aptManagerId } = await createUserAuth(
         data.ownerEmail,
-        password
+        password,
       );
 
       if (error || !aptManagerId) {
@@ -199,13 +199,13 @@ const NewCompany = () => {
       } else {
         const { error: errorEmail } = await sendEmail(
           data.ownerEmail,
-          password
+          password,
         );
 
         if (errorEmail) {
           setLoading(false);
           return errorToast(
-            "Não foi possível enviar email com credenciais, entre em contato."
+            "Não foi possível enviar email com credenciais, entre em contato.",
           );
         }
       }
@@ -219,18 +219,18 @@ const NewCompany = () => {
         emitter: data.ownerBasicInfo.emitter,
         profession: data.ownerBasicInfo.profession,
         maritalStatus: maritalStatusOptions.find(
-          (item) => item.value === data.ownerBasicInfo.maritalStatus
+          (item) => item.value === data.ownerBasicInfo.maritalStatus,
         )?.label as MaritalStatusOptionsType,
         address: data.ownerAddressData.address,
         neighborhood: data.ownerAddressData.neighborhood,
         state: brazilStates.find(
-          (item) => item.value === data.ownerAddressData.state
+          (item) => item.value === data.ownerAddressData.state,
         )?.label as BrazilStatesOptionsType,
         number: data.ownerAddressData.number,
         cep: unmask(data.ownerAddressData.cep),
         city: data.ownerAddressData.city,
         adminRole: data.ownerBasicInfo.adminRole,
-        status: Status.INACTIVE
+        status: Status.INACTIVE,
       };
 
       await setFirestoreDoc<AptManagerEntity>({
@@ -239,8 +239,8 @@ const NewCompany = () => {
           ...aptManagerData,
           image: imageUrl,
           createdAt: Timestamp.now(),
-          blockedAt: null
-        }
+          blockedAt: null,
+        },
       });
 
       const companyData = {
@@ -251,7 +251,7 @@ const NewCompany = () => {
         address: data.addressData.address,
         neighborhood: data.addressData.neighborhood,
         state: brazilStates.find(
-          (item) => item.value === data.ownerAddressData.state
+          (item) => item.value === data.ownerAddressData.state,
         )?.label as BrazilStatesOptionsType,
         number: data.addressData.number,
         cep: unmask(data.addressData.cep),
@@ -261,15 +261,15 @@ const NewCompany = () => {
         createdAt: Timestamp.now(),
         endedAt: null,
         city: data.addressData.city,
-        blockedAt: null
+        blockedAt: null,
       };
       await setFirestoreDoc<CompanyEntity>({
         docPath: `companies/${companyId}`,
-        data: companyData
+        data: companyData,
       });
 
       successToast(
-        "Nova empresa adicionada. Peça pra responsável legal acessar o email."
+        "Nova empresa adicionada. Peça pra responsável legal acessar o email.",
       );
     } else {
       const aptManagerData = {
@@ -282,20 +282,20 @@ const NewCompany = () => {
         emitter: data.ownerBasicInfo.emitter,
         profession: data.ownerBasicInfo.profession,
         maritalStatus: maritalStatusOptions.find(
-          (item) => item.value === data.ownerBasicInfo.maritalStatus
+          (item) => item.value === data.ownerBasicInfo.maritalStatus,
         )?.label as MaritalStatusOptionsType,
         address: data.ownerAddressData.address,
         neighborhood: data.ownerAddressData.neighborhood,
         state: brazilStates.find(
-          (item) => item.value === data.ownerAddressData.state
+          (item) => item.value === data.ownerAddressData.state,
         )?.label as BrazilStatesOptionsType,
         number: data.ownerAddressData.number,
         cep: unmask(data.ownerAddressData.cep),
-        city: data.ownerAddressData.city
+        city: data.ownerAddressData.city,
       };
       await updateFirestoreDoc<AptManagerEntity>({
         documentPath: `users/${company?.aptManagerId}`,
-        data: aptManagerData
+        data: aptManagerData,
       });
 
       const companyData = {
@@ -306,7 +306,7 @@ const NewCompany = () => {
         address: data.addressData.address,
         neighborhood: data.addressData.neighborhood,
         state: brazilStates.find(
-          (item) => item.value === data.ownerAddressData.state
+          (item) => item.value === data.ownerAddressData.state,
         )?.label as BrazilStatesOptionsType,
         number: data.addressData.number,
         cep: unmask(data.addressData.cep),
@@ -315,11 +315,11 @@ const NewCompany = () => {
         finder: data.finder ?? null,
         createdAt: Timestamp.now(),
         endedAt: null,
-        city: data.addressData.city
+        city: data.addressData.city,
       };
       await updateFirestoreDoc<CompanyEntity>({
         documentPath: `companies/${companyId}`,
-        data: companyData
+        data: companyData,
       });
       successToast("Empresa atualizada.");
     }
@@ -338,7 +338,7 @@ const NewCompany = () => {
 
   const inputUpload = useRef<HTMLInputElement | null>(null);
   const [image, setImage] = useState<File | string | null>(
-    company?.image ?? null
+    company?.image ?? null,
   );
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -394,7 +394,7 @@ const NewCompany = () => {
               onClick={() => inputUpload?.current?.click()}
               className={twMerge(
                 "relative flex h-[130px] w-full items-center justify-center gap-1 overflow-hidden rounded-sm border border-gray-300 px-3 text-sm text-black/50 outline-none transition-all hover:opacity-60",
-                inputClassName
+                inputClassName,
               )}
             >
               {image ? (

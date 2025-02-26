@@ -32,7 +32,7 @@ import { queryClient } from "@/store/providers/queryClient";
 import {
   deleteFirestoreDoc,
   setFirestoreDoc,
-  updateFirestoreDoc
+  updateFirestoreDoc,
 } from "@/store/services";
 import { createUserAuth, deleteUserAuth } from "@/store/services/auth";
 import { sendEmail } from "@/store/services/email";
@@ -52,13 +52,13 @@ const adminRoleOptions = [
   { value: "gerente-predial", label: "Gerente predial" },
   { value: "auxiliar-administrativo", label: "Auxiliar administrativo" },
   { value: "conselho-fiscal", label: "Conselho fiscal" },
-  { value: "Responsável Legal", label: "Responsável Legal", disabled: true }
+  { value: "Responsável Legal", label: "Responsável Legal", disabled: true },
 ];
 
 export default function CreateAdminModal({
   isOpen,
   onOpenChange,
-  adminData
+  adminData,
 }: AdminModalProps) {
   const condoId = storageGet<string>("condoId") as string;
   const { data: condo } = useCondo(condoId);
@@ -66,7 +66,7 @@ export default function CreateAdminModal({
   const { data: user } = useProfile<AptManagerEntity>(userUid);
 
   const [image, setImage] = useState<File | string | null>(
-    adminData?.image ?? null
+    adminData?.image ?? null,
   );
   const [loading, setLoading] = useState(false);
 
@@ -77,7 +77,7 @@ export default function CreateAdminModal({
     watch,
     formState: { errors },
     reset,
-    setValue
+    setValue,
   } = useForm<AddAptManagerForm>({
     resolver: zodResolver(AddAptManager),
     defaultValues: {
@@ -92,8 +92,8 @@ export default function CreateAdminModal({
             ?.value ?? "",
         maritalStatus:
           maritalStatusOptions.find(
-            (item) => item.label === adminData?.maritalStatus
-          )?.value ?? ""
+            (item) => item.label === adminData?.maritalStatus,
+          )?.value ?? "",
       },
       ownerAddressData: {
         cep: adminData?.cep ?? "",
@@ -103,10 +103,10 @@ export default function CreateAdminModal({
         city: adminData?.city ?? "",
         neighborhood: adminData?.neighborhood ?? "",
         address: adminData?.address ?? "",
-        number: adminData?.number ?? ""
+        number: adminData?.number ?? "",
       },
-      ownerEmail: adminData?.email ?? ""
-    }
+      ownerEmail: adminData?.email ?? "",
+    },
   });
 
   const inputUpload = useRef<HTMLInputElement | null>(null);
@@ -133,12 +133,12 @@ export default function CreateAdminModal({
       if (typeof image !== "string" && image) {
         // eslint-disable-next-line prettier/prettier
         const { image: url, error: errorUpload } = await uploadImage(
-          image as File
+          image as File,
         );
         if (errorUpload || !url) {
           setLoading(false);
           return errorToast(
-            "Não foi possível fazer upload de imagem, entre em contato."
+            "Não foi possível fazer upload de imagem, entre em contato.",
           );
         }
         imageUrl = url;
@@ -160,22 +160,22 @@ export default function CreateAdminModal({
         emitter: data.ownerBasicInfo.emitter,
         profession: data.ownerBasicInfo.profession,
         adminRole: adminRoleOptions.find(
-          (item) => item.value === data.ownerBasicInfo.adminRole
+          (item) => item.value === data.ownerBasicInfo.adminRole,
         )?.label as string,
         maritalStatus: maritalStatusOptions.find(
-          (item) => item.value === data.ownerBasicInfo.maritalStatus
+          (item) => item.value === data.ownerBasicInfo.maritalStatus,
         )?.label as MaritalStatusOptionsType,
         address: data.ownerAddressData.address,
         neighborhood: data.ownerAddressData.neighborhood,
         state: brazilStates.find(
-          (item) => item.value === data.ownerAddressData.state
+          (item) => item.value === data.ownerAddressData.state,
         )?.label as BrazilStatesOptionsType,
         number: data.ownerAddressData.number,
         cep: unmask(data.ownerAddressData.cep),
         city: data.ownerAddressData.city,
         status: Status.INACTIVE,
         createdAt: Timestamp.now(),
-        blockedAt: null
+        blockedAt: null,
       };
 
       if (!adminData) {
@@ -183,18 +183,18 @@ export default function CreateAdminModal({
 
         const { error: errorEmail } = await sendEmail(
           data.ownerEmail,
-          password
+          password,
         );
         if (errorEmail) {
           setLoading(false);
           return errorToast(
-            "Não foi possível enviar email com credenciais, entre em contato."
+            "Não foi possível enviar email com credenciais, entre em contato.",
           );
         }
 
         const { error, uid: aptManagerId } = await createUserAuth(
           data.ownerEmail,
-          password
+          password,
         );
         if (error || !aptManagerId) {
           setLoading(false);
@@ -204,23 +204,23 @@ export default function CreateAdminModal({
           docPath: `users/${aptManagerId}`,
           data: {
             ...aptManagerData,
-            isSecondary: false
-          } as AptManagerEntity
+            isSecondary: false,
+          } as AptManagerEntity,
         });
 
         await updateFirestoreDoc<CondoEntity>({
           documentPath: `/condominium/${condoId}`,
           data: {
-            aptManagersIds: [...(condo?.aptManagersIds || []), aptManagerId]
-          }
+            aptManagersIds: [...(condo?.aptManagersIds || []), aptManagerId],
+          },
         });
         successToast("Administrador cadastrado com sucesso.");
       } else {
         await updateFirestoreDoc<Omit<AptManagerEntity, "id">>({
           documentPath: `/users/${adminData.id}`,
           data: {
-            ...aptManagerData
-          } as AptManagerEntity
+            ...aptManagerData,
+          } as AptManagerEntity,
         });
         setImage(imageUrl);
         successToast("Administrador atualizado.");

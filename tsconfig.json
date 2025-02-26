@@ -37,13 +37,6 @@
       "@hooks/*": ["src/hooks/*"]
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "src/app/(authenticated)/sindico/financas/components/TicketTable/columns.tsx",
-    "src/app/(authenticated)/sindico/financas/components/AccountabilityTable/columns.tss"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/(authenticated)/sindico/financas/components/TicketTable/columns.tsx", "src/app/(authenticated)/sindico/financas/components/AccountabilityTable/columns.tss"],
   "exclude": ["node_modules"]
 }
