@@ -5,8 +5,7 @@ import { MaritalStatusOptionsType } from "./common/maritalStatusOptionsType";
 
 export enum Status {
   ACTIVE = "ativo",
-  INACTIVE = "inativo",
-  UNDEFINED = "indefinido"
+  INACTIVE = "inativo"
 }
 
 export interface AptManagerEntity extends AddressFields {

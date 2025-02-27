@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 import { ColumnDef } from "@tanstack/react-table";
-import Link from "next/link";
 
 import { OccurrenceEntity, Status } from "@/common/entities/occurrences";
 import Button from "@/components/atoms/Button/button";
@@ -10,7 +9,6 @@ import useProfile from "@/hooks/queries/useProfile";
 import { errorToast, successToast } from "@/hooks/useAppToast";
 import { queryClient } from "@/store/providers/queryClient";
 import { updateFirestoreDoc } from "@/store/services";
-import { extractFilename } from "@/utils/extractFilename";
 
 import SeeDetailsOccurrence from "./components/SeeDetailsOccurrence";
 import { OccurrenceColumnData } from "./types";
@@ -94,22 +92,6 @@ export const columns: ColumnDef<OccurrenceColumnData>[] = [
     cell: ({ row }) => <GetUserName userId={row.original.userId} />
   },
   {
-    accessorKey: "image",
-    header: "Imagem",
-    cell: ({ row }) =>
-      row.original.upload ? (
-        <Link
-          href={row.original.upload}
-          target="_blank"
-          className="block w-[200px] truncate text-[#2A27CE] underline"
-        >
-          {extractFilename(row.original.upload)}
-        </Link>
-      ) : (
-        "Sem dados"
-      )
-  },
-  {
     accessorKey: "date",
     header: "Data",
     cell: ({ row }) =>
@@ -128,5 +110,39 @@ export const columns: ColumnDef<OccurrenceColumnData>[] = [
     accessorKey: "detalhes",
     header: "Detalhes",
     cell: ({ row }) => <SeeMore data={row.original} />
+  },
+  {
+    accessorKey: "formationName",
+    header: "Formação",
+    cell: ({ row }) =>
+      row.original.formationName ? (
+        <p>{row.original.formationName}</p>
+      ) : (
+        <p>Sem dados</p>
+      )
+  },
+  {
+    accessorKey: "AppartmentNumber",
+    header: "Apartamento",
+    cell: ({ row }) =>
+      row.original.appartmentNumber ? (
+        <p>{row.original.appartmentNumber}</p>
+      ) : (
+        <p>Sem dados</p>
+      )
+  },
+  {
+    accessorKey: "reponseDate",
+    header: "Data de resposta",
+    cell: ({ row }) =>
+      row.original.responseDate ? (
+        <p>
+          {new Date(
+            row.original.responseDate.seconds * 1000
+          ).toLocaleDateString()}
+        </p>
+      ) : (
+        <p>xx/xx/xxxx</p>
+      )
   }
 ];
