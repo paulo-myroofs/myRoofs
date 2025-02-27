@@ -16,7 +16,7 @@ import { AdminModalProps } from "@/app/(authenticated)/sindico/cadastros/adminis
 import AddressInputsModal from "@/app/admin/nova-empresa/components/AddressInputsModal";
 import { brazilStates } from "@/common/constants/brazilStates";
 import { maritalStatusOptions } from "@/common/constants/maritalStatusOptions";
-import { AptManagerEntity, Status } from "@/common/entities/aptManager";
+import { AptManagerEntity } from "@/common/entities/aptManager";
 import { BrazilStatesOptionsType } from "@/common/entities/common/brazilStatesOptionsType";
 import { CondoEntity } from "@/common/entities/common/condo/condo";
 import { MaritalStatusOptionsType } from "@/common/entities/common/maritalStatusOptionsType";
@@ -85,8 +85,7 @@ export default function CreateAdminModal({
         maritalStatus:
           maritalStatusOptions.find(
             (item) => item.label === adminData?.maritalStatus
-          )?.value ?? "",
-        status: adminData?.status ?? Status.ACTIVE
+          )?.value ?? ""
       },
       ownerAddressData: {
         cep: adminData?.cep ?? "",
@@ -125,7 +124,9 @@ export default function CreateAdminModal({
       let imageUrl = adminData?.image ?? null;
       if (typeof image !== "string" && image) {
         // eslint-disable-next-line prettier/prettier
-      const { image: url, error: errorUpload } = await uploadImage(image as File);
+        const { image: url, error: errorUpload } = await uploadImage(
+          image as File
+        );
         if (errorUpload || !url) {
           setLoading(false);
           return errorToast(
@@ -191,8 +192,7 @@ export default function CreateAdminModal({
         await setFirestoreDoc<Omit<AptManagerEntity, "id">>({
           docPath: `users/${aptManagerId}`,
           data: {
-            ...aptManagerData,
-            isSecondary: true
+            ...aptManagerData
           } as AptManagerEntity
         });
 

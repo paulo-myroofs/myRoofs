@@ -93,8 +93,7 @@ export default function CreateAdminModal({
         maritalStatus:
           maritalStatusOptions.find(
             (item) => item.label === adminData?.maritalStatus
-          )?.value ?? "",
-        status: adminData?.status ?? Status.ACTIVE
+          )?.value ?? ""
       },
       ownerAddressData: {
         cep: adminData?.cep ?? "",
@@ -133,7 +132,9 @@ export default function CreateAdminModal({
       let imageUrl = adminData?.image ?? null;
       if (typeof image !== "string" && image) {
         // eslint-disable-next-line prettier/prettier
-      const { image: url, error: errorUpload } = await uploadImage(image as File);
+        const { image: url, error: errorUpload } = await uploadImage(
+          image as File
+        );
         if (errorUpload || !url) {
           setLoading(false);
           return errorToast(
