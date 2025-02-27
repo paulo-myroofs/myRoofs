@@ -204,7 +204,7 @@ export default function CreateAdminModal({
           docPath: `users/${aptManagerId}`,
           data: {
             ...aptManagerData,
-            isSecondary: false
+            isSecondary: true
           } as AptManagerEntity
         });
 

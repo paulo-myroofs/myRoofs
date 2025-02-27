@@ -192,8 +192,7 @@ export default function CreateAdminModal({
         await setFirestoreDoc<Omit<AptManagerEntity, "id">>({
           docPath: `users/${aptManagerId}`,
           data: {
-            ...aptManagerData,
-            isSecondary: false
+            ...aptManagerData
           } as AptManagerEntity
         });
 
