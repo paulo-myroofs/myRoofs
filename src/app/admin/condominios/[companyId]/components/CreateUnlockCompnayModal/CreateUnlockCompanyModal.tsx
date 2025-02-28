@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 
 import { inputClassName } from "@/app/contants";
 import Button from "@/components/atoms/Button/button";
+import LoadingComponent from "@/components/atoms/Loading/loading";
 import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
 import InputFieldForDelete from "@/components/molecules/InputField/InputFieldForDelete";
 import useCompanyUsers from "@/hooks/queries/companies/useCompanyUsers";
@@ -23,6 +24,7 @@ const CreateUnlockCompanyModal = ({
   condoData
 }: CreateUnlockCompanyModalProps) => {
   const [inputValue, setInputValue] = useState("");
+  const [isUnlocking, setIsUnlocking] = useState(false);
   const router = useRouter();
   const { data: aptManagerData } = useCompanyUsers(companyData?.id as string);
   const { data: employeeData } = useEmployeesByCondoData(condoData);
@@ -33,7 +35,8 @@ const CreateUnlockCompanyModal = ({
     setInputValue(value);
   };
 
-  const handleBlockCompany = async () => {
+  const handleUnlockCompany = async () => {
+    setIsUnlocking(true);
     const managerPromises = aptManagerData?.map(
       async (manager: { id: string }) => {
         const { error } = await activateUserAuth(manager.id);
@@ -59,6 +62,7 @@ const CreateUnlockCompanyModal = ({
 
     if (employeeResults.some((result) => result !== null)) {
       errorToast("Erro ao desbloquear a empresa. Por favor, tente novamente.");
+      setIsUnlocking(false);
       return;
     }
 
@@ -73,6 +77,7 @@ const CreateUnlockCompanyModal = ({
 
     if (residentResults.some((result) => result !== null)) {
       errorToast("Erro ao desbloquear a empresa. Por favor, tente novamente.");
+      setIsUnlocking(false);
       return;
     }
 
@@ -90,7 +95,7 @@ const CreateUnlockCompanyModal = ({
 
   const handleConfirmClick = () => {
     if (inputValue === companyData?.name) {
-      handleBlockCompany();
+      handleUnlockCompany();
     } else {
       errorToast(
         "O nome da empresa não corresponde. Por favor, tente novamente."
@@ -110,8 +115,9 @@ const CreateUnlockCompanyModal = ({
           size="lg"
           className=" w-[210px] bg-[#202425]"
           onClick={handleConfirmClick}
+          disabled={isUnlocking}
         >
-          Confirmar
+          {isUnlocking ? <LoadingComponent className="h-6 w-6" /> : "Confirmar"}
         </Button>
       }
       cancelBtn={
@@ -124,6 +130,7 @@ const CreateUnlockCompanyModal = ({
           variant="outline-black"
           size="lg"
           className="w-[210px] text-sm"
+          disabled={isUnlocking}
         >
           Cancelar
         </Button>
@@ -136,6 +143,7 @@ const CreateUnlockCompanyModal = ({
         placeholder="Digite Aqui"
         value={inputValue}
         onChange={handleInputChange}
+        disabled={isUnlocking}
       />
     </TransitionModal>
   );
