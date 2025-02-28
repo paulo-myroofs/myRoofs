@@ -39,6 +39,7 @@ function ResponsiveMenu({
           >
             <Link
               href={button.href}
+              onClick={onCloseMenu}
               className={`w-full text-center ${
                 pathname === button.href && "border-b-4 border-b-green-500"
               }`}
@@ -53,7 +54,10 @@ function ResponsiveMenu({
 
       {profileSelectOptions && (
         <div className="z-20 mt-8 flex w-full cursor-pointer justify-center lg:hidden">
-          <ProfileSelect options={profileSelectOptions} />
+          <ProfileSelect
+            options={profileSelectOptions}
+            onCloseMenu={onCloseMenu}
+          />
         </div>
       )}
     </div>
@@ -80,7 +84,10 @@ export default function Navbar({
       </div>
       <div className="order-3 hidden items-center space-x-4 lg:flex">
         {profileSelectOptions && (
-          <ProfileSelect options={profileSelectOptions} />
+          <ProfileSelect
+            options={profileSelectOptions}
+            onCloseMenu={() => setIsMenuOpen(false)}
+          />
         )}
       </div>
       <ul className="align-center order-2 hidden h-full items-center lg:flex lg:gap-[4rem] xl:gap-[6rem] ">

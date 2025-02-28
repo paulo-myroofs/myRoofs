@@ -26,7 +26,10 @@ const User = ({ color = "black" }: { color: string }) => {
   );
 };
 
-const ProfileSelect = ({ options }: ProfileSelectProps) => {
+const ProfileSelect = ({
+  options,
+  onCloseMenu
+}: ProfileSelectProps & { onCloseMenu: () => void }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -50,6 +53,7 @@ const ProfileSelect = ({ options }: ProfileSelectProps) => {
                 onSelect={() => {
                   option.onClick();
                   setOpen(false);
+                  onCloseMenu();
                 }}
               >
                 {option.label}

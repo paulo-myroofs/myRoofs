@@ -25,21 +25,27 @@ const IncidentsTable = () => {
   const { data: occurrences } = useOccurrencesByCondoId(
     condoId as string,
     (data) =>
-      data.map(
-        (item: OccurrenceEntity) =>
-          ({
-            id: item.id,
-            userId: item.userId,
-            upload: item.upload,
-            date: item.date,
-            status: item.status,
-            details: item.details,
-            condoId: condoId as string,
-            title: item.title,
-            return: item.return,
-            reaction: item.reaction
-          }) as OccurrenceColumnData
-      )
+      data
+        .map(
+          (item: OccurrenceEntity) =>
+            ({
+              id: item.id,
+              userId: item.userId,
+              upload: item.upload,
+              date: item.date,
+              status: item.status,
+              details: item.details,
+              condoId: condoId as string,
+              title: item.title,
+              return: item.return,
+              reaction: item.reaction
+            }) as OccurrenceColumnData
+        )
+        .sort(
+          (a: OccurrenceColumnData, b: OccurrenceColumnData) =>
+            new Date(b.date.seconds).getTime() -
+            new Date(a.date.seconds).getTime()
+        )
   );
   const filteredData: OccurrenceColumnData[] | undefined = occurrences?.filter(
     (item: OccurrenceColumnData) =>
