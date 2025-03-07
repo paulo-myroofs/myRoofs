@@ -23,17 +23,23 @@ const SelectField = <T extends FieldValues>({
   placeholder,
   emptyPlaceholder
 }: SelectFieldProps<T>) => {
-  let errorMessage: string | undefined;
+  let error: FieldErrors<T> | undefined = formErrors as FieldErrors<T>;
 
-  // Tratamento de erros sem acessar diretamente o tipo FieldErrors<T>
-  if (formErrors && typeof (formErrors as FieldErrors<T>)[name] === "object") {
-    const error = (formErrors as FieldErrors<T>)[name];
-    errorMessage = error?.message as string | undefined;
-  } else if (formErrors) {
-    errorMessage = (formErrors as FieldErrors)[name]?.message as
-      | string
-      | undefined;
+  const fieldPath = name.split(".");
+
+  for (const field of fieldPath) {
+    if (error && typeof error === "object" && error[field]) {
+      error = error[field] as FieldErrors<T>;
+    } else {
+      error = undefined;
+      break;
+    }
   }
+
+  const errorMessage =
+    error && typeof error === "object" && "message" in error
+      ? String(error.message)
+      : undefined;
 
   return (
     <div className={cn("flex flex-col gap-1")}>
