@@ -12,6 +12,7 @@ import Select from "@/components/atoms/Select/select";
 import { cn } from "@/lib/utils";
 
 import { SelectFieldProps } from "./types";
+
 const SelectField = <T extends FieldValues>({
   label,
   control,
@@ -37,7 +38,6 @@ const SelectField = <T extends FieldValues>({
   return (
     <div className={cn("flex flex-col gap-1")}>
       {label && <Label>{label}</Label>}
-
       <Controller
         name={name as Path<T>}
         control={control as Control<T>}
@@ -56,4 +56,5 @@ const SelectField = <T extends FieldValues>({
     </div>
   );
 };
+
 export default SelectField;
