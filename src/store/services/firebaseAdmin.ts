@@ -16,6 +16,10 @@ export const activateUserAuthAdmin = async (
     }))
     .catch((error) => {
       console.log(error);
+      if (error.code === "auth/user-not-found") {
+        deleteFirestoreDoc({ documentPath: `users/${uid}` });
+        return { error: null };
+      }
       return { error: "Erro ao ativar usuário" };
     });
 };
