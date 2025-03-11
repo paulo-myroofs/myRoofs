@@ -119,6 +119,9 @@ export default function CreateAdminModal({
   };
 
   const handleForm: SubmitHandler<AddAptManagerForm> = async (data) => {
+    if (!data.ownerBasicInfo.adminRole) {
+      return errorToast("Preencha o campo 'Cargo'.");
+    }
     if (!condo) {
       return errorToast("Erro ao buscar condomínio.");
     }
