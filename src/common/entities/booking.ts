@@ -10,6 +10,6 @@ export interface BookingEntity {
   periods: PeriodsType[];
   dates: Timestamp;
   area: string; // nome da área comum
-  paymentDoc: string;
+  receiptImage: string;
   guestsDoc: string;
 }

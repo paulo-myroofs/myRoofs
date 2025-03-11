@@ -11,7 +11,7 @@ const SeeDetails = ({ isOpen, onOpenChange, bookingData }: SeeDetailsProps) => {
   const dataProps = [
     {
       label: "Comprovante de pagamento",
-      file: bookingData?.paymentDoc || "mock_payment.pdf"
+      file: bookingData?.receiptImage
     },
     {
       label: "Lista de convidados",
