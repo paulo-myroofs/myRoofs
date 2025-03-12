@@ -583,7 +583,7 @@ const AddEditCondoForm = ({
         <InputField
           name="floorsQty"
           className={`${inputClassName} disabled:opacity-50`}
-          label="Número de andares"
+          label="Número de andares/Quantidade de Formação"
           register={register}
           formErrors={errors}
           placeholder="Digite aqui a quantidade de andares"
