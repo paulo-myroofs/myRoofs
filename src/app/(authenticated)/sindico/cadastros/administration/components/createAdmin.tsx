@@ -122,6 +122,9 @@ export default function CreateAdminModal({
     if (!condo) {
       return errorToast("Erro ao buscar condomínio.");
     }
+    if (!data.ownerBasicInfo.adminRole) {
+      return errorToast("Preencha o campo 'Cargo'.");
+    }
     if (!isCPF(unmask(data.ownerBasicInfo.cpf))) {
       return errorToast("CPF não é válido.");
     }
