@@ -13,6 +13,7 @@ const SignInFormSchema = z.object({
   phone,
 
   floorsQty: number,
+  aptQty: number,
   garageSpacesQty: number
 });
 

@@ -33,6 +33,7 @@ export interface CondoEntity {
     | "Outro";
   housingOther: string | null;
   floorsQty: number;
+  aptQty: number;
   garageQty: number;
   commonAreas: CondoCommonArea[] | null;
   activities: CondoActivityEntity[] | null;
