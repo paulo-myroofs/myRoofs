@@ -20,5 +20,5 @@ export interface OccurrenceColumnData {
   reaction: Reaction;
   formationName: string;
   housingName: string;
-  responseDate: Timestamp | null;
+  returnDate: Timestamp | null;
 }

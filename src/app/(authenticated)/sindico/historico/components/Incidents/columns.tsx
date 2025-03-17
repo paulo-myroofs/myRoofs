@@ -138,10 +138,10 @@ export const columns: ColumnDef<OccurrenceColumnData>[] = [
     accessorKey: "reponseDate",
     header: "Data de resposta",
     cell: ({ row }) =>
-      row.original.responseDate ? (
+      row.original.returnDate ? (
         <p>
           {new Date(
-            row.original.responseDate.seconds * 1000
+            row.original.returnDate.seconds * 1000
           ).toLocaleDateString()}
         </p>
       ) : (

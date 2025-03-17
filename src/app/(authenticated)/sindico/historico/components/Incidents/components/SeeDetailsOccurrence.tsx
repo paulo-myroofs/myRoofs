@@ -55,7 +55,7 @@ const SeeDetailsOccurrence: React.FC<SeeDetailsOccurrenceProps> = ({
     await updateFirestoreDoc({
       documentPath: `/occurrences/${occurenceData.id}`,
       data: {
-        response: data.return,
+        return: data.return,
         reaction: data.reaction
       }
     });
