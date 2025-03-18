@@ -12,7 +12,7 @@ import { v4 as uuidV4 } from "uuid";
 import { z } from "zod";
 
 // import AptManagerData from "@/app/admin/condominios/ver-mais/[condoId]/components/AptManagerData/AptManagerData";
-import { AdminModalProps } from "@/app/(authenticated)/sindico/cadastros/administration/components/types";
+
 import AddressInputsModal from "@/app/admin/nova-empresa/components/AddressInputsModal";
 import { brazilStates } from "@/common/constants/brazilStates";
 import { maritalStatusOptions } from "@/common/constants/maritalStatusOptions";
@@ -22,6 +22,7 @@ import { CondoEntity } from "@/common/entities/common/condo/condo";
 import { MaritalStatusOptionsType } from "@/common/entities/common/maritalStatusOptionsType";
 import Button from "@/components/atoms/Button/button";
 import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
+import { TransitionModalProps } from "@/components/atoms/TransitionModal/types";
 import InputField from "@/components/molecules/InputField/inputField";
 import SelectField from "@/components/molecules/SelectField/selectField";
 import { getAdministratorByCondoIdQueryKey } from "@/hooks/queries/administrator/useAdministratorByCondoId";
@@ -37,6 +38,10 @@ import AddAptManager from "@/validations/admin/AddAptManager";
 
 import DeleteAdminModal from "../DeleteAdminModal/DeleteAdminModal";
 
+export interface EditAdminModalProps
+  extends Pick<TransitionModalProps, "isOpen" | "onOpenChange"> {
+  adminData: AptManagerEntity;
+}
 type AddAptManagerForm = z.infer<typeof AddAptManager>;
 const inputClassName = "border-[#DEE2E6] bg-[#F8F9FA]";
 
@@ -53,7 +58,7 @@ export default function CreateAdminModal({
   isOpen,
   onOpenChange,
   adminData
-}: AdminModalProps) {
+}: EditAdminModalProps) {
   const { condoId } = useParams<{ condoId: string }>();
   const { data: condo } = useCondo(condoId);
   const [image, setImage] = useState<File | string | null>(
@@ -221,19 +226,6 @@ export default function CreateAdminModal({
       return errorToast("error");
     }
   };
-
-  // const handleDelete = async () => {
-  //   if (!adminData) return;
-  //   setLoading(true);
-  //   if (adminData.image) await deleteImage(adminData.image);
-  //   await deleteFirestoreDoc({ documentPath: `/users/${adminData.id}` });
-  //   await deleteUserAuth(adminData.id);
-
-  //   queryClient.invalidateQueries(["aptManagers", condoId]);
-  //   successToast("Funcionário removido com sucesso.");
-  //   setLoading(false);
-  //   onOpenChange(false);
-  // };
 
   const handleClose = () => {
     reset();
