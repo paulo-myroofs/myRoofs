@@ -1,9 +1,9 @@
+import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 
 import { inputClassName } from "@/app/contants";
 import Label from "@/components/atoms/Label/label";
 import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
-import { extractFilename } from "@/utils/extractFilename";
 
 import { SeeDetailsProps } from "./types";
 
@@ -11,7 +11,7 @@ const SeeDetails = ({ isOpen, onOpenChange, bookingData }: SeeDetailsProps) => {
   const dataProps = [
     {
       label: "Comprovante de pagamento",
-      file: bookingData?.paymentDoc
+      file: bookingData?.receiptImage
     },
     {
       label: "Lista de convidados",
@@ -40,15 +40,31 @@ const SeeDetails = ({ isOpen, onOpenChange, bookingData }: SeeDetailsProps) => {
               inputClassName
             )}
           >
-            <span className="w-[400px] truncate text-center hover:underline">
-              {item.file ? (
-                <span className="text-[#2A27CE]">
-                  {extractFilename(item.file)}
-                </span>
-              ) : (
-                "Sem arquivos"
-              )}
-            </span>
+            {item.file ? (
+              <>
+                {item.label === "Comprovante de pagamento" ? (
+                  <Image
+                    src="/icons/historic/bill_icon.svg"
+                    width={30}
+                    height={30}
+                    alt="Payment Icon"
+                    className="mx-auto"
+                  />
+                ) : (
+                  <Image
+                    src="/icons/historic/pdf_icon.svg"
+                    width={25}
+                    height={25}
+                    alt="PDF Icon"
+                    className="mx-auto"
+                  />
+                )}
+              </>
+            ) : (
+              <span className="w-[400px] truncate text-center hover:underline">
+                Sem arquivos
+              </span>
+            )}
           </a>
         </div>
       ))}
