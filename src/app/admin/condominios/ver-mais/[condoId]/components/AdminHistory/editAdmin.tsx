@@ -28,16 +28,14 @@ import { getAdministratorByCondoIdQueryKey } from "@/hooks/queries/administrator
 import useCondo from "@/hooks/queries/condos/useCondo";
 import { errorToast, successToast } from "@/hooks/useAppToast";
 import { queryClient } from "@/store/providers/queryClient";
-import {
-  deleteFirestoreDoc,
-  setFirestoreDoc,
-  updateFirestoreDoc
-} from "@/store/services";
-import { createUserAuth, deleteUserAuth } from "@/store/services/auth";
+import { setFirestoreDoc, updateFirestoreDoc } from "@/store/services";
+import { createUserAuth } from "@/store/services/auth";
 import { sendEmail } from "@/store/services/email";
 import { deleteImage, uploadImage } from "@/store/services/firebaseStorage";
 import unmask from "@/utils/unmask";
 import AddAptManager from "@/validations/admin/AddAptManager";
+
+import DeleteAdminModal from "../DeleteAdminModal/DeleteAdminModal";
 
 type AddAptManagerForm = z.infer<typeof AddAptManager>;
 const inputClassName = "border-[#DEE2E6] bg-[#F8F9FA]";
@@ -224,18 +222,18 @@ export default function CreateAdminModal({
     }
   };
 
-  const handleDelete = async () => {
-    if (!adminData) return;
-    setLoading(true);
-    if (adminData.image) await deleteImage(adminData.image);
-    await deleteFirestoreDoc({ documentPath: `/users/${adminData.id}` });
-    await deleteUserAuth(adminData.id);
+  // const handleDelete = async () => {
+  //   if (!adminData) return;
+  //   setLoading(true);
+  //   if (adminData.image) await deleteImage(adminData.image);
+  //   await deleteFirestoreDoc({ documentPath: `/users/${adminData.id}` });
+  //   await deleteUserAuth(adminData.id);
 
-    queryClient.invalidateQueries(["aptManagers", condoId]);
-    successToast("Funcionário removido com sucesso.");
-    setLoading(false);
-    onOpenChange(false);
-  };
+  //   queryClient.invalidateQueries(["aptManagers", condoId]);
+  //   successToast("Funcionário removido com sucesso.");
+  //   setLoading(false);
+  //   onOpenChange(false);
+  // };
 
   const handleClose = () => {
     reset();
@@ -243,189 +241,202 @@ export default function CreateAdminModal({
     onOpenChange(false);
   };
 
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
   return (
-    <TransitionModal
-      isOpen={isOpen}
-      title={adminData ? "Editar Administrador" : "Novo Administrador"}
-      description={
-        adminData
-          ? "Edite as informações do administrador"
-          : "Preencha as informações para adicionar um novo administrador"
-      }
-      onOpenChange={handleClose}
-      confirmBtn={
-        <Button
-          variant="icon"
-          size="lg"
-          className="w-[210px] bg-[#202425]"
-          loading={loading}
-          onClick={() => handleSubmit(handleForm)()}
-        >
-          {adminData ? "Salvar Alterações" : "Registrar"}
-        </Button>
-      }
-      cancelBtn={
-        <Button
-          onClick={handleClose}
-          type="button"
-          variant="outline-black"
-          size="lg"
-          className="w-[210px] text-sm"
-        >
-          Cancelar
-        </Button>
-      }
-    >
-      {" "}
-      {adminData && (
-        <button
-          type="button"
-          onClick={handleDelete}
-          className="absolute right-5 top-5 transition-all hover:scale-110"
-        >
-          <Image
-            src={"/icons/commonArea/trash.svg"}
-            width={30}
-            height={30}
-            alt="Icon de remoção"
-          />
-        </button>
-      )}
-      <div className="flex justify-between max-sm:flex-col">
-        <div className="relative mb-6 flex h-[64px] w-[64px] items-center justify-center overflow-hidden rounded-full bg-gray-400 bg-cover">
-          {image || adminData?.image ? (
-            <Image
-              className="object-cover"
-              fill
-              src={
-                typeof image === "string"
-                  ? image
-                  : image instanceof File
-                    ? URL.createObjectURL(image)
-                    : adminData?.image || ""
-              }
-              alt="Imagem do administrador"
-            />
-          ) : (
-            <Camera />
-          )}
-        </div>
-        <div>
-          <input
-            type="file"
-            ref={inputUpload}
-            accept=".gif,.jpg,.png,.svg"
-            className="hidden"
-            onChange={handleImageChange}
-          />
-          <button
-            onClick={() => inputUpload?.current?.click()}
-            className="h-[74px] w-full rounded-[12px] border border-solid border-[#DEE2E6] transition-all hover:scale-[103%] sm:min-w-[362px]"
+    <>
+      <TransitionModal
+        isOpen={isOpen}
+        title={adminData ? "Editar Administrador" : "Novo Administrador"}
+        description={
+          adminData
+            ? "Edite as informações do administrador"
+            : "Preencha as informações para adicionar um novo administrador"
+        }
+        onOpenChange={handleClose}
+        confirmBtn={
+          <Button
+            variant="icon"
+            size="lg"
+            className="w-[210px] bg-[#202425]"
+            loading={loading}
+            onClick={() => handleSubmit(handleForm)()}
           >
-            <div className="flex h-[42px] flex-col gap-1">
-              <div className="flex justify-center gap-1">
-                <h1 className="text-[14px] font-semibold">
-                  Clique para fazer upload
-                </h1>
-              </div>
-              <h3 className="text-center text-[12px] font-normal text-[#475467]">
-                SVG, PNG, JPG or GIF (max. 800x400px)
-              </h3>
-            </div>
-          </button>
-        </div>
-      </div>
-      <form
-        className={`flex flex-col gap-y-4`}
-        onSubmit={handleSubmit(handleForm)}
+            {adminData ? "Salvar Alterações" : "Registrar"}
+          </Button>
+        }
+        cancelBtn={
+          <Button
+            onClick={handleClose}
+            type="button"
+            variant="outline-black"
+            size="lg"
+            className="w-[210px] text-sm"
+          >
+            Cancelar
+          </Button>
+        }
       >
-        <div className="w-full">
-          <InputField
-            formErrors={errors}
-            name="ownerBasicInfo.name"
-            className={inputClassName}
-            label="Nome Completo"
-            register={register}
-            placeholder="Digite aqui"
-          />
+        {" "}
+        {adminData && (
+          <button
+            type="button"
+            onClick={() => {
+              console.log("botão de exclusão clicado");
+              setIsDeleteModalOpen(true);
+            }}
+            className="absolute right-5 top-5 transition-all hover:scale-110"
+          >
+            <Image
+              src={"/icons/commonArea/trash.svg"}
+              width={30}
+              height={30}
+              alt="Icon de remoção"
+            />
+          </button>
+        )}
+        <div className="flex justify-between max-sm:flex-col">
+          <div className="relative mb-6 flex h-[64px] w-[64px] items-center justify-center overflow-hidden rounded-full bg-gray-400 bg-cover">
+            {image || adminData?.image ? (
+              <Image
+                className="object-cover"
+                fill
+                src={
+                  typeof image === "string"
+                    ? image
+                    : image instanceof File
+                      ? URL.createObjectURL(image)
+                      : adminData?.image || ""
+                }
+                alt="Imagem do administrador"
+              />
+            ) : (
+              <Camera />
+            )}
+          </div>
+          <div>
+            <input
+              type="file"
+              ref={inputUpload}
+              accept=".gif,.jpg,.png,.svg"
+              className="hidden"
+              onChange={handleImageChange}
+            />
+            <button
+              onClick={() => inputUpload?.current?.click()}
+              className="h-[74px] w-full rounded-[12px] border border-solid border-[#DEE2E6] transition-all hover:scale-[103%] sm:min-w-[362px]"
+            >
+              <div className="flex h-[42px] flex-col gap-1">
+                <div className="flex justify-center gap-1">
+                  <h1 className="text-[14px] font-semibold">
+                    Clique para fazer upload
+                  </h1>
+                </div>
+                <h3 className="text-center text-[12px] font-normal text-[#475467]">
+                  SVG, PNG, JPG or GIF (max. 800x400px)
+                </h3>
+              </div>
+            </button>
+          </div>
         </div>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <InputField
-            name="ownerBasicInfo.cpf"
-            className={"w-full border-[#DEE2E6] bg-[#F8F9FA]"}
-            label="CPF"
-            mask={"999.999.999-99"}
-            register={register}
-            formErrors={errors}
-            placeholder="000.000.000-00"
-          />
-          <SelectField
-            name={"ownerBasicInfo.maritalStatus"}
-            className={inputClassName}
-            label="Estado Civil"
-            control={control}
-            formErrors={errors}
-            options={maritalStatusOptions}
-          />
-        </div>
-        <div className="flex w-full gap-3 max-sm:flex-wrap">
-          <InputField
-            name="ownerBasicInfo.rg"
-            className={"w-full border-[#DEE2E6] bg-[#F8F9FA]"}
-            label="RG"
-            register={register}
-            formErrors={errors}
-            placeholder="Digite aqui"
-          />
-          <InputField
-            name="ownerBasicInfo.emitter"
-            className={"w-full border-[#DEE2E6] bg-[#F8F9FA]"}
-            label="Órgão Emissor"
-            register={register}
-            formErrors={errors}
-            placeholder="Digite aqui"
-          />
-        </div>
-        <div className="w-full">
-          <InputField
-            name="ownerEmail"
-            className={"w-full border-[#DEE2E6] bg-[#F8F9FA]"}
-            label="Email"
-            register={register}
-            formErrors={errors}
-            placeholder="Digite aqui"
-          />
-        </div>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <InputField
-            name="ownerBasicInfo.profession"
-            className={"w-full border-[#DEE2E6] bg-[#F8F9FA]"}
-            label="Profissão"
-            register={register}
-            formErrors={errors}
-            placeholder="Digite aqui"
-          />
-          <SelectField
-            name={"ownerBasicInfo.adminRole"}
-            className={inputClassName}
-            label="Cargo"
-            control={control}
-            formErrors={errors}
-            options={adminRoleOptions}
-          />
-        </div>
-        <div className="w-full">
-          <AddressInputsModal
-            control={control}
-            inputClassName={inputClassName}
-            register={register}
-            formErrors={errors}
-            zodObj="ownerAddressData"
-            setValue={setValue}
-            watchCep={watch("ownerAddressData.cep") ?? ""}
-          />
-        </div>
-      </form>
-    </TransitionModal>
+        <form
+          className={`flex flex-col gap-y-4`}
+          onSubmit={handleSubmit(handleForm)}
+        >
+          <div className="w-full">
+            <InputField
+              formErrors={errors}
+              name="ownerBasicInfo.name"
+              className={inputClassName}
+              label="Nome Completo"
+              register={register}
+              placeholder="Digite aqui"
+            />
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <InputField
+              name="ownerBasicInfo.cpf"
+              className={"w-full border-[#DEE2E6] bg-[#F8F9FA]"}
+              label="CPF"
+              mask={"999.999.999-99"}
+              register={register}
+              formErrors={errors}
+              placeholder="000.000.000-00"
+            />
+            <SelectField
+              name={"ownerBasicInfo.maritalStatus"}
+              className={inputClassName}
+              label="Estado Civil"
+              control={control}
+              formErrors={errors}
+              options={maritalStatusOptions}
+            />
+          </div>
+          <div className="flex w-full gap-3 max-sm:flex-wrap">
+            <InputField
+              name="ownerBasicInfo.rg"
+              className={"w-full border-[#DEE2E6] bg-[#F8F9FA]"}
+              label="RG"
+              register={register}
+              formErrors={errors}
+              placeholder="Digite aqui"
+            />
+            <InputField
+              name="ownerBasicInfo.emitter"
+              className={"w-full border-[#DEE2E6] bg-[#F8F9FA]"}
+              label="Órgão Emissor"
+              register={register}
+              formErrors={errors}
+              placeholder="Digite aqui"
+            />
+          </div>
+          <div className="w-full">
+            <InputField
+              name="ownerEmail"
+              className={"w-full border-[#DEE2E6] bg-[#F8F9FA]"}
+              label="Email"
+              register={register}
+              formErrors={errors}
+              placeholder="Digite aqui"
+            />
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <InputField
+              name="ownerBasicInfo.profession"
+              className={"w-full border-[#DEE2E6] bg-[#F8F9FA]"}
+              label="Profissão"
+              register={register}
+              formErrors={errors}
+              placeholder="Digite aqui"
+            />
+            <SelectField
+              name={"ownerBasicInfo.adminRole"}
+              className={inputClassName}
+              label="Cargo"
+              control={control}
+              formErrors={errors}
+              options={adminRoleOptions}
+            />
+          </div>
+          <div className="w-full">
+            <AddressInputsModal
+              control={control}
+              inputClassName={inputClassName}
+              register={register}
+              formErrors={errors}
+              zodObj="ownerAddressData"
+              setValue={setValue}
+              watchCep={watch("ownerAddressData.cep") ?? ""}
+            />
+          </div>
+        </form>
+      </TransitionModal>
+      <DeleteAdminModal
+        isOpen={isDeleteModalOpen}
+        onOpenChange={setIsDeleteModalOpen}
+        adminData={adminData}
+        condoId={condoId}
+      ></DeleteAdminModal>
+    </>
   );
 }
