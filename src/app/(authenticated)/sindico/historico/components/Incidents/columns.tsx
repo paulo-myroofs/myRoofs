@@ -1,10 +1,10 @@
 import { useState } from "react";
 
 import { ColumnDef } from "@tanstack/react-table";
+import { Timestamp } from "firebase/firestore";
 
 import { OccurrenceEntity, Status } from "@/common/entities/occurrences";
 import Button from "@/components/atoms/Button/button";
-import { Timestamp } from "firebase/firestore";
 import Tag from "@/components/atoms/Tag/Tag";
 import useProfile from "@/hooks/queries/useProfile";
 import { errorToast, successToast } from "@/hooks/useAppToast";
@@ -32,16 +32,17 @@ const GetHousingName = ({ userId }: { userId: string }) => {
   return <p>{housingName ?? "Sem dados"}</p>;
 };
 
-const GetResponseDate = ({ responseDate }: { responseDate: Timestamp | undefined }) => {
+const GetResponseDate = ({
+  responseDate
+}: {
+  responseDate: Timestamp | undefined;
+}) => {
   if (!responseDate) return <p>Sem resposta</p>;
-  
+
   return (
-    <p>
-      {new Date(responseDate.seconds * 1000).toLocaleDateString("pt-BR")}
-    </p>
+    <p>{new Date(responseDate.seconds * 1000).toLocaleDateString("pt-BR")}</p>
   );
 };
-
 
 const GetStatus = ({ data }: { data: OccurrenceColumnData }) => {
   const handleUpdate = async () => {
@@ -149,6 +150,8 @@ export const columns: ColumnDef<OccurrenceColumnData>[] = [
   {
     accessorKey: "responseDate",
     header: "Data de resposta",
-    cell: ({ row }) => <GetResponseDate responseDate={row.original.responseDate} />
+    cell: ({ row }) => (
+      <GetResponseDate responseDate={row.original.responseDate} />
+    )
   }
 ];
