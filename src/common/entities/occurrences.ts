@@ -20,5 +20,5 @@ export interface OccurrenceEntity {
   response: string;
   formationName: string;
   appartmentNumber: number;
-  returnDate: Timestamp;
+  responseDate: Timestamp;
 }

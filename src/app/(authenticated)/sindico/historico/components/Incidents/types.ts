@@ -1,5 +1,5 @@
 import { Status } from "@/common/entities/occurrences";
-import { Timestamp } from "@/common/entities/timestamp";
+import { Timestamp } from "firebase/firestore";
 
 export enum Reaction {
   LIKE = "like",
