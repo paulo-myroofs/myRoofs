@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Timestamp } from "firebase/firestore";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
@@ -56,7 +57,8 @@ const SeeDetailsOccurrence: React.FC<SeeDetailsOccurrenceProps> = ({
       documentPath: `/occurrences/${occurenceData.id}`,
       data: {
         return: data.return,
-        reaction: data.reaction
+        reaction: data.reaction,
+        responseDate: Timestamp.now()
       }
     });
 
