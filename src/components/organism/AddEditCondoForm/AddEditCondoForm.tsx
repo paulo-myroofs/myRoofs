@@ -95,6 +95,7 @@ const AddEditCondoForm = ({
     },
     phone: condoData?.phone ? formatToPhoneMask(condoData?.phone) : "",
     floorsQty: (condoData?.floorsQty ?? "0").toString(),
+    aptQty: (condoData?.aptQty ?? "0").toString(),
     garageSpacesQty: (condoData?.garageQty ?? "0").toString()
   };
 
@@ -197,6 +198,7 @@ const AddEditCondoForm = ({
       housingOther:
         internalHabitationInputs.type === "Outro" ? housingOther : null,
       floorsQty: parseInt(data.floorsQty),
+      aptQty: parseInt(data.aptQty),
       garageQty: parseInt(data.garageSpacesQty),
       formationType: internalOrgInputs.type,
       formationNames: internalOrgInputs.names,
@@ -583,10 +585,19 @@ const AddEditCondoForm = ({
         <InputField
           name="floorsQty"
           className={`${inputClassName} disabled:opacity-50`}
-          label="Número de andares"
+          label="Número de andares/Quantidade de Formação"
           register={register}
           formErrors={errors}
           placeholder="Digite aqui a quantidade de andares"
+          disabled={isEditing}
+        />
+        <InputField
+          name="aptQty"
+          className={`${inputClassName} disabled:opacity-50`}
+          label="Apartamentos por andar/Quantidade de tipo de habitação"
+          register={register}
+          formErrors={errors}
+          placeholder="Digite aqui a quantidade de apartamentos"
           disabled={isEditing}
         />
         <InputField
