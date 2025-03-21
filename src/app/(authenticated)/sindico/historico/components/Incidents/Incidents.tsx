@@ -38,7 +38,8 @@ const IncidentsTable = () => {
               condoId: condoId as string,
               title: item.title,
               return: item.return,
-              reaction: item.reaction
+              reaction: item.reaction,
+              responseDate: item.responseDate
             }) as OccurrenceColumnData
         )
         .sort(

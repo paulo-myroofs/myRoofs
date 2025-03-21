@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { ColumnDef } from "@tanstack/react-table";
+import { Timestamp } from "firebase/firestore";
 
 import { OccurrenceEntity, Status } from "@/common/entities/occurrences";
 import Button from "@/components/atoms/Button/button";
@@ -16,6 +17,31 @@ import { OccurrenceColumnData } from "./types";
 const GetUserName = ({ userId }: { userId: string }) => {
   const { data: name } = useProfile(userId, (data) => data.name);
   return <p>{name}</p>;
+};
+
+const GetFormationName = ({ userId }: { userId: string }) => {
+  const { data: formationName } = useProfile(
+    userId,
+    (data) => data.formationName
+  );
+  return <p>{formationName}</p>;
+};
+
+const GetHousingName = ({ userId }: { userId: string }) => {
+  const { data: housingName } = useProfile(userId, (data) => data.housingName);
+  return <p>{housingName ?? "Sem dados"}</p>;
+};
+
+const GetResponseDate = ({
+  responseDate
+}: {
+  responseDate: Timestamp | undefined;
+}) => {
+  if (!responseDate) return <p>Sem resposta</p>;
+
+  return (
+    <p>{new Date(responseDate.seconds * 1000).toLocaleDateString("pt-BR")}</p>
+  );
 };
 
 const GetStatus = ({ data }: { data: OccurrenceColumnData }) => {
@@ -114,35 +140,18 @@ export const columns: ColumnDef<OccurrenceColumnData>[] = [
   {
     accessorKey: "formationName",
     header: "Formação",
-    cell: ({ row }) =>
-      row.original.formationName ? (
-        <p>{row.original.formationName}</p>
-      ) : (
-        <p>Sem dados</p>
-      )
+    cell: ({ row }) => <GetFormationName userId={row.original.userId} />
   },
   {
-    accessorKey: "AppartmentNumber",
+    accessorKey: "housingName",
     header: "Apartamento",
-    cell: ({ row }) =>
-      row.original.appartmentNumber ? (
-        <p>{row.original.appartmentNumber}</p>
-      ) : (
-        <p>Sem dados</p>
-      )
+    cell: ({ row }) => <GetHousingName userId={row.original.userId} />
   },
   {
-    accessorKey: "reponseDate",
+    accessorKey: "responseDate",
     header: "Data de resposta",
-    cell: ({ row }) =>
-      row.original.responseDate ? (
-        <p>
-          {new Date(
-            row.original.responseDate.seconds * 1000
-          ).toLocaleDateString()}
-        </p>
-      ) : (
-        <p>xx/xx/xxxx</p>
-      )
+    cell: ({ row }) => (
+      <GetResponseDate responseDate={row.original.responseDate} />
+    )
   }
 ];

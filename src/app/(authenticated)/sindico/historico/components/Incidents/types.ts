@@ -1,5 +1,6 @@
+import { Timestamp } from "firebase/firestore";
+
 import { Status } from "@/common/entities/occurrences";
-import { Timestamp } from "@/common/entities/timestamp";
 
 export enum Reaction {
   LIKE = "like",
@@ -19,6 +20,6 @@ export interface OccurrenceColumnData {
   return: string;
   reaction: Reaction;
   formationName: string;
-  appartmentNumber: string;
-  responseDate: Timestamp | null;
+  housingName: string;
+  responseDate?: Timestamp;
 }
