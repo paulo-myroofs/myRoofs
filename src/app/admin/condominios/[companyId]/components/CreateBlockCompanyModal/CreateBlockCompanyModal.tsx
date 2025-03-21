@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { inputClassName } from "@/app/contants";
 import Button from "@/components/atoms/Button/button";
+import LoadingComponent from "@/components/atoms/Loading/loading";
 import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
 import InputFieldForDelete from "@/components/molecules/InputField/InputFieldForDelete";
 import useCompanyUsers from "@/hooks/queries/companies/useCompanyUsers";
@@ -25,6 +26,7 @@ const CreateBlockCompanyModal = ({
 }: CreateBlockCompanyModalProps) => {
   const router = useRouter();
   const [inputValue, setInputValue] = useState("");
+  const [isBlocking, setIsBlocking] = useState(false);
   const { data: aptManagerData } = useCompanyUsers(companyData.id as string);
   const { data: employeeData } = useEmployeesByCondoData(condoData);
   const { data: residentData } = useResidentsByCondoData(condoData);
@@ -35,6 +37,7 @@ const CreateBlockCompanyModal = ({
   };
 
   const handleBlockCompany = async () => {
+    setIsBlocking(true);
     const managerPromises = aptManagerData?.map(
       async (manager: { id: string }) => {
         const { error } = await deactivateUserAuth(manager.id);
@@ -46,6 +49,7 @@ const CreateBlockCompanyModal = ({
 
     if (managerResults.some((result) => result !== null)) {
       errorToast("Erro ao bloquear a empresa. Por favor, tente novamente.");
+      setIsBlocking(false);
       return;
     }
 
@@ -60,6 +64,7 @@ const CreateBlockCompanyModal = ({
 
     if (employeeResults.some((result) => result !== null)) {
       errorToast("Erro ao bloquear a empresa. Por favor, tente novamente.");
+      setIsBlocking(false);
       return;
     }
 
@@ -74,6 +79,7 @@ const CreateBlockCompanyModal = ({
 
     if (residentResults.some((result) => result !== null)) {
       errorToast("Erro ao bloquear a empresa. Por favor, tente novamente.");
+      setIsBlocking(false);
       return;
     }
 
@@ -90,6 +96,7 @@ const CreateBlockCompanyModal = ({
     queryClient.invalidateQueries(["residents", condoData]);
     successToast("Empresa e seus condomínios bloqueados com sucesso!");
     router.push("/admin");
+    setIsBlocking(false);
   };
 
   const handleConfirmClick = () => {
@@ -114,8 +121,9 @@ const CreateBlockCompanyModal = ({
           size="lg"
           className=" w-[210px] bg-[#202425]"
           onClick={handleConfirmClick}
+          disabled={isBlocking}
         >
-          Confirmar
+          {isBlocking ? <LoadingComponent className="h-6 w-6" /> : "Confirmar"}
         </Button>
       }
       cancelBtn={
@@ -128,6 +136,7 @@ const CreateBlockCompanyModal = ({
           variant="outline-black"
           size="lg"
           className="w-[210px] text-sm"
+          disabled={isBlocking}
         >
           Cancelar
         </Button>
@@ -140,6 +149,7 @@ const CreateBlockCompanyModal = ({
         placeholder="Digite Aqui"
         value={inputValue}
         onChange={handleInputChange}
+        disabled={isBlocking}
       />
     </TransitionModal>
   );

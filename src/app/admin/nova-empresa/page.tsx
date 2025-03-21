@@ -188,15 +188,6 @@ const NewCompany = () => {
       const password = uuidV4().slice(0, 8);
       const companyId = uuid();
 
-      const { error: errorEmail } = await sendEmail(data.ownerEmail, password);
-
-      if (errorEmail) {
-        setLoading(false);
-        return errorToast(
-          "Não foi possível enviar email com credenciais, entre em contato."
-        );
-      }
-
       const { error, uid: aptManagerId } = await createUserAuth(
         data.ownerEmail,
         password
@@ -205,6 +196,18 @@ const NewCompany = () => {
       if (error || !aptManagerId) {
         setLoading(false);
         return errorToast(error ?? "Algo deu errado.");
+      } else {
+        const { error: errorEmail } = await sendEmail(
+          data.ownerEmail,
+          password
+        );
+
+        if (errorEmail) {
+          setLoading(false);
+          return errorToast(
+            "Não foi possível enviar email com credenciais, entre em contato."
+          );
+        }
       }
       const aptManagerData = {
         companyId,
