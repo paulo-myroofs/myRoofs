@@ -274,7 +274,6 @@ export default function CreateAdminModal({
           <button
             type="button"
             onClick={() => {
-              console.log("botão de exclusão clicado");
               setIsDeleteModalOpen(true);
             }}
             className="absolute right-5 top-5 transition-all hover:scale-110"
