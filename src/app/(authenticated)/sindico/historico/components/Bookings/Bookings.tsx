@@ -17,6 +17,7 @@ const BookingsTable = () => {
   const condoId = storageGet<string>("condoId");
   const [filterValue, setFilterValue] = useState("");
   const { data: bookingData } = useBookingByCondoId(condoId as string);
+  console.log(bookingData);
   const filteredData = bookingData?.filter((item) =>
     item.area?.toLocaleLowerCase().includes(filterValue.toLocaleLowerCase())
   );
