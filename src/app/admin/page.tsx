@@ -46,7 +46,8 @@ export default function AdminPage() {
         <div className="flex items-center justify-between">
           <TitleAtom>
             {" "}
-            Administradoras <span className="hidden sm:inline">Cadastradas</span>{" "}
+            Administradoras{" "}
+            <span className="hidden sm:inline">Cadastradas</span>{" "}
           </TitleAtom>
           <Button
             onClick={() => router.push("/admin/nova-empresa")}
