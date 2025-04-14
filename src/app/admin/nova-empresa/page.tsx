@@ -162,7 +162,7 @@ const NewCompany = () => {
     }
 
     if (!image) {
-      return errorToast("Adicione uma imagem da empresa.");
+      return errorToast("Adicione uma imagem da administradora.");
     }
 
     setLoading(true);
@@ -269,7 +269,7 @@ const NewCompany = () => {
       });
 
       successToast(
-        "Nova empresa adicionada. Peça pra responsável legal acessar o email."
+        "Nova administradora adicionada. Peça pra responsável legal acessar o email."
       );
     } else {
       const aptManagerData = {
@@ -321,7 +321,7 @@ const NewCompany = () => {
         documentPath: `companies/${companyId}`,
         data: companyData
       });
-      successToast("Empresa atualizada.");
+      successToast("Administradora atualizada.");
     }
     setLoading(false);
     queryClient.invalidateQueries(["companies", "activeCompanies"]);
@@ -356,7 +356,7 @@ const NewCompany = () => {
       <div className="space-y-4 ">
         <TitleAtom className="text-center">
           {" "}
-          {company ? "Editar Empresa" : "Nova Empresa"}
+          {company ? "Editar Administradora" : "Nova Administradora"}
         </TitleAtom>
 
         <div className="mt-4 grid grid-cols-1 gap-x-2 gap-y-4 sm:grid-cols-2">
@@ -365,7 +365,7 @@ const NewCompany = () => {
               formErrors={errors}
               name="name"
               className={inputClassName}
-              label="Nome da empresa"
+              label="Nome da administradora"
               register={register}
               placeholder="Digite o nome"
             />
@@ -380,7 +380,7 @@ const NewCompany = () => {
             />
           </div>
           <div className="flex flex-col gap-1">
-            <Label>Imagem da empresa </Label>
+            <Label>Imagem da administradora </Label>
             <input
               type="file"
               ref={inputUpload}
@@ -407,7 +407,7 @@ const NewCompany = () => {
                     }
                     fill
                     sizes="440px"
-                    alt="Imagem da empresa"
+                    alt="Imagem da administradora"
                     className="object-cover"
                   />
                 </>

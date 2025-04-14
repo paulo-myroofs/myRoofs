@@ -37,7 +37,7 @@ function AptManagerOnlyFeature({ children }: Props): JSX.Element {
       ) {
         if (endedCompaniesIds?.includes(user.companyId)) {
           errorToast(
-            "A empresa associada a você foi encerrada. Entre em contato com o seu administrador."
+            "A administradora associada a você foi encerrada. Entre em contato com o seu administrador."
           );
           logout();
         }

@@ -28,7 +28,7 @@ export default function AdminPage() {
   return (
     <section className="mx-auto w-11/12 max-w-[1500px]  space-y-16">
       <div className="space-y-8">
-        <TitleAtom> Histórico de Empresas </TitleAtom>
+        <TitleAtom> Histórico de Administradoras </TitleAtom>
         {companies && companies.length > 0 ? (
           <div className="flex flex-wrap gap-x-12 gap-y-6">
             {companies?.map((item) => (
@@ -42,7 +42,7 @@ export default function AdminPage() {
             ))}
           </div>
         ) : (
-          <p> Sem resultados empresas encerradas ainda.</p>
+          <p> Sem resultados administradoras encerradas ainda.</p>
         )}
       </div>
 

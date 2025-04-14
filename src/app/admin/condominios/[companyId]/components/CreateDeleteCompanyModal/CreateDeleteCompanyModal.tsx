@@ -32,7 +32,9 @@ const CreateDeleteCompanyModal = ({
     const { error } = await deleteUserAuth(companyData?.aptManagerId as string);
 
     if (error) {
-      errorToast("Erro ao encerrar a empresa. Por favor, tente novamente.");
+      errorToast(
+        "Erro ao encerrar a administradora. Por favor, tente novamente."
+      );
       return;
     }
 
@@ -60,7 +62,7 @@ const CreateDeleteCompanyModal = ({
 
     queryClient.invalidateQueries(["companies"]);
     queryClient.invalidateQueries(["condominiums", companyData.id]);
-    successToast("Empresa e seus condomínios encerrados com sucesso!");
+    successToast("Administradora e seus condomínios encerrados com sucesso!");
     router.push("/admin");
   };
 
@@ -69,7 +71,7 @@ const CreateDeleteCompanyModal = ({
       handleEndCompany();
     } else {
       errorToast(
-        "O nome da empresa não corresponde. Por favor, tente novamente."
+        "O nome da administradora não corresponde. Por favor, tente novamente."
       );
     }
   };
@@ -78,8 +80,8 @@ const CreateDeleteCompanyModal = ({
     <TransitionModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title="Deseja mesmo encerrar a empresa?"
-      description="Ao encerrar a empresa, todos os condomínios cadastrados serão encerrados também."
+      title="Deseja mesmo encerrar a administradora?"
+      description="Ao encerrar a administradora, todos os condomínios cadastrados serão encerrados também."
       confirmBtn={
         <Button
           variant="icon"

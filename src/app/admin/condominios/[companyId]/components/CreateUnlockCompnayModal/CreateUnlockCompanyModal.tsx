@@ -47,7 +47,9 @@ const CreateUnlockCompanyModal = ({
     const managerResults = await Promise.all(managerPromises || []);
 
     if (managerResults.some((result) => result !== null)) {
-      errorToast("Erro ao desbloquear a empresa. Por favor, tente novamente.");
+      errorToast(
+        "Erro ao desbloquear a administradora. Por favor, tente novamente."
+      );
       return;
     }
 
@@ -61,7 +63,9 @@ const CreateUnlockCompanyModal = ({
     const employeeResults = await Promise.all(employeePromises || []);
 
     if (employeeResults.some((result) => result !== null)) {
-      errorToast("Erro ao desbloquear a empresa. Por favor, tente novamente.");
+      errorToast(
+        "Erro ao desbloquear a administradora. Por favor, tente novamente."
+      );
       setIsUnlocking(false);
       return;
     }
@@ -76,7 +80,9 @@ const CreateUnlockCompanyModal = ({
     const residentResults = await Promise.all(residentPromises || []);
 
     if (residentResults.some((result) => result !== null)) {
-      errorToast("Erro ao desbloquear a empresa. Por favor, tente novamente.");
+      errorToast(
+        "Erro ao desbloquear a administradora. Por favor, tente novamente."
+      );
       setIsUnlocking(false);
       return;
     }
@@ -89,7 +95,9 @@ const CreateUnlockCompanyModal = ({
     queryClient.invalidateQueries(["companies", "activeCompanies"]);
     queryClient.invalidateQueries(["companies", "blockedCompanies"]);
     queryClient.invalidateQueries(["companies", companyData?.id]);
-    successToast("Empresa e seus condomínios desbloqueados com sucesso!");
+    successToast(
+      "Administradora e seus condomínios desbloqueados com sucesso!"
+    );
     router.push("/admin");
   };
 
@@ -98,7 +106,7 @@ const CreateUnlockCompanyModal = ({
       handleUnlockCompany();
     } else {
       errorToast(
-        "O nome da empresa não corresponde. Por favor, tente novamente."
+        "O nome da administradora não corresponde. Por favor, tente novamente."
       );
     }
   };
@@ -107,8 +115,8 @@ const CreateUnlockCompanyModal = ({
     <TransitionModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title="Deseja realmente desbloquear a empresa?"
-      description="Ao desbloquear a empresa, todos os condomínios cadastrados serão desbloqueados também."
+      title="Deseja realmente desbloquear a administradora?"
+      description="Ao desbloquear a administradora, todos os condomínios cadastrados serão desbloqueados também."
       confirmBtn={
         <Button
           variant="icon"
