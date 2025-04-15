@@ -84,11 +84,11 @@ export default function CompanyCondos() {
                 router.push(`/admin/nova-empresa?companyId=${company.id}`);
               }}
             >
-              Editar Empresa
+              Editar Administradora
             </Button>
             <Button onClick={() => setDeleteModalOpen(true)}>
               {" "}
-              Encerrar Empresa
+              Encerrar Administradora
             </Button>
           </div>
         </div>

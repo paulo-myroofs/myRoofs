@@ -48,7 +48,9 @@ const CreateBlockCompanyModal = ({
     const managerResults = await Promise.all(managerPromises || []);
 
     if (managerResults.some((result) => result !== null)) {
-      errorToast("Erro ao bloquear a empresa. Por favor, tente novamente.");
+      errorToast(
+        "Erro ao bloquear a administradora. Por favor, tente novamente."
+      );
       setIsBlocking(false);
       return;
     }
@@ -63,7 +65,9 @@ const CreateBlockCompanyModal = ({
     const employeeResults = await Promise.all(employeePromises || []);
 
     if (employeeResults.some((result) => result !== null)) {
-      errorToast("Erro ao bloquear a empresa. Por favor, tente novamente.");
+      errorToast(
+        "Erro ao bloquear a administradora. Por favor, tente novamente."
+      );
       setIsBlocking(false);
       return;
     }
@@ -78,7 +82,9 @@ const CreateBlockCompanyModal = ({
     const residentResults = await Promise.all(residentPromises || []);
 
     if (residentResults.some((result) => result !== null)) {
-      errorToast("Erro ao bloquear a empresa. Por favor, tente novamente.");
+      errorToast(
+        "Erro ao bloquear a administradora. Por favor, tente novamente."
+      );
       setIsBlocking(false);
       return;
     }
@@ -94,7 +100,7 @@ const CreateBlockCompanyModal = ({
     queryClient.invalidateQueries(["users", companyData.id]);
     queryClient.invalidateQueries(["employees", condoData]);
     queryClient.invalidateQueries(["residents", condoData]);
-    successToast("Empresa e seus condomínios bloqueados com sucesso!");
+    successToast("Administradora e seus condomínios bloqueados com sucesso!");
     router.push("/admin");
     setIsBlocking(false);
   };
@@ -104,7 +110,7 @@ const CreateBlockCompanyModal = ({
       handleBlockCompany();
     } else {
       errorToast(
-        "O nome da empresa não corresponde. Por favor, tente novamente."
+        "O nome da administradora não corresponde. Por favor, tente novamente."
       );
     }
   };
@@ -113,8 +119,8 @@ const CreateBlockCompanyModal = ({
     <TransitionModal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      title="Deseja realmente bloquear a empresa?"
-      description="Ao bloquear a empresa, todos os condomínios cadastrados serão bloqueados também."
+      title="Deseja realmente bloquear a administradora?"
+      description="Ao bloquear a administradora, todos os condomínios cadastrados serão bloqueados também."
       confirmBtn={
         <Button
           variant="icon"

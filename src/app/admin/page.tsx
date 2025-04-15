@@ -46,7 +46,8 @@ export default function AdminPage() {
         <div className="flex items-center justify-between">
           <TitleAtom>
             {" "}
-            Empresas <span className="hidden sm:inline">Cadastradas</span>{" "}
+            Administradoras{" "}
+            <span className="hidden sm:inline">Cadastradas</span>{" "}
           </TitleAtom>
           <Button
             onClick={() => router.push("/admin/nova-empresa")}
@@ -55,12 +56,12 @@ export default function AdminPage() {
             className="w-[140px] bg-[#202425] sm:w-[180px]"
           >
             <Plus className="hidden sm:inline" />
-            Nova empresa{" "}
+            Nova administradora{" "}
           </Button>
         </div>
 
         <div>
-          <h2 className="text-lg font-semibold">Empresas Ativas</h2>
+          <h2 className="text-lg font-semibold">Administradoras Ativas</h2>
           {activeCompanies && activeCompanies.length > 0 ? (
             <div className="flex flex-wrap gap-x-12 gap-y-6">
               {activeCompanies.map((item) => (
@@ -73,12 +74,12 @@ export default function AdminPage() {
               ))}
             </div>
           ) : (
-            <p>Sem empresas ativas cadastradas ainda.</p>
+            <p>Sem administradoras ativas cadastradas ainda.</p>
           )}
         </div>
 
         <div>
-          <h2 className="text-lg font-semibold">Empresas Bloqueadas</h2>
+          <h2 className="text-lg font-semibold">Administradoras Bloqueadas</h2>
           {blockedCompanies && blockedCompanies.length > 0 ? (
             <div className="flex flex-wrap gap-x-12 gap-y-6">
               {blockedCompanies.map((item) => (
@@ -91,7 +92,7 @@ export default function AdminPage() {
               ))}
             </div>
           ) : (
-            <p>Sem empresas bloqueadas cadastradas ainda.</p>
+            <p>Sem administradoras bloqueadas cadastradas ainda.</p>
           )}
         </div>
       </section>

@@ -136,7 +136,7 @@ const AddEditCondoForm = ({
       return errorToast("CNPJ não é válido.");
     }
     if (!image) {
-      return errorToast("Adicione uma imagem da empresa.");
+      return errorToast("Adicione uma imagem do condomínio.");
     }
 
     if (!internalOrgInputs) {
@@ -362,7 +362,7 @@ const AddEditCondoForm = ({
                   }
                   fill
                   sizes="440px"
-                  alt="Imagem da empresa"
+                  alt="Imagem do condomínio"
                   className="object-cover"
                 />
               ) : (
