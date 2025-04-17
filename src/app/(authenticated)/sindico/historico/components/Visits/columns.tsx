@@ -2,10 +2,12 @@ import { useState } from "react";
 
 import { ColumnDef } from "@tanstack/react-table";
 
+import { ResidentEntity } from "@/common/entities/resident";
 import { VisitEntity } from "@/common/entities/visits";
 import AuthEnterModal from "@/components/atoms/AuthEnterModal/AuthEnterModal";
 import Button from "@/components/atoms/Button/button";
 import Tag from "@/components/atoms/Tag/Tag";
+import useProfile from "@/hooks/queries/useProfile";
 import { errorToast, successToast } from "@/hooks/useAppToast";
 import { queryClient } from "@/store/providers/queryClient";
 import { updateFirestoreDoc } from "@/store/services";
@@ -15,11 +17,14 @@ import { timestampToDate } from "@/utils/timestampToDate";
 import CreateVisitsModal from "./components/CreateVisitsModal";
 
 const Validate = ({ visitData }: { visitData: VisitEntity }) => {
+  const { data: residentData } = useProfile<ResidentEntity>(
+    visitData.residentId || ""
+  );
   const [modalOpen, setModalOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
   const onConfirm = async () => {
-    if (visitData.validationCode === inputValue) {
+    if (residentData?.deliveryCode === inputValue) {
       await updateFirestoreDoc({
         documentPath: `/visits/${visitData.id}`,
         data: { wasValidated: true }
