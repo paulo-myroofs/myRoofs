@@ -13,7 +13,7 @@ import SelectField from "@/components/molecules/SelectField/selectField";
 import useCondo from "@/hooks/queries/condos/useCondo";
 import useResidentsByCondoId from "@/hooks/queries/residents/useResidentsByCondoId";
 import useProfile from "@/hooks/queries/useProfile";
-import { successToast, errorToast } from "@/hooks/useAppToast";
+import { errorToast, successToast } from "@/hooks/useAppToast";
 import useAuth from "@/hooks/useAuth";
 import { queryClient } from "@/store/providers/queryClient";
 import { updateFirestoreDoc } from "@/store/services";
@@ -104,7 +104,7 @@ const ValidateDeliverLostFound = ({
       if (resident.deliveryCode) {
         setDeliveryCode(resident.deliveryCode);
       }
-      setDeliveredUserId(resident.id);
+      setDeliveredUserId(selectedResidentUid);
       setDeliveredUserName(resident.name);
     }
     setModalOpen(true);
