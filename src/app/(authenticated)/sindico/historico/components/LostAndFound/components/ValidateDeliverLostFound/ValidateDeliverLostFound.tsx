@@ -5,14 +5,15 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { inputClassName } from "@/app/contants";
+import { ResidentEntity } from "@/common/entities/resident";
 import AuthEnterModal from "@/components/atoms/AuthEnterModal/AuthEnterModal";
 import Button from "@/components/atoms/Button/button";
 import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
 import SelectField from "@/components/molecules/SelectField/selectField";
 import useCondo from "@/hooks/queries/condos/useCondo";
-import useResidentsByUserData from "@/hooks/queries/residents/useResidentByUserData";
 import useResidentsByCondoId from "@/hooks/queries/residents/useResidentsByCondoId";
-import { successToast, errorToast } from "@/hooks/useAppToast";
+import useProfile from "@/hooks/queries/useProfile";
+import { errorToast, successToast } from "@/hooks/useAppToast";
 import useAuth from "@/hooks/useAuth";
 import { queryClient } from "@/store/providers/queryClient";
 import { updateFirestoreDoc } from "@/store/services";
@@ -88,22 +89,23 @@ const ValidateDeliverLostFound = ({
       )
       ?.map((item) => ({
         label: item.name,
-        value: item.name
+        value: item.name,
+        uid: item.id
       })) ?? [];
 
-  const { data: chosenResidentData } = useResidentsByUserData(
-    watch("formation"),
-    watch("apartment"),
-    watch("resident")
-  );
+  const selectedResidentUid =
+    residentsOptions.find((resident) => resident.value === watch("resident"))
+      ?.uid || "";
+
+  const { data: resident } = useProfile<ResidentEntity>(selectedResidentUid);
 
   const handleForm = async () => {
-    if (chosenResidentData && chosenResidentData.length > 0) {
-      if (chosenResidentData[0].deliveryCode) {
-        setDeliveryCode(chosenResidentData[0].deliveryCode);
+    if (resident) {
+      if (resident.deliveryCode) {
+        setDeliveryCode(resident.deliveryCode);
       }
-      setDeliveredUserId(chosenResidentData[0].id);
-      setDeliveredUserName(chosenResidentData[0].name);
+      setDeliveredUserId(selectedResidentUid);
+      setDeliveredUserName(resident.name);
     }
     setModalOpen(true);
   };
