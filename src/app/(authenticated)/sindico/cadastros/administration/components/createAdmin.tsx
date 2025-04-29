@@ -176,7 +176,7 @@ export default function CreateAdminModal({
         number: data.ownerAddressData.number,
         cep: unmask(data.ownerAddressData.cep),
         city: data.ownerAddressData.city,
-        status: Status.INACTIVE,
+        status: Status.ACTIVE,
         createdAt: Timestamp.now(),
         blockedAt: null
       };
