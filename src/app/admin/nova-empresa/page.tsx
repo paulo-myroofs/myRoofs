@@ -230,7 +230,7 @@ const NewCompany = () => {
         cep: unmask(data.ownerAddressData.cep),
         city: data.ownerAddressData.city,
         adminRole: data.ownerBasicInfo.adminRole,
-        status: Status.INACTIVE
+        status: Status.ACTIVE
       };
 
       await setFirestoreDoc<AptManagerEntity>({
