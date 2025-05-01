@@ -98,10 +98,7 @@ const MoreInfoCondo = () => {
             <TitleAtom> {condo?.name}</TitleAtom>
           </div>
           <div className="flex gap-4">
-            <Button onClick={() => setModalOpen(true)}>
-              {" "}
-              Publicidade
-            </Button>
+            <Button onClick={() => setModalOpen(true)}>Publicidade</Button>
             <Button onClick={() => setModalOpen(true)}>
               {" "}
               Encerrar Condomínio
