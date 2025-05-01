@@ -97,10 +97,16 @@ const MoreInfoCondo = () => {
             />
             <TitleAtom> {condo?.name}</TitleAtom>
           </div>
-          <Button onClick={() => setModalOpen(true)}>
-            {" "}
-            Encerrar Condomínio
-          </Button>
+          <div className="flex gap-4">
+            <Button onClick={() => setModalOpen(true)}>
+              {" "}
+              Publicidade
+            </Button>
+            <Button onClick={() => setModalOpen(true)}>
+              {" "}
+              Encerrar Condomínio
+            </Button>
+          </div>
         </div>
 
         <Accordion type="single" collapsible className="w-full">
