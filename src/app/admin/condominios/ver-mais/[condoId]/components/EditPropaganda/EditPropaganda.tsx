@@ -1,41 +1,23 @@
-import React, { useRef, useEffect } from "react";
-import Button from "@/components/atoms/Button/button";
-import Label from "@/components/atoms/Label/label";
-import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
+import React, { useRef, useEffect, useState } from "react";
+
+import { Timestamp } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
-import { uploadImage, deleteImage } from "@/store/services/firebaseStorage";
-import { errorToast, successToast } from "@/hooks/useAppToast";
-import { Timestamp } from "firebase/firestore";
+
 import { inputClassName } from "@/app/contants";
-import { useState } from "react";
+import Button from "@/components/atoms/Button/button";
+import Label from "@/components/atoms/Label/label";
+import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
+import { errorToast, successToast } from "@/hooks/useAppToast";
+import { uploadImage, deleteImage } from "@/store/services/firebaseStorage";
 
 import { EditPropagandaProps } from "./types";
 
-interface NoticeModalProps {
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-  title: string;
-  description: string;
-  readOnly: boolean;
-  loading: boolean;
-  noticeData?: any;
-  errors: any;
-  register: any;
-  handleSubmit: any;
-  handleForm: any;
-  reset: () => void;
-  setImage: (image: File | null) => void;
-  handleImageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  image: string | File | null;
-  inputClassName?: string;
-}
-
-export const NoticeModal: React.FC<EditPropagandaProps> = ({
+export const PropagaModal: React.FC<EditPropagandaProps> = ({
   isOpen,
   onOpenChange,
-  noticeData,
+  condoId
 }) => {
   const inputUpload = useRef<HTMLInputElement | null>(null);
   const [loading, setLoading] = useState(false);
@@ -123,11 +105,11 @@ export const NoticeModal: React.FC<EditPropagandaProps> = ({
     }
   };
 
-  useEffect(() => {
-    if (noticeData && noticeData.image && !image) {
-      setImage(noticeData.image);
-    }
-  }, [noticeData, image]);
+  // useEffect(() => {
+  // if (noticeData && noticeData.image && !image) {
+  //   setImage(noticeData.image);
+  // }
+  // }, [noticeData, image]);
 
   return (
     <TransitionModal
@@ -137,26 +119,26 @@ export const NoticeModal: React.FC<EditPropagandaProps> = ({
       description={"Escolha os 4 banners que deseja adicionar"}
       confirmBtn={
         <Button
-        variant="icon"
-        size="lg"
-        className="w-[210px] bg-[#202425]"
-        loading={loading}
+          variant="icon"
+          size="lg"
+          className="w-[210px] bg-[#202425]"
+          loading={loading}
         >
-        {noticeData ? "Editar " : "Registrar"}
+          Confirmar
         </Button>
       }
       cancelBtn={
         <Button
-        onClick={() => {
+          onClick={() => {
             setImage(null);
             onOpenChange(false);
-        }}
-        type="button"
-        variant="outline-black"
-        size="lg"
-        className="w-[210px] text-sm"
+          }}
+          type="button"
+          variant="outline-black"
+          size="lg"
+          className="w-[210px] text-sm"
         >
-        Cancelar
+          Cancelar
         </Button>
       }
     >
@@ -179,25 +161,12 @@ export const NoticeModal: React.FC<EditPropagandaProps> = ({
         >
           {image ? (
             <>
-                <Link
-                  target="_blank"
-                  href={
-                    typeof image === "string"
-                      ? image
-                      : URL.createObjectURL(image)
-                  }
-                >
-                  <Image
-                    src={
-                      typeof image === "string"
-                        ? image
-                        : URL.createObjectURL(image)
-                    }
-                    fill
-                    alt="Imagem do aviso"
-                    className="object-contain"
-                  />
-                </Link>
+              <Link
+                target="_blank"
+                href={
+                  typeof image === "string" ? image : URL.createObjectURL(image)
+                }
+              >
                 <Image
                   src={
                     typeof image === "string"
@@ -208,7 +177,15 @@ export const NoticeModal: React.FC<EditPropagandaProps> = ({
                   alt="Imagem do aviso"
                   className="object-contain"
                 />
-              
+              </Link>
+              <Image
+                src={
+                  typeof image === "string" ? image : URL.createObjectURL(image)
+                }
+                fill
+                alt="Imagem do aviso"
+                className="object-contain"
+              />
             </>
           ) : (
             <strong>Clique para fazer upload</strong>
