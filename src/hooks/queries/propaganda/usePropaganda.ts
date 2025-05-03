@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { createFirestoreDoc, getFirestoreDocs } from "@/store/services";
+import { createFirestoreDoc, getFirestoreCollection } from "@/store/services";
 import { errorToast, successToast } from "@/hooks/useAppToast";
 
 interface Propaganda {
@@ -9,30 +9,29 @@ interface Propaganda {
     createdAt?: Date;
 }
 
-export const usePropaganda = (condoId: string) => {
-    const [loading, setLoading] = useState(false);
-    const [propagandas, setPropagandas] = useState<Propaganda[]>([]);
+export function getPropagandasQueryKey(condoId: string) {
+    return ["propagandas", condoId];
+}
 
-    const fetchPropagandas = async () => {
-        setLoading(true);
-        try {
-            const docs = await getFirestoreDocs<Propaganda>({
-                collectionPath: `condo/${condoId}/propaganda`
-            });
-            setPropagandas(docs);
-        } catch (error) {
-            errorToast("Erro ao buscar propagandas. Tente novamente.")
-        } finally {
-            setLoading(false);
-        }
-    };
+export const getPropagandasQueryFn = (condoId: string) => {
+    return () =>
+        getFirestoreCollection<Propaganda>({
+            collectionPath: `condominiums/${condoId}/propagandas`
+        }).then((res) => res.data);
+};
+
+export const usePropaganda = (condoId: string) => {
+    const { data: propagandas = [], isLoading: loading, refetch } = useQuery({
+        queryKey: getPropagandasQueryKey(condoId),
+        queryFn: getPropagandasQueryFn(condoId),
+        enabled: !!condoId
+    });
 
     const savePropaganda = async (imageUrl: string) => {
         if (propagandas.length >= 4) {
             return errorToast("Você só pode adicionar até 4 propagandas.");
         }
 
-        setLoading(true);
         try {
             await createFirestoreDoc({
                 collectionPath: `condominiums/${condoId}/propagandas`,
@@ -42,19 +41,15 @@ export const usePropaganda = (condoId: string) => {
                 }
             });
             successToast("Propaganda adicionada com sucesso.");
-            queryClient.invalidateQueries(["propagandas", condoId]);
-            await fetchPropagandas();
+            refetch();
         } catch (error) {
             errorToast("Erro ao salvar propaganda. Tente novamente.");
-        } finally {
-            setLoading(false);
         }
     };
 
     return {
         propagandas,
         loading,
-        fetchPropagandas,
         savePropaganda
     };
 };

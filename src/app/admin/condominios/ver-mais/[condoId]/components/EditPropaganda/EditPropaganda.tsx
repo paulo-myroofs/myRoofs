@@ -11,6 +11,7 @@ import Label from "@/components/atoms/Label/label";
 import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
 import { errorToast, successToast } from "@/hooks/useAppToast";
 import { uploadImage, deleteImage } from "@/store/services/firebaseStorage";
+import { usePropaganda } from "@/hooks/queries/propaganda/usePropaganda.ts";
 
 import { EditPropagandaProps } from "./types";
 
@@ -20,83 +21,10 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
   condoId
 }) => {
   const inputUpload = useRef<HTMLInputElement | null>(null);
-  const [loading, setLoading] = useState(false);
   const [image, setImage] = useState<File | string | null>(null);
 
-  // const handleForm = async (data: AddWarningForm) => {
-  //   if (!condoId) return;
-  //   if (!image) {
-  //     return errorToast("Adicione uma imagem.");
-  //   }
-
-  //   setLoading(true);
-
-  //   let imageUrl = noticeData?.image ?? undefined;
-  //   if (typeof image !== "string" && !!image) {
-  //     const { image: url, error: errorUpload } = await uploadImage(
-  //       image as File
-  //     );
-
-  //     if (errorUpload || !url) {
-  //       setLoading(false);
-  //       return errorToast(
-  //         "Não foi possível fazer upload de imagem, entrar em contato."
-  //       );
-  //     }
-  //     imageUrl = url;
-
-  //     if (noticeData && noticeData.image) {
-  //       // is editting
-  //       await deleteImage(noticeData.image);
-  //     }
-  //   }
-
-  //   const finalData: Partial<CondoNoticeEntity> = {
-  //     about: data.title,
-  //     text: data.description,
-  //     image: imageUrl,
-  //     condominiumId: condoId as string,
-  //     creatorId: userUid
-  //   };
-
-  //   if (!noticeData) {
-  //     await createFirestoreDoc<Omit<CondoNoticeEntity, "id">>({
-  //       collectionPath: `condoNotices`,
-  //       data: {
-  //         ...finalData,
-  //         createdAt: Timestamp.now(),
-  //         updatedAt: Timestamp.now()
-  //       } as CondoNoticeEntity
-  //     });
-  //     await sendNotification({
-  //       content: `Alerta: ${data.title}`,
-  //       title: "Alerta!",
-  //       date: null,
-  //       type: "alert",
-  //       users: (residents ?? []).map((resident) => ({
-  //         tokens: resident?.tokens ?? [],
-  //         userId: resident?.id ?? ""
-  //       }))
-  //     });
-
-  //     successToast("Novo aviso de condomínio adicionado.");
-  //   } else {
-  //     await updateFirestoreDoc({
-  //       documentPath: `/condoNotices/${noticeData.id}`,
-  //       data: {
-  //         ...finalData,
-  //         updatedAt: Timestamp.now()
-  //       } as CondoNoticeEntity
-  //     });
-  //     queryClient.invalidateQueries(["condoNotices", condoId]);
-  //     successToast("Aviso editado com sucesso!");
-  //   }
-
-  //   setLoading(false);
-  //   queryClient.invalidateQueries(["condoNotices", condoId]);
-  //   setImage(null);
-  //   onOpenChange(false);
-  // };
+  const { propagandas, loading, deletePropaganda, savePropaganda } = 
+    usePropaganda(condoId);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const currentFile = e.target.files?.[0];
@@ -105,11 +33,31 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
     }
   };
 
-  // useEffect(() => {
-  // if (noticeData && noticeData.image && !image) {
-  //   setImage(noticeData.image);
-  // }
-  // }, [noticeData, image]);
+  const handleSave = async () => {
+    if (!image) {
+      return errorToast("Adicione uma imagem.");
+    }
+
+    try {
+      let imageUrl = "";
+
+      if (image instanceof File) {
+        const { image: uploadedImageUrl, error: uploadError } = await uploadImage(image);
+        if (uploadError || !uploadedImageUrl) {
+          return;
+        }
+        imageUrl = uploadedImageUrl;
+      } else {
+        imageUrl = image;
+      }
+
+      await savePropaganda(imageUrl);
+      setImage(null);
+      onOpenChange(false);
+    } catch (error) {
+      console.error("Error saving propaganda:", error);
+    }
+  };
 
   return (
     <TransitionModal
@@ -123,6 +71,9 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
           size="lg"
           className="w-[210px] bg-[#202425]"
           loading={loading}
+          onClick={() => {
+            if (!loading) handleSave();
+          }}
         >
           Confirmar
         </Button>
@@ -144,6 +95,21 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
     >
       <div className="flex flex-col gap-1">
         <Label>Imagem</Label>
+        <div className="grid grid-cols-2 gap-4">
+          {propagandas.map((propaganda) => (
+            <div key={propaganda.id} className="relative">
+              <Image
+                src={propaganda.imageUrl}
+                alt="Banner"
+                width={200}
+                height={100}
+                className="object-cover"
+              />
+            </div>
+          ))}
+        </div>
+
+        <Label>Adicionar Nova Imagem</Label>
         <input
           type="file"
           ref={inputUpload}
