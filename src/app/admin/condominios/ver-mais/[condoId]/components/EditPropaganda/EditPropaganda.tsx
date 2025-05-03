@@ -1,6 +1,5 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 
-import { Timestamp } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
@@ -9,9 +8,9 @@ import { inputClassName } from "@/app/contants";
 import Button from "@/components/atoms/Button/button";
 import Label from "@/components/atoms/Label/label";
 import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
-import { errorToast, successToast } from "@/hooks/useAppToast";
-import { uploadImage, deleteImage } from "@/store/services/firebaseStorage";
-import { usePropaganda } from "@/hooks/queries/propaganda/usePropaganda.ts";
+import { usePropaganda } from "@/hooks/queries/propaganda/usePropaganda";
+import { errorToast } from "@/hooks/useAppToast";
+import { uploadImage } from "@/store/services/firebaseStorage";
 
 import { EditPropagandaProps } from "./types";
 
@@ -23,8 +22,7 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
   const inputUpload = useRef<HTMLInputElement | null>(null);
   const [image, setImage] = useState<File | string | null>(null);
 
-  const { propagandas, loading, deletePropaganda, savePropaganda } = 
-    usePropaganda(condoId);
+  const { propagandas, loading, savePropaganda } = usePropaganda(condoId);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const currentFile = e.target.files?.[0];
@@ -42,7 +40,8 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
       let imageUrl = "";
 
       if (image instanceof File) {
-        const { image: uploadedImageUrl, error: uploadError } = await uploadImage(image);
+        const { image: uploadedImageUrl, error: uploadError } =
+          await uploadImage(image);
         if (uploadError || !uploadedImageUrl) {
           return;
         }
@@ -96,7 +95,7 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
       <div className="flex flex-col gap-1">
         <Label>Imagem</Label>
         <div className="grid grid-cols-2 gap-4">
-          {propagandas.map((propaganda) => (
+          {propagandas?.map((propaganda) => (
             <div key={propaganda.id} className="relative">
               <Image
                 src={propaganda.imageUrl}
