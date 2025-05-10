@@ -18,10 +18,10 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
   isOpen,
   onOpenChange
 }) => {
-  const condominiumId = storageGet<string>("condoId"); // Obtendo o ID do condomínio do storage
+  const condominiumId = storageGet<string>("condoId");
 
   const { propagandas, isLoading, savePropaganda, updatePropaganda } =
-    usePropaganda(condominiumId as string); // Usando o condominiumId do storage
+    usePropaganda(condominiumId as string);
 
   const inputUpload = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState<File | null>(null);
