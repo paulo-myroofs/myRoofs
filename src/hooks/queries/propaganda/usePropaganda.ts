@@ -1,59 +1,90 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { errorToast, successToast } from "@/hooks/useAppToast";
-import { createFirestoreDoc, getFirestoreCollection } from "@/store/services";
+import { updateFirestoreDoc, getFirestoreDoc } from "@/store/services";
 
-interface Propaganda {
-  id?: string;
-  imageUrl: string;
-  createdAt?: Date;
-}
+const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
 
-export function getPropagandasQueryKey(condoId: string) {
-  return ["propagandas", condoId];
-}
+export const getPropagandasQueryKey = (condoId: string) => [
+  "propagandas",
+  condoId
+];
 
-export const getPropagandasQueryFn = (condoId: string) => {
-  return () =>
-    getFirestoreCollection<Propaganda>({
-      collectionPath: `condominiums/${condoId}/propagandas`
-    }).then((res) => res.data);
+export const getPropagandasQueryFn = async (condoId: string) => {
+  const { data, error } = await getFirestoreDoc({
+    documentPath: `condominium/${condoId}`
+  });
+
+  if (error) {
+    throw new Error("Erro ao buscar propagandas");
+  }
+
+  return data?.propagandas || [];
 };
 
-export const usePropaganda = (condoId: string) => {
+const usePropaganda = (condoId: string) => {
   const {
     data: propagandas = [],
-    isLoading: loading,
+    isLoading,
+    isError,
     refetch
   } = useQuery({
     queryKey: getPropagandasQueryKey(condoId),
-    queryFn: getPropagandasQueryFn(condoId),
-    enabled: !!condoId
+    queryFn: () => getPropagandasQueryFn(condoId),
+    enabled: !!condoId,
+    cacheTime: ONE_DAY_IN_MS,
+    staleTime: 0
   });
 
   const savePropaganda = async (imageUrl: string) => {
-    if (propagandas && propagandas.length >= 4) {
+    if (propagandas.length >= 4) {
       return errorToast("Você só pode adicionar até 4 propagandas.");
     }
 
     try {
-      await createFirestoreDoc({
-        collectionPath: `condominiums/${condoId}/propagandas`,
-        data: {
-          imageUrl,
-          createdAt: new Date()
-        }
+      const updatedPropagandas = [
+        ...propagandas,
+        { imageUrl, createdAt: new Date() }
+      ];
+      await updateFirestoreDoc({
+        documentPath: `condominium/${condoId}`,
+        data: { propagandas: updatedPropagandas }
       });
       successToast("Propaganda adicionada com sucesso.");
-      refetch();
+      await refetch();
     } catch (error) {
+      console.error("Erro ao salvar propaganda:", error);
       errorToast("Erro ao salvar propaganda. Tente novamente.");
+    }
+  };
+
+  const updatePropaganda = async (index: number, newImageUrl: string) => {
+    try {
+      const updatedPropagandas = [...propagandas];
+      updatedPropagandas[index] = {
+        ...updatedPropagandas[index],
+        imageUrl: newImageUrl
+      };
+
+      await updateFirestoreDoc({
+        documentPath: `condominium/${condoId}`,
+        data: { propagandas: updatedPropagandas }
+      });
+      successToast("Propaganda atualizada com sucesso.");
+      await refetch();
+    } catch (error) {
+      console.error("Erro ao atualizar propaganda:", error);
+      errorToast("Erro ao atualizar propaganda. Tente novamente.");
     }
   };
 
   return {
     propagandas,
-    loading,
-    savePropaganda
+    isLoading,
+    isError,
+    savePropaganda,
+    updatePropaganda
   };
 };
+
+export default usePropaganda;

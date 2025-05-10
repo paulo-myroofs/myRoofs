@@ -127,7 +127,6 @@ const MoreInfoCondo = () => {
       <PropagaModal
         isOpen={propagandaModelOpen}
         onOpenChange={setPropagandaModalOpen}
-        condoId="ii"
       ></PropagaModal>
     </>
   );
