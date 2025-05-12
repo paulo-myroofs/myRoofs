@@ -26,6 +26,7 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
   const inputUpload = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState<File | null>(null);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleImageChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -33,6 +34,8 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    setLoading(true);
 
     try {
       const { image: uploadedImageUrl, error } = await uploadImage(file);
@@ -50,6 +53,7 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
       console.error("Erro ao processar imagem:", error);
       errorToast("Erro ao processar imagem. Tente novamente.");
     } finally {
+      setLoading(false);
       if (inputUpload.current) {
         inputUpload.current.value = "";
       }
@@ -60,6 +64,8 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
     if (!image) {
       return errorToast("Selecione uma imagem");
     }
+
+    setLoading(true);
 
     try {
       const { image: uploadedImageUrl, error } = await uploadImage(image);
@@ -73,6 +79,8 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
     } catch (error) {
       console.error("Erro ao salvar:", error);
       errorToast("Erro ao salvar propaganda.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -93,7 +101,7 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
           variant="icon"
           size="lg"
           className="w-[210px] bg-[#202425]"
-          loading={isLoading}
+          loading={loading || isLoading}
           onClick={handleSave}
         >
           Confirmar
