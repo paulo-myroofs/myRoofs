@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-
+import { X } from "lucide-react";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 
@@ -20,13 +20,14 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
 }) => {
   const condominiumId = storageGet<string>("condoId");
 
-  const { propagandas, isLoading, savePropaganda, updatePropaganda } =
+  const { propagandas, isLoading, savePropaganda, updatePropaganda, deletePropaganda } =
     usePropaganda(condominiumId as string);
 
   const inputUpload = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState<File | null>(null);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
+  const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
 
   const handleImageChange = async (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -84,6 +85,19 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
     }
   };
 
+  const handleDelete = async () => {
+    if (deleteIndex === null) return;
+    setLoading(true);
+    try {
+      await deletePropaganda(deleteIndex);
+      setDeleteIndex(null);
+    } catch (error) {
+      errorToast("Erro ao deletar propaganda.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <TransitionModal
       isOpen={isOpen}
@@ -133,11 +147,20 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
                 />
                 <button
                   type="button"
+                  onClick={() => setDeleteIndex(index)}
+                  className="absolute top-2 right-2 z-20 rounded-full bg-gray-200/70 hover:bg-white/100 opacity-0 text-red-500 w-7 h-7 flex items-center justify-center shadow transition-opacity group-hover:opacity-80"
+                  disabled={loading}
+                  title="Remover propaganda"
+                >
+                  <X size={18} />
+                </button>
+                <button
+                  type="button"
                   onClick={() => {
                     setEditingIndex(index);
                     inputUpload.current?.click();
                   }}
-                  className="absolute inset-0 flex items-center justify-center bg-black/50 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                  className="absolute inset-0 flex items-center justify-center bg-black/50 text-white opacity-0 transition-opacity group-hover:opacity-100 z-10"
                 >
                   Editar
                 </button>
@@ -176,6 +199,39 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
           className="hidden"
           onChange={(e) => handleImageChange(e, editingIndex ?? undefined)}
         />
+
+        {deleteIndex !== null && (
+          <TransitionModal
+            isOpen={true}
+            onOpenChange={(open) => {
+              if (!open) setDeleteIndex(null);
+            }}
+            title="Remover propaganda?"
+            description="Tem certeza que deseja remover esta propaganda?"
+            confirmBtn={
+              <Button
+                variant="icon"
+                size="lg"
+                className="w-[120px] bg-[#202425]"
+                loading={loading}
+                onClick={handleDelete}
+              >
+                Remover
+              </Button>
+            }
+            cancelBtn={
+              <Button
+                type="button"
+                variant="outline-black"
+                size="lg"
+                className="w-[120px] text-sm"
+                onClick={() => setDeleteIndex(null)}
+              >
+                Cancelar
+              </Button>
+            }
+          />
+        )}
       </div>
     </TransitionModal>
   );

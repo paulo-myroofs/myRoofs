@@ -78,12 +78,30 @@ const usePropaganda = (condoId: string) => {
     }
   };
 
+  const deletePropaganda = async (index: number) => {
+    try {
+      const updatedPropagandas = propagandas.filter(
+        (_: any, i: number) => i !== index
+      );
+      await updateFirestoreDoc({
+        documentPath: `condominium/${condoId}`,
+        data: { propagandas: updatedPropagandas }
+      });
+      successToast("Propaganda excluída com sucesso.");
+      await refetch();
+    } catch (error) {
+      console.error("Erro ao excluir propaganda:", error);
+      errorToast("Erro ao excluir propaganda. Tente novamente.");
+    }
+  }
+
   return {
     propagandas,
     isLoading,
     isError,
     savePropaganda,
-    updatePropaganda
+    updatePropaganda,
+    deletePropaganda
   };
 };
 
