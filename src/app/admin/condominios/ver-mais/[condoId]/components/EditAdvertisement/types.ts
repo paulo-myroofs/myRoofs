@@ -1,4 +1,4 @@
 import { TransitionModalProps } from "@/components/atoms/TransitionModal/types";
 
-export interface EditPropagandaProps
+export interface EditAdvertisementProps
   extends Pick<TransitionModalProps, "isOpen" | "onOpenChange"> {}

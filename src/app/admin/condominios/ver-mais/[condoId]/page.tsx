@@ -20,13 +20,13 @@ import AdminHistory from "./components/AdminHistory/AdminHistory";
 import AptManagerData from "./components/AptManagerData/AptManagerData";
 import CondoData from "./components/CondoData/CondoData";
 import CreateDeleteCondoModal from "./components/CreateDeleteCondoModal/CreateDeleteCondoModal";
-import { PropagaModal } from "./components/EditPropaganda/EditPropaganda";
+import { AdvertisementModal } from "./components/EditAdvertisement/EditAdvertisement";
 import UsersSection from "./components/UsersSection/UsersSection";
 
 const MoreInfoCondo = () => {
   const { condoId } = useParams();
   const [deleteCondoModalOpen, setDeleteCondoModalOpen] = useState(false);
-  const [propagandaModelOpen, setPropagandaModalOpen] = useState(false);
+  const [advertisementModelOpen, setadvertisementModalOpen] = useState(false);
   const { data: condo, isLoading, isError } = useCondo(condoId as string);
   const router = useRouter();
 
@@ -100,7 +100,7 @@ const MoreInfoCondo = () => {
             <TitleAtom> {condo?.name}</TitleAtom>
           </div>
           <div className="flex gap-4">
-            <Button onClick={() => setPropagandaModalOpen(true)}>
+            <Button onClick={() => setadvertisementModalOpen(true)}>
               Publicidade
             </Button>
             <Button onClick={() => setDeleteCondoModalOpen(true)}>
@@ -124,10 +124,10 @@ const MoreInfoCondo = () => {
         onOpenChange={setDeleteCondoModalOpen}
         condoData={condo}
       ></CreateDeleteCondoModal>
-      <PropagaModal
-        isOpen={propagandaModelOpen}
-        onOpenChange={setPropagandaModalOpen}
-      ></PropagaModal>
+      <AdvertisementModal
+        isOpen={advertisementModelOpen}
+        onOpenChange={setadvertisementModalOpen}
+      ></AdvertisementModal>
     </>
   );
 };

@@ -8,26 +8,26 @@ import { inputClassName } from "@/app/contants";
 import Button from "@/components/atoms/Button/button";
 import Label from "@/components/atoms/Label/label";
 import TransitionModal from "@/components/atoms/TransitionModal/tempModal";
-import usePropaganda from "@/hooks/queries/propaganda/usePropaganda";
+import useAdvertisement from "@/hooks/queries/advertisement/useAdvertisement";
 import { errorToast } from "@/hooks/useAppToast";
 import { uploadImage } from "@/store/services/firebaseStorage";
 import { storageGet } from "@/store/services/storage";
 
-import { EditPropagandaProps } from "./types";
+import { EditAdvertisementProps } from "./types";
 
-export const PropagaModal: React.FC<EditPropagandaProps> = ({
+export const AdvertisementModal: React.FC<EditAdvertisementProps> = ({
   isOpen,
   onOpenChange
 }) => {
   const condominiumId = storageGet<string>("condoId");
 
   const {
-    propagandas,
+    advertisements,
     isLoading,
-    savePropaganda,
-    updatePropaganda,
-    deletePropaganda
-  } = usePropaganda(condominiumId as string);
+    saveadvertisement,
+    updateadvertisement,
+    deleteadvertisement
+  } = useAdvertisement(condominiumId as string);
 
   const inputUpload = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState<File | null>(null);
@@ -51,7 +51,7 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
       }
 
       if (index !== undefined) {
-        await updatePropaganda(index, uploadedImageUrl);
+        await updateadvertisement(index, uploadedImageUrl);
         setEditingIndex(null);
       } else {
         setImage(file);
@@ -80,12 +80,12 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
         throw new Error(error?.toString() || "Erro no upload");
       }
 
-      await savePropaganda(uploadedImageUrl);
+      await saveadvertisement(uploadedImageUrl);
       setImage(null);
       onOpenChange(false);
     } catch (error) {
       console.error("Erro ao salvar:", error);
-      errorToast("Erro ao salvar propaganda.");
+      errorToast("Erro ao salvar advertisement.");
     } finally {
       setLoading(false);
     }
@@ -95,10 +95,10 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
     if (deleteIndex === null) return;
     setLoading(true);
     try {
-      await deletePropaganda(deleteIndex);
+      await deleteadvertisement(deleteIndex);
       setDeleteIndex(null);
     } catch (error) {
-      errorToast("Erro ao deletar propaganda.");
+      errorToast("Erro ao deletar advertisement.");
     } finally {
       setLoading(false);
     }
@@ -143,35 +143,37 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
         <div>
           <Label>Imagens Atuais</Label>
           <div className="mt-2 grid grid-cols-2 gap-4">
-            {propagandas?.map((prop: { imageUrl: string }, index: number) => (
-              <div key={index} className="group relative h-32">
-                <Image
-                  src={prop.imageUrl}
-                  alt="Banner"
-                  fill
-                  className="rounded object-cover"
-                />
-                <button
-                  type="button"
-                  onClick={() => setDeleteIndex(index)}
-                  className="absolute right-2 top-2 z-20 flex h-7 w-7 items-center justify-center rounded-full bg-gray-200/70 text-red-500 opacity-0 shadow transition-opacity hover:bg-white/100 group-hover:opacity-80"
-                  disabled={loading}
-                  title="Remover propaganda"
-                >
-                  <X size={18} />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEditingIndex(index);
-                    inputUpload.current?.click();
-                  }}
-                  className="absolute inset-0 z-10 flex items-center justify-center bg-black/50 text-white opacity-0 transition-opacity group-hover:opacity-100"
-                >
-                  Editar
-                </button>
-              </div>
-            ))}
+            {advertisements?.map(
+              (prop: { imageUrl: string }, index: number) => (
+                <div key={index} className="group relative h-32">
+                  <Image
+                    src={prop.imageUrl}
+                    alt="Banner"
+                    fill
+                    className="rounded object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setDeleteIndex(index)}
+                    className="absolute right-2 top-2 z-20 flex h-7 w-7 items-center justify-center rounded-full bg-gray-200/70 text-red-500 opacity-0 shadow transition-opacity hover:bg-white/100 group-hover:opacity-80"
+                    disabled={loading}
+                    title="Remover advertisement"
+                  >
+                    <X size={18} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditingIndex(index);
+                      inputUpload.current?.click();
+                    }}
+                    className="absolute inset-0 z-10 flex items-center justify-center bg-black/50 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                  >
+                    Editar
+                  </button>
+                </div>
+              )
+            )}
           </div>
         </div>
 
@@ -212,8 +214,8 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
             onOpenChange={(open) => {
               if (!open) setDeleteIndex(null);
             }}
-            title="Remover propaganda?"
-            description="Tem certeza que deseja remover esta propaganda?"
+            title="Remover advertisement?"
+            description="Tem certeza que deseja remover esta advertisement?"
             confirmBtn={
               <Button
                 variant="icon"

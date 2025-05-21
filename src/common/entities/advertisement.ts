@@ -1,4 +1,4 @@
-export interface PropagandaEntity {
+export interface advertisementEntity {
   condoId: string;
   image1: string;
   image2: string;
