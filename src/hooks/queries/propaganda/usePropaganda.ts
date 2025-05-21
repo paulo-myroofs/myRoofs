@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
+import { PropagandaEntity } from "@/common/entities/propaganda";
 import { errorToast, successToast } from "@/hooks/useAppToast";
 import { updateFirestoreDoc, getFirestoreDoc } from "@/store/services";
 
@@ -81,7 +82,7 @@ const usePropaganda = (condoId: string) => {
   const deletePropaganda = async (index: number) => {
     try {
       const updatedPropagandas = propagandas.filter(
-        (_: any, i: number) => i !== index
+        (_: PropagandaEntity, i: number) => i !== index
       );
       await updateFirestoreDoc({
         documentPath: `condominium/${condoId}`,
@@ -93,7 +94,7 @@ const usePropaganda = (condoId: string) => {
       console.error("Erro ao excluir propaganda:", error);
       errorToast("Erro ao excluir propaganda. Tente novamente.");
     }
-  }
+  };
 
   return {
     propagandas,

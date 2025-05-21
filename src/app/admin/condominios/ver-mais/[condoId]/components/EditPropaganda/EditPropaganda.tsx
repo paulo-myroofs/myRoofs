@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+
 import { X } from "lucide-react";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
@@ -20,8 +21,13 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
 }) => {
   const condominiumId = storageGet<string>("condoId");
 
-  const { propagandas, isLoading, savePropaganda, updatePropaganda, deletePropaganda } =
-    usePropaganda(condominiumId as string);
+  const {
+    propagandas,
+    isLoading,
+    savePropaganda,
+    updatePropaganda,
+    deletePropaganda
+  } = usePropaganda(condominiumId as string);
 
   const inputUpload = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState<File | null>(null);
@@ -148,7 +154,7 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
                 <button
                   type="button"
                   onClick={() => setDeleteIndex(index)}
-                  className="absolute top-2 right-2 z-20 rounded-full bg-gray-200/70 hover:bg-white/100 opacity-0 text-red-500 w-7 h-7 flex items-center justify-center shadow transition-opacity group-hover:opacity-80"
+                  className="absolute right-2 top-2 z-20 flex h-7 w-7 items-center justify-center rounded-full bg-gray-200/70 text-red-500 opacity-0 shadow transition-opacity hover:bg-white/100 group-hover:opacity-80"
                   disabled={loading}
                   title="Remover propaganda"
                 >
@@ -160,7 +166,7 @@ export const PropagaModal: React.FC<EditPropagandaProps> = ({
                     setEditingIndex(index);
                     inputUpload.current?.click();
                   }}
-                  className="absolute inset-0 flex items-center justify-center bg-black/50 text-white opacity-0 transition-opacity group-hover:opacity-100 z-10"
+                  className="absolute inset-0 z-10 flex items-center justify-center bg-black/50 text-white opacity-0 transition-opacity group-hover:opacity-100"
                 >
                   Editar
                 </button>
