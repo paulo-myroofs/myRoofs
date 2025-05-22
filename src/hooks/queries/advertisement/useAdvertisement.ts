@@ -17,7 +17,7 @@ export const getadvertisementsQueryFn = async (condoId: string) => {
   });
 
   if (error) {
-    throw new Error("Erro ao buscar advertisements");
+    throw new Error("Erro ao buscar propagandas");
   }
 
   return data?.advertisements || [];
@@ -39,7 +39,7 @@ const useAdvertisement = (condoId: string) => {
 
   const saveadvertisement = async (imageUrl: string) => {
     if (advertisements.length >= 4) {
-      return errorToast("Você só pode adicionar até 4 advertisements.");
+      return errorToast("Você só pode adicionar até 4 propagandas.");
     }
 
     try {
@@ -54,8 +54,8 @@ const useAdvertisement = (condoId: string) => {
       successToast("Propaganda adicionada com sucesso.");
       await refetch();
     } catch (error) {
-      console.error("Erro ao salvar advertisement:", error);
-      errorToast("Erro ao salvar advertisement. Tente novamente.");
+      console.error("Erro ao salvar propaganda:", error);
+      errorToast("Erro ao salvar propaganda. Tente novamente.");
     }
   };
 
@@ -71,11 +71,11 @@ const useAdvertisement = (condoId: string) => {
         documentPath: `condominium/${condoId}`,
         data: { advertisements: updatedadvertisements }
       });
-      successToast("propaganda atualizada com sucesso.");
+      successToast("Propaganda atualizada com sucesso.");
       await refetch();
     } catch (error) {
-      console.error("Erro ao atualizar advertisement:", error);
-      errorToast("Erro ao atualizar advertisement. Tente novamente.");
+      console.error("Erro ao atualizar propaganda:", error);
+      errorToast("Erro ao atualizar propaganda. Tente novamente.");
     }
   };
 
@@ -88,11 +88,11 @@ const useAdvertisement = (condoId: string) => {
         documentPath: `condominium/${condoId}`,
         data: { advertisements: updatedadvertisements }
       });
-      successToast("propaganda excluída com sucesso.");
+      successToast("Propaganda excluída com sucesso.");
       await refetch();
     } catch (error) {
-      console.error("Erro ao excluir advertisement:", error);
-      errorToast("Erro ao excluir advertisement. Tente novamente.");
+      console.error("Erro ao excluir propaganda:", error);
+      errorToast("Erro ao excluir propaganda. Tente novamente.");
     }
   };
 

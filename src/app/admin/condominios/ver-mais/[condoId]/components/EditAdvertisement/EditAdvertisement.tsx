@@ -85,7 +85,7 @@ export const AdvertisementModal: React.FC<EditAdvertisementProps> = ({
       onOpenChange(false);
     } catch (error) {
       console.error("Erro ao salvar:", error);
-      errorToast("Erro ao salvar advertisement.");
+      errorToast("Erro ao salvar propaganda.");
     } finally {
       setLoading(false);
     }
@@ -98,7 +98,7 @@ export const AdvertisementModal: React.FC<EditAdvertisementProps> = ({
       await deleteadvertisement(deleteIndex);
       setDeleteIndex(null);
     } catch (error) {
-      errorToast("Erro ao deletar advertisement.");
+      errorToast("Erro ao deletar propaganda.");
     } finally {
       setLoading(false);
     }
@@ -214,7 +214,7 @@ export const AdvertisementModal: React.FC<EditAdvertisementProps> = ({
             onOpenChange={(open) => {
               if (!open) setDeleteIndex(null);
             }}
-            title="Remover advertisement?"
+            title="Remover propaganda?"
             description="Tem certeza que deseja remover esta propaganda?"
             confirmBtn={
               <Button
