@@ -157,7 +157,7 @@ export const AdvertisementModal: React.FC<EditAdvertisementProps> = ({
                     onClick={() => setDeleteIndex(index)}
                     className="absolute right-2 top-2 z-20 flex h-7 w-7 items-center justify-center rounded-full bg-gray-200/70 text-red-500 opacity-0 shadow transition-opacity hover:bg-white/100 group-hover:opacity-80"
                     disabled={loading}
-                    title="Remover advertisement"
+                    title="Remover propaganda"
                   >
                     <X size={18} />
                   </button>
@@ -215,7 +215,7 @@ export const AdvertisementModal: React.FC<EditAdvertisementProps> = ({
               if (!open) setDeleteIndex(null);
             }}
             title="Remover advertisement?"
-            description="Tem certeza que deseja remover esta advertisement?"
+            description="Tem certeza que deseja remover esta propaganda?"
             confirmBtn={
               <Button
                 variant="icon"

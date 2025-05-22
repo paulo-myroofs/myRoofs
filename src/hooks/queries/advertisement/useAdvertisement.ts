@@ -71,7 +71,7 @@ const useAdvertisement = (condoId: string) => {
         documentPath: `condominium/${condoId}`,
         data: { advertisements: updatedadvertisements }
       });
-      successToast("advertisement atualizada com sucesso.");
+      successToast("propaganda atualizada com sucesso.");
       await refetch();
     } catch (error) {
       console.error("Erro ao atualizar advertisement:", error);
@@ -88,7 +88,7 @@ const useAdvertisement = (condoId: string) => {
         documentPath: `condominium/${condoId}`,
         data: { advertisements: updatedadvertisements }
       });
-      successToast("advertisement excluída com sucesso.");
+      successToast("propaganda excluída com sucesso.");
       await refetch();
     } catch (error) {
       console.error("Erro ao excluir advertisement:", error);
