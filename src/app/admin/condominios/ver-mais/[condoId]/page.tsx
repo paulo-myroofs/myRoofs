@@ -20,11 +20,13 @@ import AdminHistory from "./components/AdminHistory/AdminHistory";
 import AptManagerData from "./components/AptManagerData/AptManagerData";
 import CondoData from "./components/CondoData/CondoData";
 import CreateDeleteCondoModal from "./components/CreateDeleteCondoModal/CreateDeleteCondoModal";
+import { AdvertisementModal } from "./components/EditAdvertisement/EditAdvertisement";
 import UsersSection from "./components/UsersSection/UsersSection";
 
 const MoreInfoCondo = () => {
   const { condoId } = useParams();
-  const [modalOpen, setModalOpen] = useState(false);
+  const [deleteCondoModalOpen, setDeleteCondoModalOpen] = useState(false);
+  const [advertisementModelOpen, setadvertisementModalOpen] = useState(false);
   const { data: condo, isLoading, isError } = useCondo(condoId as string);
   const router = useRouter();
 
@@ -97,10 +99,15 @@ const MoreInfoCondo = () => {
             />
             <TitleAtom> {condo?.name}</TitleAtom>
           </div>
-          <Button onClick={() => setModalOpen(true)}>
-            {" "}
-            Encerrar Condomínio
-          </Button>
+          <div className="flex gap-4">
+            <Button onClick={() => setadvertisementModalOpen(true)}>
+              Publicidade
+            </Button>
+            <Button onClick={() => setDeleteCondoModalOpen(true)}>
+              {" "}
+              Encerrar Condomínio
+            </Button>
+          </div>
         </div>
 
         <Accordion type="single" collapsible className="w-full">
@@ -113,10 +120,14 @@ const MoreInfoCondo = () => {
         </Accordion>
       </section>
       <CreateDeleteCondoModal
-        isOpen={modalOpen}
-        onOpenChange={setModalOpen}
+        isOpen={deleteCondoModalOpen}
+        onOpenChange={setDeleteCondoModalOpen}
         condoData={condo}
       ></CreateDeleteCondoModal>
+      <AdvertisementModal
+        isOpen={advertisementModelOpen}
+        onOpenChange={setadvertisementModalOpen}
+      ></AdvertisementModal>
     </>
   );
 };
