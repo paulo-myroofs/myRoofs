@@ -55,6 +55,7 @@ git clone [https://github.com/seu-usuario/myroofs.git](https://github.com/seu-us
 cd myroofs
 pnpm install
 pnpm dev
+```
 
 ### Variáveis de Ambiente
 
